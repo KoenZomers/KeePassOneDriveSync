@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using KoenZomersKeePassOneDriveSync;
 using Newtonsoft.Json;
@@ -32,7 +33,7 @@ namespace KoenZomers.KeePass.OneDriveSync
         #region Serializable Properties
 
         /// <summary>
-        /// Gets or sets refresh token from authorization
+        /// Gets or sets refresh token that can be used to get an Access Token for OneDrive access
         /// </summary>
         [DataMember]
         public string RefreshToken { get; set; }
@@ -44,10 +45,10 @@ namespace KoenZomers.KeePass.OneDriveSync
         public string RemoteDatabasePath { get; set; }
 
         /// <summary>
-        /// Gets or sets database file update time as it is returned from SkyDrive.
+        /// Gets or sets a boolean to indicate if the database should be synced with OneDrive
         /// </summary>
         [DataMember]
-        public string LastModified { get; set; }
+        public bool DoNotSync { get; set; }
 
         #endregion
 
@@ -57,10 +58,14 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// Gets the KeePass database configuration for KeePassOneDriveSync for the KeePass database of which the local path is provided
         /// </summary>
         /// <param name="localPasswordDatabasePath">Full path to where the KeePass database resides locally</param>
-        /// <returns>KeePassOneDriveSync settings for the provided database or NULL if no configuration found</returns>
+        /// <returns>KeePassOneDriveSync settings for the provided database</returns>
         public static Configuration GetPasswordDatabaseConfiguration(string localPasswordDatabasePath)
         {
-            return PasswordDatabases.ContainsKey(localPasswordDatabasePath) ? PasswordDatabases[localPasswordDatabasePath] : null;
+            if (!PasswordDatabases.ContainsKey(localPasswordDatabasePath))
+            {
+                PasswordDatabases.Add(new KeyValuePair<string, Configuration>(localPasswordDatabasePath, new Configuration()));
+            }
+            return PasswordDatabases[localPasswordDatabasePath];
         }
 
         /// <summary>
