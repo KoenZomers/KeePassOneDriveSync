@@ -2,8 +2,11 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using KeePass.DataExchange;
 using KeePass.Forms;
 using KeePass.Plugins;
+using KeePassLib;
+using KeePassLib.Serialization;
 using KoenZomers.KeePass.OneDriveSync;
 
 namespace KoenZomersKeePassOneDriveSync
@@ -46,8 +49,10 @@ namespace KoenZomersKeePassOneDriveSync
             //Host.MainWindow.Shown += MainWindowOnShown;
             //Host.MainWindow.Activated += MainWindowOnShown;
             Host.MainWindow.FileOpened += OnKeePassDatabaseOpened;
-            //Host.MainWindow.FileSaved += MainWindowOnFileSaved;
+            Host.MainWindow.FileSaved += MainWindowOnFileSaved;
 
+
+            //Host.MainWindow. += MenuOpenFromOneDriveOnClick;
             //var menu = Host.MainWindow.ToolsMenu.DropDownItems;
             //menu.Add(new ToolStripSeparator());
             //var menuItem = new ToolStripMenuItem("KeeOneDrive Options");
@@ -55,6 +60,11 @@ namespace KoenZomersKeePassOneDriveSync
             //menu.Add(menuItem);
 
             return true;
+        }
+
+        private void MainWindowOnFileSaved(object sender, EventArgs e)
+        {
+
         }
 
         private void MenuOptionsOnClick(object sender, EventArgs e)
@@ -103,7 +113,7 @@ namespace KoenZomersKeePassOneDriveSync
 
             if (oneDriveApi == null)
             {
-                MessageBox.Show("Failed to connect to OneDrive");
+                UpdateStatus("Failed to connect to OneDrive");
                 return;
             }
 
@@ -127,66 +137,65 @@ namespace KoenZomersKeePassOneDriveSync
             if (oneDriveItem == null)
             {
                 // KeePass database not found on OneDrive
-                MessageBox.Show("Database does not exist yet on OneDrive");
+                UpdateStatus("Database does not exist yet on OneDrive");
+                return;
             }
-            else
+            
+            // Calculate the SHA1 hash of the local KeePass database
+            var fileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+
+            if (oneDriveItem.File.Hashes.Sha1.Equals(fileHash))
             {
-                // Calculate the SHA1 hash of the local KeePass database
-                var fileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
-
-                if (oneDriveItem.File.Hashes.Sha1.Equals(fileHash))
-                {
-                    MessageBox.Show("Databases are in sync!", "OneDrive Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                // Sync the database
-                MessageBox.Show("Going to sync");
+                UpdateStatus("Databases are in sync");
+                return;
             }
 
-            //try
-            //{
+            // Download the database from OneDrive
+            UpdateStatus("Downloading KeePass database from OneDrive");
 
-            //    downloadDatabase = Task<OneDriveIo.DownloadInformation>.Factory.StartNew(() =>
-            //    {
-            //        var config = Configuration.PasswordDatabases[fileOpenedEventArgs.Database.IOConnectionInfo.Path];
-            //        var session = new LiveSession(OneDriveClientId, OneDriveClientSecret);
-            //        session.Open(config.RefreshToken);
-            //        var liveApi = new LiveApi(session);
-            //        return OneDriveIo.DownloadIfUpdated(liveApi, config, Host.MainWindow.SetStatusEx);
-            //    });
+            var temporaryKeePassDatabasePath = Path.GetTempFileName();
+            var downloadSuccessful = await oneDriveApi.DownloadItem(oneDriveItem, temporaryKeePassDatabasePath);
 
-            //    if (downloadDatabase == null)
-            //    {
-            //        return;
-            //    }
+            if (!downloadSuccessful)
+            {
+                UpdateStatus("Failed to download the KeePass database from OneDrive");
+                return;
+            }
 
-            //    var downloadResult = downloadDatabase.Result;
+            // Sync database
+            UpdateStatus("KeePass database downloaded, going to sync");
+            
+            var connectionInfo = IOConnectionInfo.FromPath(temporaryKeePassDatabasePath);
+            var formatter = Host.FileFormatPool.Find("KeePass KDBX (2.x)");
 
-            //    if (downloadResult.FileName == null)
-            //    {
-            //        return;
-            //    }
+            var importSuccessful = ImportUtil.Import(Host.Database, formatter, new[] { connectionInfo }, true, Host.MainWindow, false, Host.MainWindow);
 
-            //    SyncDatabase(downloadResult.FileName);
-            //    var remoteUpdateTime = DateTime.Parse(downloadResult.RemoteItem.UpdatedTime);
+            if (!importSuccessful.GetValueOrDefault(false))
+            {
+                UpdateStatus("Failed to synchronize the KeePass databases");
+                return;
+            }
 
-            //    if (new FileInfo(downloadResult.FileName).LastWriteTimeUtc != remoteUpdateTime)
-            //    {
-            //        Task.Factory.StartNew(() =>
-            //            UpdateRemoteFile(downloadResult.Api, downloadResult.FileName, downloadResult.RemoteItem));
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Host.MainWindow.SetStatusEx("Error syncing database: " + ex.Message);
-            //}
-            //finally
-            //{
-            //    Monitor.Exit(lockObject);
-            //}
+            // Upload the synced database
+            UpdateStatus("Uploading the new KeePass database to OneDrive");
+            var uploadResult = await oneDriveApi.UploadFile(temporaryKeePassDatabasePath, oneDriveItem);
 
-            //Task.Factory.StartNew(Sync, Configuration.PasswordDatabases[fileOpenedEventArgs.Database.IOConnectionInfo.Path]);
+            if (uploadResult == null)
+            {
+                UpdateStatus("Failed to upload the KeePass database");
+                return;
+            }
+
+            UpdateStatus("KeePass database has successfully been synchronized and uploaded");
+        }
+
+        /// <summary>
+        /// Displays a status message on the bottom bar
+        /// </summary>
+        /// <param name="message">Message to show</param>
+        private static void UpdateStatus(string message)
+        {
+            Host.MainWindow.SetStatusEx(message);
         }
     }
 }
