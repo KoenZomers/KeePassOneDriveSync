@@ -4,11 +4,11 @@ using KoenZomers.KeePass.OneDriveSync;
 
 namespace KoenZomersKeePassOneDriveSync
 {
-    public partial class OneDriveRemoteLocation : Form
+    public partial class OneDriveRemoteLocationDialog : Form
     {
-        private Configuration _databaseConfiguration;
+        private readonly Configuration _databaseConfiguration;
 
-        public OneDriveRemoteLocation(Configuration databasecConfiguration)
+        public OneDriveRemoteLocationDialog(Configuration databasecConfiguration)
         {
             InitializeComponent();
 
@@ -29,10 +29,6 @@ namespace KoenZomersKeePassOneDriveSync
             }
             else
             {
-                _databaseConfiguration.RemoteDatabasePath = OneDriveRemotePathTextBox.Text;                
-                
-                Configuration.Save();
-
                 DialogResult = DialogResult.OK;
                 Close();
             }

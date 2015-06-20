@@ -1,6 +1,6 @@
 ﻿namespace KoenZomersKeePassOneDriveSync
 {
-    partial class OneDriveRemoteLocation
+    partial class OneDriveRemoteLocationDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -38,9 +38,10 @@
             // 
             this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(12, 9);
+            this.ExplanationLabel.Location = new System.Drawing.Point(9, 7);
+            this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(489, 41);
+            this.ExplanationLabel.Size = new System.Drawing.Size(404, 33);
             this.ExplanationLabel.TabIndex = 0;
             this.ExplanationLabel.Text = "Type the location on OneDrive where you want to store the KeePass database";
             // 
@@ -49,16 +50,19 @@
             this.OneDriveRemotePathTextBox.AcceptsTab = true;
             this.OneDriveRemotePathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.OneDriveRemotePathTextBox.Location = new System.Drawing.Point(15, 53);
+            this.OneDriveRemotePathTextBox.Location = new System.Drawing.Point(11, 43);
+            this.OneDriveRemotePathTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.OneDriveRemotePathTextBox.Name = "OneDriveRemotePathTextBox";
-            this.OneDriveRemotePathTextBox.Size = new System.Drawing.Size(436, 22);
+            this.OneDriveRemotePathTextBox.Size = new System.Drawing.Size(402, 20);
             this.OneDriveRemotePathTextBox.TabIndex = 1;
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(303, 90);
+            this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKButton.Location = new System.Drawing.Point(264, 75);
+            this.OKButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(96, 40);
+            this.OKButton.Size = new System.Drawing.Size(72, 32);
             this.OKButton.TabIndex = 2;
             this.OKButton.Text = "&OK";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -66,26 +70,30 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(405, 90);
+            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CancelButton.Location = new System.Drawing.Point(341, 75);
+            this.CancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(96, 40);
+            this.CancelButton.Size = new System.Drawing.Size(72, 32);
             this.CancelButton.TabIndex = 3;
             this.CancelButton.Text = "&Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // OneDriveRemoteLocation
+            // OneDriveRemoteLocationDialog
             // 
             this.AcceptButton = this.OKButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(513, 142);
+            this.ClientSize = new System.Drawing.Size(429, 116);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.OneDriveRemotePathTextBox);
             this.Controls.Add(this.ExplanationLabel);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MinimizeBox = false;
-            this.Name = "OneDriveRemoteLocation";
+            this.MinimumSize = new System.Drawing.Size(255, 151);
+            this.Name = "OneDriveRemoteLocationDialog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

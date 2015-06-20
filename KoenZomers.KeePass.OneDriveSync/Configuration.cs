@@ -28,6 +28,11 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         public static IDictionary<string, Configuration> PasswordDatabases = new Dictionary<string, Configuration>();
 
+        /// <summary>
+        /// Boolean indicating if the syncing of this database is allowed
+        /// </summary>
+        public bool SyncingEnabled = true;
+
         #endregion
 
         #region Serializable Properties
@@ -37,6 +42,12 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         [DataMember]
         public string RefreshToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the OneDrive the KeePass database is synchronized with
+        /// </summary>
+        [DataMember]
+        public string OneDriveName { get; set; }
 
         /// <summary>
         /// Gets or sets database file path on OneDrive relative to the user 
@@ -49,6 +60,24 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         [DataMember]
         public bool DoNotSync { get; set; }
+
+        /// <summary>
+        /// The MD5 hash of the local KeePass database
+        /// </summary>
+        [DataMember]
+        public string LocalFileHash { get; set; }
+
+        /// <summary>
+        /// Date and time at which the database last synced with OneDrive
+        /// </summary>
+        [DataMember]
+        public DateTime? LastSyncedAt { get; set; }
+
+        /// <summary>
+        /// Date and time at which the database has last been compared with its equivallent on OneDrive
+        /// </summary>
+        [DataMember]
+        public DateTime? LastCheckedAt { get; set; }
 
         #endregion
 
