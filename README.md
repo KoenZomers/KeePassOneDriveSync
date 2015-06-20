@@ -23,6 +23,7 @@ In this configuration window you can choose to delete configuration of KeePass d
 ## Todo
 
 On my todo list are still:
+
 1. Add a OneDrive File browser for easier selection of a location on OneDrive 
 2. Allow a KeePass database to be opened directly from OneDrive without the need to download it yourself first
 
