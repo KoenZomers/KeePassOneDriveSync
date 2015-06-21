@@ -98,6 +98,14 @@ namespace KoenZomersKeePassOneDriveSync
                 var newUploadResult = await oneDriveApi.UploadFileAs(localKeePassDatabasePath, fileName, oneDriveFolder);
 
                 updateStatus(newUploadResult == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to OneDrive");
+
+                databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+                if (newUploadResult != null)
+                {
+                    databaseConfig.LastCheckedAt = DateTime.Now;
+                    databaseConfig.LastSyncedAt = DateTime.Now;                                       
+                }
+                Configuration.Save();
                 return;
             }
 
