@@ -16,6 +16,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		KeeOneDriveSync.plgx = KeeOneDriveSync.plgx
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{1985E673-364B-4E4F-9DF4-7F110239AEB0}"
+	ProjectSection(SolutionItems) = preProject
+		Screenshots\AuthenticateToOneDrive.png = Screenshots\AuthenticateToOneDrive.png
+		Screenshots\ConfigurationDetails.png = Screenshots\ConfigurationDetails.png
+		Screenshots\ConfigurationsContextMenu.png = Screenshots\ConfigurationsContextMenu.png
+		Screenshots\ConfigurationsOverview.png = Screenshots\ConfigurationsOverview.png
+		Screenshots\KeePassOneDriveSyncOptions.png = Screenshots\KeePassOneDriveSyncOptions.png
+		Screenshots\OneDriveConsentToPriviledges.png = Screenshots\OneDriveConsentToPriviledges.png
+		Screenshots\OneDriveDatabaseUploaded.png = Screenshots\OneDriveDatabaseUploaded.png
+		Screenshots\OneDriveSaveLocation.png = Screenshots\OneDriveSaveLocation.png
+		Screenshots\OneDriveTwoFactorAuthentication.png = Screenshots\OneDriveTwoFactorAuthentication.png
+		Screenshots\StartSyncing.png = Screenshots\StartSyncing.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
