@@ -63,7 +63,7 @@ namespace KoenZomers.KeePass.OneDriveSync
         public bool DoNotSync { get; set; }
 
         /// <summary>
-        /// The MD5 hash of the local KeePass database
+        /// The SHA1 hash of the local KeePass database
         /// </summary>
         [DataMember]
         public string LocalFileHash { get; set; }
