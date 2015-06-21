@@ -4,7 +4,7 @@ I've created a free plugin for KeePass that allows syncing of multiple password 
 
 ## Installation instructions
 
-[Click here to view the installation instructions](Installation%20Instructions.md)
+[Click here to view the installation instructions](Installation Instructions.md)
 
 ## Configuration Options
 
