@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Windows.Forms;
 using KoenZomersKeePassOneDriveSync;
 using Newtonsoft.Json;
 
@@ -110,8 +111,19 @@ namespace KoenZomers.KeePass.OneDriveSync
                 return;
             }
 
-            // Convert the retrieved JSON to a typed entity
-            PasswordDatabases = JsonConvert.DeserializeObject<Dictionary<string, Configuration>>(value);
+            try
+            {
+                // Convert the retrieved JSON to a typed entity
+                PasswordDatabases = JsonConvert.DeserializeObject<Dictionary<string, Configuration>>(value);
+            }
+            catch (JsonSerializationException)
+            {                
+                MessageBox.Show("Unable to parse the plugin configuration for the KeePass OneDriveSync plugin. If this happens again, please let me know. Sorry for the inconvinience. Koen Zomers <mail@koenzomers.nl>", "KeePass OneDriveSync Plugin", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
+                // Reset the configuration so at least it works again next time, all be it that all configuration will be lost
+                PasswordDatabases = new Dictionary<string, Configuration>();
+                Save();
+            }
         }
 
         /// <summary>
