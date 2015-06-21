@@ -98,6 +98,8 @@ namespace KoenZomersKeePassOneDriveSync
                 Configuration.PasswordDatabases.Remove(((KeyValuePair<string, Configuration>)selectedItem.Tag).Key);
             }
 
+            Configuration.Save();
+
             LoadConfigurations();
         }
 

@@ -55,6 +55,7 @@ namespace KoenZomersKeePassOneDriveSync
             if (answer != DialogResult.Yes) return;
 
             Configuration.PasswordDatabases.Remove(_configuration.Key);
+            Configuration.Save();
 
             Close();
         }
