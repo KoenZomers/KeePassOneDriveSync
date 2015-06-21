@@ -103,9 +103,6 @@
     <EmbeddedResource Include="OneDriveAuthenticateForm.resx">
       <DependentUpon>OneDriveAuthenticateForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OneDriveConfigDetailsForm.resx">
-      <DependentUpon>OneDriveConfigDetailsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="OneDriveConfigForm.resx">
       <DependentUpon>OneDriveConfigForm.cs</DependentUpon>
     </EmbeddedResource>
