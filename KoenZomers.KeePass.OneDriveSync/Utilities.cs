@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -58,7 +59,15 @@ namespace KoenZomersKeePassOneDriveSync
                 return oneDriveApi;
             }
 
-            return await OneDriveApi.GetOneDriveApiFromRefreshToken(oneDriveClientId, oneDriveClientSecret, databaseConfig.RefreshToken);
+            try
+            {
+                return await OneDriveApi.GetOneDriveApiFromRefreshToken(oneDriveClientId, oneDriveClientSecret, databaseConfig.RefreshToken);
+            }
+            catch (WebException)
+            {
+                // Occurs if no connection can be made with the OneDrive service. It will be handled properly in the calling code.
+                return null;
+            }
         }
     }
 }
