@@ -6,7 +6,7 @@
 2. Copy the file into the KeePass 2 installation folder. Typically this is C:\Program Files (x86)\KeePass Password Safe 2
 3. Start KeePass, it should parse the plugin. You can verify if the plugin was loaded successfully by going to Tools -> Plugins and verifying that an enty named "KoenZomers.KeePass.OneDriveSync" is present 
 ![](./Screenshots/KeePasstoolsPlugins.png) ![](./Screenshots/KeePassVerifyPluginPresent.png)
-4. Create a new KeePass database or open an already existing locally stored KeePass database. It's currently not yet supported to open a KeePass database directly from OneDrive, so manually download it first as a one time action.
+4. Create a new KeePass database or open an already existing locally stored KeePass database. It's currently not yet supported to open a KeePass database directly from OneDrive, so manually download it first as a one time action. Do not store it on your PC where you are also using the native OneDrive sync tool to sync your files as this will mess up things. KeePass OneDriveSync will take care of synchronizing your database instead.
 5. When you open an existing KeePass database, it will ask you if you want to connect it to OneDrive. Make sure Yes is selected and click OK. If you choose to create a new KeePass database, as soon as you save it for the first time, it will ask you if you want to connect it to OneDrive. Select Yes and click OK. ![](./Screenshots/StartSyncing.png)
 6. Log in to the OneDrive where you want to sync your KeePass database to. ![](./Screenshots/AuthenticateToOneDrive.png). Multi Factor Authentication on OneDrive is also supported.
 ![](./Screenshots/OneDriveTwoFactorAuthentication.png)
