@@ -34,10 +34,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 		Screenshots\StartSyncing.png = Screenshots\StartSyncing.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Readme", "Readme", "{C681B3E0-217B-497C-A067-12FE1CC6DE69}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{C681B3E0-217B-497C-A067-12FE1CC6DE69}"
 	ProjectSection(SolutionItems) = preProject
+		Configuration.md = Configuration.md
 		Installaton Instructions.md = Installaton Instructions.md
 		README.md = README.md
+		UpdateCheck.md = UpdateCheck.md
 	EndProjectSection
 EndProject
 Global
