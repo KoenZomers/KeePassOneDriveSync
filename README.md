@@ -7,6 +7,11 @@ I've created a free plugin for KeePass that allows syncing of multiple password 
 - [Configuration options](./Configuration.md)
 - [Checking for updates](./UpdateCheck.md)
 
+## System Requirements
+
+- The plugin is written for KeePass v2.29 but should work with any KeePass version in the 2.x range
+- It requires to have the Microsoft .NET v4.5 framework installed. This means this plugin will NOT work on Windows XP as the Microsoft .NET Framework v4.5 is not available on that OS. On later operating systems, you may have to install or enable it manually.
+
 ## Todo
 
 On my todo list are still:
@@ -19,6 +24,8 @@ On my todo list are still:
 Special thanks to Oleksandr Senyuk for making [KeeSkyDrive](http://sourceforge.net/projects/keeskydrive/) as it has inspired me to create this plugin.
 
 ## Feedback
+
+I've been receiving several e-mails from people that are having trouble using this plugin. Please do contact me and share the operating system you're using so I can try to resolve the iesue.
 
 Comments\suggestions\bug reports are welcome!
 
