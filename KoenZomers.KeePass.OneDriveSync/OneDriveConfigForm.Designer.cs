@@ -65,7 +65,7 @@
             this.HeaderLabel.Name = "HeaderLabel";
             this.HeaderLabel.Size = new System.Drawing.Size(428, 23);
             this.HeaderLabel.TabIndex = 1;
-            this.HeaderLabel.Text = "KeePass OneDrivesync";
+            this.HeaderLabel.Text = "KeePass OneDriveSync";
             this.HeaderLabel.UseMnemonic = false;
             // 
             // ConfigurationListView
