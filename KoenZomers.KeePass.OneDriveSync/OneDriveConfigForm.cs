@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KoenZomers.KeePass.OneDriveSync;
@@ -50,6 +53,7 @@ namespace KoenZomersKeePassOneDriveSync
                     Text = configuration.Key,
                     Tag = configuration
                 };
+                configurationItem.BackColor = System.IO.File.Exists(configuration.Key) ? ConfigurationListView.BackColor : Color.Red;
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "OneDrive", Text = configuration.Value.DoNotSync ? "Not synced" : configuration.Value.OneDriveName });
                 ConfigurationListView.Items.Add(configurationItem);
             }
@@ -90,15 +94,13 @@ namespace KoenZomersKeePassOneDriveSync
         {
             if (ConfigurationListView.SelectedItems.Count == 0) return;
 
-            var answer = MessageBox.Show("Are you sure that you wish to delete the OneDrive configuration for the selected KeePass databases?", "Confirm removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            var answer = MessageBox.Show("Are you sure that you wish to delete the OneDrive configuration for the selected KeePass databases? This will NOT delete the actual KeePass database file, just its configuration for the KeeOneDriveSync plugin.", "Confirm removal", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
             if (answer != DialogResult.Yes) return;
 
             foreach (ListViewItem selectedItem in ConfigurationListView.SelectedItems)
             {
-                Configuration.PasswordDatabases.Remove(((KeyValuePair<string, Configuration>)selectedItem.Tag).Key);
+                Configuration.DeleteConfig(((KeyValuePair<string, Configuration>)selectedItem.Tag).Key);
             }
-
-            Configuration.Save();
 
             LoadConfigurations();
         }
@@ -167,6 +169,18 @@ namespace KoenZomersKeePassOneDriveSync
                 case Keys.F5:
                     LoadConfigurations();
                     break;
+            }
+        }
+
+        private void ConfigurationListViewContextItemOpenFileLocation_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem selectedItem in ConfigurationListView.SelectedItems)
+            {
+                // Get the full local path of the selected KeePass database configuration
+                var databaseFileLocation = ((KeyValuePair<string, Configuration>)selectedItem.Tag).Key;
+
+                // Open File Explorer and make it directly jump to the KeePass database if it exists, if not, just open the explorer to the folder
+                Process.Start("explorer.exe", File.Exists(databaseFileLocation) ? string.Concat("/select, ", databaseFileLocation) : Directory.GetParent(databaseFileLocation).FullName);
             }
         }
     }

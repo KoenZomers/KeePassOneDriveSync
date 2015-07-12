@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
+using KoenZomers.KeePass.OneDriveSync.Enums;
 using KoenZomersKeePassOneDriveSync;
 using Newtonsoft.Json;
 
@@ -11,7 +13,7 @@ namespace KoenZomers.KeePass.OneDriveSync
     /// Plugin configuration class. Contains functions to serialize/deserialize to/from JSON.
     /// </summary>
     [DataContract]
-    public class Configuration
+    public class Configuration : ICloneable
     {
         #region Constants
 
@@ -34,6 +36,11 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         public bool SyncingEnabled = true;
 
+        /// <summary>
+        /// The KeePass database to which these settings belong
+        /// </summary>
+        public KeePassLib.PwDatabase KeePassDatabase { get; set; }
+
         #endregion
 
         #region Serializable Properties
@@ -43,6 +50,12 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         [DataMember]
         public string RefreshToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the location where the refresh token will be stored
+        /// </summary>
+        [DataMember]
+        public Enums.OneDriveRefreshTokenStorage? RefreshTokenStorage { get; set; } 
 
         /// <summary>
         /// Gets or sets the name of the OneDrive the KeePass database is synchronized with
@@ -124,6 +137,13 @@ namespace KoenZomers.KeePass.OneDriveSync
                 PasswordDatabases = new Dictionary<string, Configuration>();
                 Save();
             }
+
+            // Get all database configurations which have their OneDrive Refresh Token stored in the Windows Credential Manager and retrieve them
+            var windowsCredentialManagerDatabaseConfigs = PasswordDatabases.Where(pwdDb => pwdDb.Value.RefreshTokenStorage == OneDriveRefreshTokenStorage.WindowsCredentialManager);
+            foreach (var windowsCredentialManagerDatabaseConfig in windowsCredentialManagerDatabaseConfigs)
+            {
+                windowsCredentialManagerDatabaseConfig.Value.RefreshToken = Utilities.GetRefreshTokenFromWindowsCredentialManager(windowsCredentialManagerDatabaseConfig.Key);
+            }
         }
 
         /// <summary>
@@ -131,15 +151,89 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         public static void Save()
         {
-            // Serialize the configuration to JSON
-            var json = JsonConvert.SerializeObject(PasswordDatabases);
+            // Create a new dictionary with the information to store in KeePass.config.xml
+            var passwordDatabasesForStoring = new Dictionary<string, Configuration>();
 
-            // Store the configuration in KeePass
+            // Loop through the entries to store
+            foreach (var passwordDatabase in PasswordDatabases)
+            {
+                switch (passwordDatabase.Value.RefreshTokenStorage)
+                {
+                    case OneDriveRefreshTokenStorage.Disk:
+                        // Refresh token will be stored on disk, we can store the complete configuration instance on disk in this case
+                        passwordDatabasesForStoring.Add(passwordDatabase.Key, passwordDatabase.Value);
+                        break;
+
+                    case OneDriveRefreshTokenStorage.KeePassDatabase:
+                    case OneDriveRefreshTokenStorage.WindowsCredentialManager:
+                        // Refresh token will not be stored on disk, we create a copy of the configuration and remove the refresh token from it so it will not be stored on disk
+                        var tempConfiguration = (Configuration) passwordDatabase.Value.Clone();
+                        tempConfiguration.RefreshToken = null;
+                        passwordDatabasesForStoring.Add(passwordDatabase.Key, tempConfiguration);
+
+                        if (passwordDatabase.Value.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase && passwordDatabase.Value.KeePassDatabase != null && !string.IsNullOrEmpty(passwordDatabase.Value.RefreshToken))
+                        {
+                            Utilities.SaveRefreshTokenInKeePassDatabase(passwordDatabase.Value.KeePassDatabase, passwordDatabase.Value.RefreshToken);
+                        }
+                        if (passwordDatabase.Value.RefreshTokenStorage == OneDriveRefreshTokenStorage.WindowsCredentialManager)
+                        {
+                            Utilities.SaveRefreshTokenInWindowsCredentialManager(passwordDatabase.Key, passwordDatabase.Value.RefreshToken);
+                        }
+                        break;
+                }
+            }
+
+            // Serialize the configuration to JSON
+            var json = JsonConvert.SerializeObject(passwordDatabasesForStoring);
+
+            // Store the configuration in KeePass.config.xml
             KoenZomersKeePassOneDriveSyncExt.Host.CustomConfig.SetString(ConfigurationKey, json);
         }
 
-        #endregion
+        /// <summary>
+        /// Returns a copy of the current instance
+        /// </summary>
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
 
+        /// <summary>
+        /// Deletes the complete configuration of the KeePass database on the provided local path
+        /// </summary>
+        /// <param name="localPasswordDatabasePath">Full local path to a KeePass database of which to delete the configuration</param>
+        public static void DeleteConfig(string localPasswordDatabasePath)
+        {
+            // Verify if we have configuration available of a KeePass database stored on the provided full local path
+            if (!PasswordDatabases.ContainsKey(localPasswordDatabasePath)) return;
+            
+            // Retrieve the configuration we have available about the KeePass database
+            var config = PasswordDatabases[localPasswordDatabasePath];
+            
+            // Take cleanup actions based on where the OneDrive Refresh Token is stored
+            switch (config.RefreshTokenStorage)
+            {
+                case OneDriveRefreshTokenStorage.Disk:
+                    // No action required as it will be removed as part of removing the complete configuration
+                    break;
+
+                case OneDriveRefreshTokenStorage.KeePassDatabase:
+                    // There's no way to remove it from the KeePass database without having the database open, so we'll have to leave it there
+                    break;
+
+                case OneDriveRefreshTokenStorage.WindowsCredentialManager:
+                    Utilities.DeleteRefreshTokenFromWindowsCredentialManager(localPasswordDatabasePath);
+                    break;
+            }
+
+            // Remove the configuration we have available
+            PasswordDatabases.Remove(localPasswordDatabasePath);
+
+            // Initiate a save to write the results
+            Save();
+        }
+
+        #endregion
     }
 }
 

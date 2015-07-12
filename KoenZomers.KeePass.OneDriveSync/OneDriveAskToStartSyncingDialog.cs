@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Windows.Forms;
 using KoenZomers.KeePass.OneDriveSync;
 
@@ -14,7 +14,7 @@ namespace KoenZomersKeePassOneDriveSync
         public OneDriveAskToStartSyncingDialog(Configuration configuration)
         {
             InitializeComponent();
-            
+
             _configuration = configuration;
         }
 
@@ -26,7 +26,7 @@ namespace KoenZomersKeePassOneDriveSync
             }
             if (YesRadio.Checked)
             {
-                DialogResult = DialogResult.OK;    
+                DialogResult = DialogResult.OK;
             }
             if (NoNeverAskAgainRadio.Checked)
             {

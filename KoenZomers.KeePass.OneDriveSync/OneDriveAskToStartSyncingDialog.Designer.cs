@@ -1,33 +1,33 @@
-﻿namespace KoenZomersKeePassOneDriveSync
-{
-    partial class OneDriveAskToStartSyncingDialog
-    {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+﻿﻿namespace KoenZomersKeePassOneDriveSync
+ {
+     partial class OneDriveAskToStartSyncingDialog
+     {
+         /// <summary>
+         /// Required designer variable.
+         /// </summary>
+         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+         /// <summary>
+         /// Clean up any resources being used.
+         /// </summary>
+         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+         protected override void Dispose(bool disposing)
+         {
+             if (disposing && (components != null))
+             {
+                 components.Dispose();
+             }
+             base.Dispose(disposing);
+         }
 
-        #region Windows Form Designer generated code
+         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+         /// <summary>
+         /// Required method for Designer support - do not modify
+         /// the contents of this method with the code editor.
+         /// </summary>
+         private void InitializeComponent()
+         {
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.YesRadio = new System.Windows.Forms.RadioButton();
             this.NotNowRadio = new System.Windows.Forms.RadioButton();
@@ -46,7 +46,7 @@
             this.ExplanationLabel.Size = new System.Drawing.Size(375, 49);
             this.ExplanationLabel.TabIndex = 0;
             this.ExplanationLabel.Text = "This KeePass database is not being synced with OneDrive. Would you like to set up" +
-    " a synchronization connect now?";
+    " a synchronization connection now?";
             // 
             // YesRadio
             // 
@@ -131,15 +131,15 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-        }
+         }
 
-        #endregion
+         #endregion
 
-        private System.Windows.Forms.Label ExplanationLabel;
-        private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.Button CancelButton;
-        private System.Windows.Forms.RadioButton YesRadio;
-        private System.Windows.Forms.RadioButton NotNowRadio;
-        private System.Windows.Forms.RadioButton NoNeverAskAgainRadio;
-    }
-}
+         private System.Windows.Forms.Label ExplanationLabel;
+         private System.Windows.Forms.Button OKButton;
+         private System.Windows.Forms.Button CancelButton;
+         private System.Windows.Forms.RadioButton YesRadio;
+         private System.Windows.Forms.RadioButton NotNowRadio;
+         private System.Windows.Forms.RadioButton NoNeverAskAgainRadio;
+     }
+ }

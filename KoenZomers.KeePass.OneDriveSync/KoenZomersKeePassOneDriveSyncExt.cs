@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using KeePass.Forms;
 using KeePass.Plugins;
 using KoenZomers.KeePass.OneDriveSync;
+using KoenZomers.KeePass.OneDriveSync.Enums;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -57,6 +58,7 @@ namespace KoenZomersKeePassOneDriveSync
             // Bind to the events for loading and saving databases
             Host.MainWindow.FileOpened += OnKeePassDatabaseOpened;
             Host.MainWindow.FileSaved += MainWindowOnFileSaved;
+            Host.MainWindow.FileClosed += OnKeePassDatabaseClosed;
 
             // Add the menu option for configuration under Tools
             var menu = Host.MainWindow.ToolsMenu.DropDownItems;
@@ -74,7 +76,16 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         private static async void MainWindowOnFileSaved(object sender, FileSavedEventArgs fileSavedEventArgs)
         {
+            var config = Configuration.GetPasswordDatabaseConfiguration(fileSavedEventArgs.Database.IOConnectionInfo.Path);
+            config.KeePassDatabase = fileSavedEventArgs.Database;
+
             await KeePass.SyncDatabase(fileSavedEventArgs.Database.IOConnectionInfo.Path, KeePass.UpdateStatus);
+            
+            // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
+            if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
+            {
+                fileSavedEventArgs.Database.Save(null);
+            }
         }
 
         /// <summary>
@@ -91,7 +102,34 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         private async static void OnKeePassDatabaseOpened(object sender, FileOpenedEventArgs fileOpenedEventArgs)
         {
+            // Add the KeePass database instance to the already available configuration
+            var config = Configuration.GetPasswordDatabaseConfiguration(fileOpenedEventArgs.Database.IOConnectionInfo.Path);
+            config.KeePassDatabase = fileOpenedEventArgs.Database;
+
+            // Check if the database configuration of the opened KeePass database is set to retrieve the OneDrive Refresh Token from the KeePass database itself
+            if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
+            {
+                // Retrieve the OneDrive Refresh Token from the KeePass database that is being opened
+                config.RefreshToken = Utilities.GetRefreshTokenFromKeePassDatabase(fileOpenedEventArgs.Database);
+            }
+
             await KeePass.SyncDatabase(fileOpenedEventArgs.Database.IOConnectionInfo.Path, KeePass.UpdateStatus);
+
+            // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
+            if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
+            {
+                fileOpenedEventArgs.Database.Save(null);
+            }
+        }
+
+        /// <summary>
+        /// Triggered when a KeePass database has been closed
+        /// </summary>
+        private static void OnKeePassDatabaseClosed(object sender, FileClosedEventArgs fileClosedEventArgs)
+        {
+            // Remove the KeePass database instance from the already available configuration
+            var config = Configuration.GetPasswordDatabaseConfiguration(fileClosedEventArgs.IOConnectionInfo.Path);
+            config.KeePassDatabase = null;
         }
     }
 }

@@ -44,7 +44,7 @@
             this.HeaderLabel.Name = "HeaderLabel";
             this.HeaderLabel.Size = new System.Drawing.Size(356, 23);
             this.HeaderLabel.TabIndex = 2;
-            this.HeaderLabel.Text = "KeePass OneDrivesync";
+            this.HeaderLabel.Text = "KeePass OneDriveSync";
             this.HeaderLabel.UseMnemonic = false;
             // 
             // ExplanationLabel

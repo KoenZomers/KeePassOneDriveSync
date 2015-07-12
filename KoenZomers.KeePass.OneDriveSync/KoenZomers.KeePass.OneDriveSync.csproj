@@ -33,6 +33,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CredentialManagement, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\CredentialManagement.dll</HintPath>
+    </Reference>
     <Reference Include="KeePass">
       <HintPath>C:\Program Files (x86)\KeePass Password Safe 2\KeePass.exe</HintPath>
     </Reference>
@@ -52,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Enums\OneDriveRefreshTokenStorage.cs" />
     <Compile Include="KeePass.cs" />
     <Compile Include="KoenZomersKeePassOneDriveSyncExt.cs" />
     <Compile Include="OneDriveAboutForm.cs">
@@ -59,6 +64,12 @@
     </Compile>
     <Compile Include="OneDriveAboutForm.Designer.cs">
       <DependentUpon>OneDriveAboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OneDriveRefreshTokenStorageDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OneDriveRefreshTokenStorageDialog.Designer.cs">
+      <DependentUpon>OneDriveRefreshTokenStorageDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="OneDriveAskToStartSyncingDialog.cs">
       <SubType>Form</SubType>
@@ -97,11 +108,17 @@
     <EmbeddedResource Include="OneDriveAboutForm.resx">
       <DependentUpon>OneDriveAboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OneDriveRefreshTokenStorageDialog.resx">
+      <DependentUpon>OneDriveRefreshTokenStorageDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OneDriveAskToStartSyncingDialog.resx">
       <DependentUpon>OneDriveAskToStartSyncingDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OneDriveAuthenticateForm.resx">
       <DependentUpon>OneDriveAuthenticateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OneDriveConfigDetailsForm.resx">
+      <DependentUpon>OneDriveConfigDetailsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OneDriveConfigForm.resx">
       <DependentUpon>OneDriveConfigForm.cs</DependentUpon>
@@ -109,6 +126,9 @@
     <EmbeddedResource Include="OneDriveRemoteLocationDialog.resx">
       <DependentUpon>OneDriveRemoteLocationDialog.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

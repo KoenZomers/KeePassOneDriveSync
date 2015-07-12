@@ -38,6 +38,7 @@ namespace KoenZomersKeePassOneDriveSync
             LocalKeePassPathTextbox.Text = _configuration.Key;
             RemoteKeePassPathTextbox.Text = _configuration.Value.RemoteDatabasePath;
             OneDriveRefreshTokenTextbox.Text = _configuration.Value.RefreshToken;
+            RefreshTokenStorageTextBox.Text = _configuration.Value.RefreshTokenStorage.ToString();
             LastSyncedTextbox.Text = _configuration.Value.LastSyncedAt.HasValue ? _configuration.Value.LastSyncedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never synced yet";
             LastVerifiedTextbox.Text = _configuration.Value.LastCheckedAt.HasValue ? _configuration.Value.LastCheckedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never verified yet";
             LocalKeePassFileHashTextbox.Text = _configuration.Value.LocalFileHash;
@@ -51,11 +52,10 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            var answer = MessageBox.Show("Are you sure that you wish to delete the OneDrive configuration for this KeePass database?", "Confirm removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            var answer = MessageBox.Show("Are you sure that you wish to delete the OneDrive configuration for the selected KeePass databases? This will NOT delete the actual KeePass database file, just its configuration for the KeeOneDriveSync plugin.", "Confirm removal", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
             if (answer != DialogResult.Yes) return;
 
-            Configuration.PasswordDatabases.Remove(_configuration.Key);
-            Configuration.Save();
+            Configuration.DeleteConfig(_configuration.Key);
 
             Close();
         }

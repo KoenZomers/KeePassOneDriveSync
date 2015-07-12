@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.40418.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoenZomers.KeePass.OneDriveSync", "KoenZomers.KeePass.OneDriveSync\KoenZomers.KeePass.OneDriveSync.csproj", "{ED981431-32EA-4FC8-BF5B-D5A29B3AD52E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{078F6134-F1AF-4F2A-907F-C8AC4C976834}"
 	ProjectSection(SolutionItems) = preProject
+		KoenZomers.KeePass.OneDriveSync\CredentialManagement.dll = KoenZomers.KeePass.OneDriveSync\CredentialManagement.dll
 		KoenZomers.KeePass.OneDriveSync\KoenZomers.OneDrive.Api.dll = KoenZomers.KeePass.OneDriveSync\KoenZomers.OneDrive.Api.dll
 		KoenZomers.KeePass.OneDriveSync\Newtonsoft.Json.dll = KoenZomers.KeePass.OneDriveSync\Newtonsoft.Json.dll
 	EndProjectSection
@@ -23,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 		Screenshots\ConfigurationDetails.png = Screenshots\ConfigurationDetails.png
 		Screenshots\ConfigurationsContextMenu.png = Screenshots\ConfigurationsContextMenu.png
 		Screenshots\ConfigurationsOverview.png = Screenshots\ConfigurationsOverview.png
+		Screenshots\CredentialManagerControlPanel.png = Screenshots\CredentialManagerControlPanel.png
 		Screenshots\KeePassCheckForUpdates.png = Screenshots\KeePassCheckForUpdates.png
 		Screenshots\KeePassOneDriveSyncOptions.png = Screenshots\KeePassOneDriveSyncOptions.png
 		Screenshots\KeePassPluginUpToDate.png = Screenshots\KeePassPluginUpToDate.png
@@ -33,12 +35,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 		Screenshots\OneDriveSaveLocation.png = Screenshots\OneDriveSaveLocation.png
 		Screenshots\OneDriveTwoFactorAuthentication.png = Screenshots\OneDriveTwoFactorAuthentication.png
 		Screenshots\StartSyncing.png = Screenshots\StartSyncing.png
+		Screenshots\WhereToStoreOneDriveToken.png = Screenshots\WhereToStoreOneDriveToken.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{C681B3E0-217B-497C-A067-12FE1CC6DE69}"
 	ProjectSection(SolutionItems) = preProject
 		Configuration.md = Configuration.md
 		Installaton Instructions.md = Installaton Instructions.md
+		OneDriveRefreshToken.md = OneDriveRefreshToken.md
 		README.md = README.md
 		UpdateCheck.md = UpdateCheck.md
 		VersionHistory.md = VersionHistory.md
