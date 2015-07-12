@@ -39,8 +39,6 @@ Special thanks to Oleksandr Senyuk for making [KeeSkyDrive](http://sourceforge.n
 
 ## Feedback
 
-I've been receiving several e-mails from people that are having trouble using this plugin. Please do contact me and share the operating system you're using so I can try to resolve the iesue.
-
 Comments\suggestions\bug reports are welcome!
 
 Koen Zomers
