@@ -2,6 +2,10 @@
 
 ## Version History
 
+Version 1.3.1.0 - July 17, 2015
+
+- Updated the link in the OneDrive Token storage selection dialog to link to the help page regarding this topic
+
 Version 1.3.0.0 - July 13, 2015
 
 - Fixed a bug where uploading could fail if you stored the KeePass database in the root of your OneDrive
