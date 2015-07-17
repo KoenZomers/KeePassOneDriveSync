@@ -21,7 +21,7 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void HelpMeChooseLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/KoenZomers/KeePassOneDriveSync/blob/master/UpdateCheck.md");
+            System.Diagnostics.Process.Start("https://github.com/KoenZomers/KeePassOneDriveSync/blob/master/OneDriveRefreshToken.md");
         }
 
         private void FinishButton_Click(object sender, EventArgs e)
