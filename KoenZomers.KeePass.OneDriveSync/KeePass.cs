@@ -95,7 +95,7 @@ namespace KoenZomersKeePassOneDriveSync
                 
                 // Upload the database to OneDrive
                 var fileName = databaseConfig.RemoteDatabasePath.Contains("/") ? databaseConfig.RemoteDatabasePath.Remove(0, databaseConfig.RemoteDatabasePath.LastIndexOf("/", StringComparison.Ordinal) + 1) : databaseConfig.RemoteDatabasePath;
-                MessageBox.Show("Test: " + localKeePassDatabasePath);
+                
                 var newUploadResult = await oneDriveApi.UploadFileAs(localKeePassDatabasePath, fileName, oneDriveFolder);
 
                 updateStatus(newUploadResult == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to OneDrive");
