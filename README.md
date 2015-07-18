@@ -11,6 +11,7 @@ I've created a free plugin for KeePass that allows syncing of multiple password 
 
 - The plugin is written for KeePass v2.29 but should work with any KeePass version in the 2.x range
 - It requires to have the Microsoft .NET v4.5 framework installed. This means this plugin will NOT work on Windows XP as the Microsoft .NET Framework v4.5 is not available on that OS. On later operating systems, you may have to install or enable it manually.
+- It only supports KeePass databases which are opened via File -> Open -> Open File in KeePass. Databases which you open via File -> Open -> Open URL will not be able to use this plugin and will get a message stating that they're not supported.
 
 ## Latest Version
 
