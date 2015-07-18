@@ -50,7 +50,7 @@ namespace KoenZomersKeePassOneDriveSync
             // If we're on this page, but we didn't get an authorization token, it means that we just signed out, proceed with signing in again
             if (e.Url.ToString().StartsWith("https://login.live.com/oauth20_desktop.srf"))
             {
-                var authenticateUri = OneDriveApi.GetAuthenticationUri();
+                var authenticateUri = OneDriveApi.GetAuthenticationUri("wl.offline_access wl.skydrive_update");
                 WebBrowser.Navigate(authenticateUri);
             }
         }

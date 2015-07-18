@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KoenZomers.KeePass.OneDriveSync;
@@ -53,7 +54,10 @@ namespace KoenZomersKeePassOneDriveSync
                     Text = configuration.Key,
                     Tag = configuration
                 };
-                configurationItem.BackColor = System.IO.File.Exists(configuration.Key) ? ConfigurationListView.BackColor : Color.Red;
+                var doesDatabaseExistLocally = File.Exists(configuration.Key);
+                var isRemoteDatabase = System.Text.RegularExpressions.Regex.IsMatch(configuration.Key, @".+:[\\/]{2}.+", RegexOptions.IgnoreCase);
+                configurationItem.BackColor = doesDatabaseExistLocally ? ConfigurationListView.BackColor : isRemoteDatabase ? Color.Orange : Color.Red;
+                configurationItem.ToolTipText = doesDatabaseExistLocally ? "Database has been found" : isRemoteDatabase ? "Database is a remote database which is not supported" : "Database has not been found"; 
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "OneDrive", Text = configuration.Value.DoNotSync ? "Not synced" : configuration.Value.OneDriveName });
                 ConfigurationListView.Items.Add(configurationItem);
             }

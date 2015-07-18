@@ -79,6 +79,19 @@ namespace KoenZomersKeePassOneDriveSync
             var config = Configuration.GetPasswordDatabaseConfiguration(fileSavedEventArgs.Database.IOConnectionInfo.Path);
             config.KeePassDatabase = fileSavedEventArgs.Database;
 
+            // Check if we should sync this database
+            if (config.DoNotSync) return;
+
+            // Make sure it's not a remote database on i.e. an FTP or website
+            if (!fileSavedEventArgs.Database.IOConnectionInfo.IsLocalFile())
+            {
+                MessageBox.Show("KeePass OneDriveSync does not support synchronizing databases from remote locations and will therefore not be available for this database", "KeePass OneDriveSync", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                config.DoNotSync = true;
+                Configuration.Save();
+                return;
+            }
+
             await KeePass.SyncDatabase(fileSavedEventArgs.Database.IOConnectionInfo.Path, KeePass.UpdateStatus);
             
             // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
@@ -105,6 +118,9 @@ namespace KoenZomersKeePassOneDriveSync
             // Add the KeePass database instance to the already available configuration
             var config = Configuration.GetPasswordDatabaseConfiguration(fileOpenedEventArgs.Database.IOConnectionInfo.Path);
             config.KeePassDatabase = fileOpenedEventArgs.Database;
+
+            // Check if we should sync this database
+            if (config.DoNotSync || !fileOpenedEventArgs.Database.IOConnectionInfo.IsLocalFile()) return;
 
             // Check if the database configuration of the opened KeePass database is set to retrieve the OneDrive Refresh Token from the KeePass database itself
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
