@@ -48,11 +48,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		VersionHistory.md = VersionHistory.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Downloads", "Downloads", "{A4611A1D-0A5D-4827-89B8-9E24F9FC7CF6}"
-	ProjectSection(SolutionItems) = preProject
-		Downloads\KoenZomers.Omnik.TestConsole.zip = Downloads\KoenZomers.Omnik.TestConsole.zip
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
