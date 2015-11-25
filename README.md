@@ -16,10 +16,10 @@ I've created a free plugin for KeePass that allows syncing of multiple password 
 
 ## Latest Version
 
-Version 1.3.2.0 - July 18, 2015
+Version 1.3.3.0 - November 25, 2015
 
-- Added better error handling when remote databases on FTP or websites are used. These are still not supported, but now should not let the plug in crash anymore when used.
-- Limited the rights requested to your OneDrive to the minimum
+- Added support for using a HTTP/HTTPS proxy. You can switch this on under Tools -> Options -> Advanced -> Proxy.
+  NOTE: At some PCs KeePass doesn't allow this plugin to be loaded. I'm looking into this at the moment. Therefore the plgx download link above still points to 1.3.2.0.
 
 [Version History](./VersionHistory.md)
 

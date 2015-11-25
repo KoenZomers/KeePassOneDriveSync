@@ -7,6 +7,11 @@ Version 1.3.2.0 - July 18, 2015
 - Added better error handling when remote databases on FTP or websites are used. These are still not supported, but now should not let the plug in crash anymore when used.
 - Limited the rights requested to your OneDrive to the minimum
 
+Version 1.3.2.0 - July 18, 2015
+
+- Added better error handling when remote databases on FTP or websites are used. These are still not supported, but now should not let the plug in crash anymore when used.
+- Limited the rights requested to your OneDrive to the minimum
+
 Version 1.3.1.0 - July 17, 2015
 
 - Updated the link in the OneDrive Token storage selection dialog to link to the help page regarding this topic

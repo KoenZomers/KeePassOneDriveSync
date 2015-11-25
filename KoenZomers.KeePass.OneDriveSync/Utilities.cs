@@ -3,12 +3,10 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using CredentialManagement;
+using KeePassLib;
 using KoenZomers.KeePass.OneDriveSync;
-using KoenZomers.KeePass.OneDriveSync.Enums;
 using KoenZomers.OneDrive.Api;
-using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -54,7 +52,7 @@ namespace KoenZomersKeePassOneDriveSync
                 var oneDriveAuthenticateForm = new OneDriveAuthenticateForm(oneDriveClientId, oneDriveClientSecret);
                 var result = oneDriveAuthenticateForm.ShowDialog();
 
-                if (result != DialogResult.OK)
+                if (result != System.Windows.Forms.DialogResult.OK)
                 {
                     return null;
                 }
@@ -78,12 +76,48 @@ namespace KoenZomersKeePassOneDriveSync
 
             try
             {
-                return await OneDriveApi.GetOneDriveApiFromRefreshToken(oneDriveClientId, oneDriveClientSecret, databaseConfig.RefreshToken);
+                var oneDriveApi = new OneDriveApi(oneDriveClientId, oneDriveClientSecret);
+                ApplyProxySettings(oneDriveApi);
+                await oneDriveApi.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
+                return oneDriveApi;
             }
             catch (WebException)
             {
                 // Occurs if no connection can be made with the OneDrive service. It will be handled properly in the calling code.
                 return null;
+            }
+        }
+
+        #endregion
+
+        #region Proxy Support
+        
+        /// <summary>
+        /// Applies the correct web proxy settings to the provided OneDriveApi instance based on KeePass proxy configuration
+        /// </summary>
+        /// <param name="oneDriveApi">OneDriveApi instance to apply the proper proxy settings to</param>
+        public static void ApplyProxySettings(OneDriveApi oneDriveApi)
+        {
+            switch (KeePass.Program.Config.Integration.ProxyType)
+            {
+                case ProxyServerType.None:
+                    oneDriveApi.UseProxy = false;
+                    return;
+
+                case ProxyServerType.Manual:
+                    oneDriveApi.UseProxy = true;
+                    oneDriveApi.ProxyConfiguration = new WebProxy(string.Concat(KeePass.Program.Config.Integration.ProxyAddress, ":", KeePass.Program.Config.Integration.ProxyPort));
+                    oneDriveApi.ProxyConfiguration.UseDefaultCredentials = KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Auto || KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Default;
+
+                    if (KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Manual)
+                    {
+                        oneDriveApi.ProxyConfiguration.Credentials = new NetworkCredential(KeePass.Program.Config.Integration.ProxyUserName, KeePass.Program.Config.Integration.ProxyPassword);
+                    }
+                    break;
+
+                case ProxyServerType.System:
+                    oneDriveApi.UseProxy = true;
+                    break;
             }
         }
 
@@ -144,7 +178,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         /// <param name="keePassDatabase">KeePass database instance to store the Refresh Token in</param>
         /// <param name="refreshToken">The OneDrive Refresh Token to store securely in the KeePass database</param>
-        public static void SaveRefreshTokenInKeePassDatabase(KeePassLib.PwDatabase keePassDatabase, string refreshToken)
+        public static void SaveRefreshTokenInKeePassDatabase(PwDatabase keePassDatabase, string refreshToken)
         {
             keePassDatabase.CustomData.Set("KoenZomers.KeePass.OneDriveSync.RefreshToken", refreshToken);
         }
@@ -154,7 +188,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         /// <param name="keePassDatabase">KeePass database instance to get the Refresh Token from</param>
         /// <returns>OneDrive Refresh Token if available or NULL if no Refresh Token found for the provided database</returns>
-        public static string GetRefreshTokenFromKeePassDatabase(KeePassLib.PwDatabase keePassDatabase)
+        public static string GetRefreshTokenFromKeePassDatabase(PwDatabase keePassDatabase)
         {
             var refreshToken = keePassDatabase.CustomData.Get("KoenZomers.KeePass.OneDriveSync.RefreshToken");
             return refreshToken;

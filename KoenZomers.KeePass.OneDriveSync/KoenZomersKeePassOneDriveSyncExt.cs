@@ -39,10 +39,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// Returns the URL where KeePass can check for updates of this plugin
         /// </summary>
-        public override string UpdateUrl
-        {
-            get { return "http://services.zomers.eu/KeeOneDrive/VersionCheck.txt"; }
-        }
+        public override string UpdateUrl => "http://services.zomers.eu/KeeOneDrive/VersionCheck.txt";
 
         /// <summary>
         /// Called when the Plugin is being loaded which happens on startup of KeePass
@@ -53,7 +50,7 @@ namespace KoenZomersKeePassOneDriveSync
             Host = pluginHost;
 
             // Load the configuration
-            Configuration.Load();
+            Configuration.Load();                       
 
             // Bind to the events for loading and saving databases
             Host.MainWindow.FileOpened += OnKeePassDatabaseOpened;
@@ -92,7 +89,7 @@ namespace KoenZomersKeePassOneDriveSync
                 return;
             }
 
-            await KeePass.SyncDatabase(fileSavedEventArgs.Database.IOConnectionInfo.Path, KeePass.UpdateStatus);
+            await KeePassDatabase.SyncDatabase(fileSavedEventArgs.Database.IOConnectionInfo.Path, KeePassDatabase.UpdateStatus);
             
             // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
@@ -129,7 +126,7 @@ namespace KoenZomersKeePassOneDriveSync
                 config.RefreshToken = Utilities.GetRefreshTokenFromKeePassDatabase(fileOpenedEventArgs.Database);
             }
 
-            await KeePass.SyncDatabase(fileOpenedEventArgs.Database.IOConnectionInfo.Path, KeePass.UpdateStatus);
+            await KeePassDatabase.SyncDatabase(fileOpenedEventArgs.Database.IOConnectionInfo.Path, KeePassDatabase.UpdateStatus);
 
             // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)

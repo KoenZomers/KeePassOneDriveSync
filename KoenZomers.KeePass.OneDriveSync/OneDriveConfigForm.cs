@@ -55,7 +55,7 @@ namespace KoenZomersKeePassOneDriveSync
                     Tag = configuration
                 };
                 var doesDatabaseExistLocally = File.Exists(configuration.Key);
-                var isRemoteDatabase = System.Text.RegularExpressions.Regex.IsMatch(configuration.Key, @".+:[\\/]{2}.+", RegexOptions.IgnoreCase);
+                var isRemoteDatabase = Regex.IsMatch(configuration.Key, @".+:[\\/]{2}.+", RegexOptions.IgnoreCase);
                 configurationItem.BackColor = doesDatabaseExistLocally ? ConfigurationListView.BackColor : isRemoteDatabase ? Color.Orange : Color.Red;
                 configurationItem.ToolTipText = doesDatabaseExistLocally ? "Database has been found" : isRemoteDatabase ? "Database is a remote database which is not supported" : "Database has not been found"; 
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "OneDrive", Text = configuration.Value.DoNotSync ? "Not synced" : configuration.Value.OneDriveName });
@@ -133,7 +133,7 @@ namespace KoenZomersKeePassOneDriveSync
             }
             
             UpdateStatus("Synchronizing");
-            await KeePass.SyncDatabase(ConfigurationListView.SelectedItems[0].Text, UpdateStatus);
+            await KeePassDatabase.SyncDatabase(ConfigurationListView.SelectedItems[0].Text, UpdateStatus);
         }
 
         private async void ConfigurationListViewContextItemSyncNow_Click(object sender, EventArgs e)

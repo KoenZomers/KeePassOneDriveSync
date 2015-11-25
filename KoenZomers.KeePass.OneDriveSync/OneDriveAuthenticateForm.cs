@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.OneDrive.Api;
 
 namespace KoenZomersKeePassOneDriveSync
@@ -15,6 +16,7 @@ namespace KoenZomersKeePassOneDriveSync
             InitializeComponent();
 
             OneDriveApi = new OneDriveApi(oneDriveClientId, oneDriveClientSecret);
+            Utilities.ApplyProxySettings(OneDriveApi);
 
             SignOut();
         }

@@ -11,7 +11,7 @@ namespace KoenZomersKeePassOneDriveSync
     /// <summary>
     /// Methods that regard the KeePass database
     /// </summary>
-    public static class KeePass
+    public static class KeePassDatabase
     {
         /// <summary>
         /// Checks if a newer database exists on OneDrive compared to the locally opened version and syncs them if so

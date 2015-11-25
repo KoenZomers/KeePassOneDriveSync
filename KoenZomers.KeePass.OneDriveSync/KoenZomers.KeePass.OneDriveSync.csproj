@@ -57,7 +57,7 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums\OneDriveRefreshTokenStorage.cs" />
-    <Compile Include="KeePass.cs" />
+    <Compile Include="KeePassDatabase.cs" />
     <Compile Include="KoenZomersKeePassOneDriveSyncExt.cs" />
     <Compile Include="OneDriveAboutForm.cs">
       <SubType>Form</SubType>
@@ -126,9 +126,6 @@
     <EmbeddedResource Include="OneDriveRemoteLocationDialog.resx">
       <DependentUpon>OneDriveRemoteLocationDialog.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
