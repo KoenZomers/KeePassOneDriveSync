@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		create-plgx.cmd = create-plgx.cmd
 		KeeOneDriveSync.plgx = KeeOneDriveSync.plgx
+		KeeOneDriveSync.zip = KeeOneDriveSync.zip
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{1985E673-364B-4E4F-9DF4-7F110239AEB0}"
