@@ -2,7 +2,8 @@
 
 I've created a free plugin for KeePass that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your Windows devices.
 
-- [Direct download](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.plgx)
+- [Direct download PLGX](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.plgx)
+- [Direct download DLLs](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.zip)
 - [Installation instructions](./Installaton%20Instructions.md)
 - [Configuration options](./Configuration.md)
 - [Checking for updates](./UpdateCheck.md)
@@ -18,8 +19,7 @@ I've created a free plugin for KeePass that allows syncing of multiple password 
 
 Version 1.3.3.0 - November 25, 2015
 
-- Added support for using a HTTP/HTTPS proxy. You can switch this on under Tools -> Options -> Advanced -> Proxy.
-  NOTE: At some PCs KeePass doesn't allow this plugin to be loaded. I'm looking into this at the moment. Therefore the plgx download link above still points to 1.3.2.0.
+- Added support for using a HTTP/HTTPS proxy. You can switch this on under Tools -> Options -> Advanced -> Proxy.  
 
 [Version History](./VersionHistory.md)
 

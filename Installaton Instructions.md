@@ -2,8 +2,8 @@
 
 ## Installation instructions
 
-1. [Download the plugin file from GitHub](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.plgx)
-2. Copy the file into the KeePass 2 installation folder. Typically this is C:\Program Files (x86)\KeePass Password Safe 2
+1. [Download the plugin PLGX file from GitHub](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.plgx) OR if having problems using the PLGX file, alternatively [download the DLLs in the ZIP file](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.zip). You need either, not both.
+2. Copy the PLGX file into the KeePass 2 installation folder or when using the ZIP file, extract all DLLs from it and copy all of them into your KeePass 2 installation folder. Typically this is C:\Program Files (x86)\KeePass Password Safe 2
 3. Start KeePass, it should parse the plugin. You can verify if the plugin was loaded successfully by going to Tools -> Plugins and verifying that an enty named "KoenZomers.KeePass.OneDriveSync" is present 
 ![](./Screenshots/KeePasstoolsPlugins.png) ![](./Screenshots/KeePassVerifyPluginPresent.png)
 4. Create a new KeePass database or open an already existing locally stored KeePass database. It's currently not yet supported to open a KeePass database directly from OneDrive, so manually download it first as a one time action. Do not store it on your PC where you are also using the native OneDrive sync tool to sync your files as this will mess up things. KeePass OneDriveSync will take care of synchronizing your database instead. Due to having a local copy of the KeePass database you are also able to access your database when you (temporarily) do not have an internet connection.
