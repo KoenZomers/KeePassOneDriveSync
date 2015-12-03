@@ -21,6 +21,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.3.3.1 - December 3, 2015
+
+- Finally was able to fix the issue with the PLGX. Thanks to Dominik Reichl!
+
 Version 1.3.3.0 - November 25, 2015
 
 - Added support for using a HTTP/HTTPS proxy. You can switch this on under Tools -> Options -> Advanced -> Proxy.  
