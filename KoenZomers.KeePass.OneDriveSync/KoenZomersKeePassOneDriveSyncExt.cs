@@ -39,7 +39,10 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// Returns the URL where KeePass can check for updates of this plugin
         /// </summary>
-        public override string UpdateUrl => "http://services.zomers.eu/KeeOneDrive/VersionCheck.txt";
+        public override string UpdateUrl
+        {
+            get {  return "http://services.zomers.eu/KeeOneDrive/VersionCheck.txt"; }
+        }
 
         /// <summary>
         /// Called when the Plugin is being loaded which happens on startup of KeePass
