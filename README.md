@@ -5,8 +5,9 @@ I've created a free plugin for KeePass that allows syncing of multiple password 
 ## Download ##
 You need to download either the DLLs *OR* the PLGX and place it inside your KeePass folder, so not both:
 - [Direct download PLGX](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.plgx)
-- [Direct download DLLs](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.zip)
+- OR [Direct download DLLs](https://github.com/KoenZomers/KeePassOneDriveSync/raw/master/KeeOneDriveSync.zip)
 
+## Documentation ##
 - [Installation instructions](./Installaton%20Instructions.md)
 - [Configuration options](./Configuration.md)
 - [Checking for updates](./UpdateCheck.md)
