@@ -81,6 +81,7 @@ namespace KoenZomersKeePassOneDriveSync
             var configurationSelected = ConfigurationListView.SelectedItems.Count > 0;
             ConfigurationListViewContextItemDelete.Enabled = configurationSelected;
             ConfigurationListViewContextItemViewDetails.Enabled = configurationSelected;
+            ConfigurationListViewContextItemOpenFileLocation.Enabled = configurationSelected;
             ConfigurationListViewContextItemSyncNow.Enabled = configurationSelected && !((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag).Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(ConfigurationListView.SelectedItems[0].Text, StringComparison.InvariantCultureIgnoreCase);
         }
 
