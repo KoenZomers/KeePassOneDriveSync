@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CredentialManagement;
 using KeePassLib;
 using KoenZomers.KeePass.OneDriveSync;
+using KoenZomers.KeePass.OneDriveSync.Enums;
 using KoenZomers.OneDrive.Api;
 
 namespace KoenZomersKeePassOneDriveSync
@@ -42,14 +43,28 @@ namespace KoenZomersKeePassOneDriveSync
         /// Returns an active OneDriveApi instance. If a RefreshToken is available, it will set up an instance based on that, otherwise it will show the login dialog
         /// </summary>
         /// <param name="databaseConfig">Configuration of the KeePass database</param>
-        /// <param name="oneDriveClientId">ClientID to get access to OneDrive</param>
-        /// <param name="oneDriveClientSecret">ClientSecret to get access to OneDrive</param>
         /// <returns>Active OneDrive instance or NULL if unable to get an authenticated instance</returns>
-        public static async Task<OneDriveApi> GetOneDriveApi(Configuration databaseConfig, string oneDriveClientId, string oneDriveClientSecret)
+        public static async Task<OneDriveApi> GetOneDriveApi(Configuration databaseConfig)
         {
+            OneDriveApi cloudStorage;
+
+            switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
+            {
+                case CloudStorageType.OneDriveConsumer:
+                    cloudStorage = new OneDriveConsumerApi(KoenZomersKeePassOneDriveSyncExt.OneDriveConsumerClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveConsumerClientSecret);
+                    break;
+
+                case CloudStorageType.OneDriveForBusiness:
+                    cloudStorage = new OneDriveForBusinessO365Api(KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientSecret);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(string.Format("Cloud storage type {0} is not supported", databaseConfig.CloudStorageType));
+            }
+
             if (string.IsNullOrEmpty(databaseConfig.RefreshToken))
             {
-                var oneDriveAuthenticateForm = new OneDriveAuthenticateForm(oneDriveClientId, oneDriveClientSecret);
+                var oneDriveAuthenticateForm = new OneDriveAuthenticateForm(cloudStorage);
                 var result = oneDriveAuthenticateForm.ShowDialog();
 
                 if (result != System.Windows.Forms.DialogResult.OK)
@@ -76,10 +91,9 @@ namespace KoenZomersKeePassOneDriveSync
 
             try
             {
-                var oneDriveApi = new OneDriveApi(oneDriveClientId, oneDriveClientSecret);
-                ApplyProxySettings(oneDriveApi);
-                await oneDriveApi.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
-                return oneDriveApi;
+                ApplyProxySettings(cloudStorage);
+                await cloudStorage.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
+                return cloudStorage;
             }
             catch (WebException)
             {
@@ -132,8 +146,24 @@ namespace KoenZomersKeePassOneDriveSync
         /// <param name="refreshToken">The OneDrive Refresh Token to store securely in the Windows Credential Manager</param>
         public static void SaveRefreshTokenInWindowsCredentialManager(string databaseFilePath, string refreshToken)
         {
-            using (var saved = new Credential(string.Empty, refreshToken, string.Concat("KoenZomers.KeePass.OneDriveSync:", databaseFilePath), CredentialType.Generic) {PersistanceType = PersistanceType.LocalComputer})
+            // Some refresh tokens can be longer than the maximum permitted 512 characters for a password field. If this is the case, put the first 512 characters of the refresh token in the password field and the rest in the comments field. Also the comments field has a limit. So far I have not run into this limit yet.
+            string passwordPart1;
+            string passwordPart2;
+
+            if (refreshToken != null && refreshToken.Length > 512)
             {
+                passwordPart1 = refreshToken.Remove(512);
+                passwordPart2 = refreshToken.Remove(0, 512);
+            }
+            else
+            {
+                passwordPart1 = refreshToken;
+                passwordPart2 = string.Empty;
+            }
+
+            using (var saved = new Credential(databaseFilePath, passwordPart1, string.Concat("KoenZomers.KeePass.OneDriveSync:", databaseFilePath), CredentialType.Generic) {PersistanceType = PersistanceType.LocalComputer})
+            {
+                saved.Description = passwordPart2;
                 saved.Save();
             }
         }
@@ -148,7 +178,9 @@ namespace KoenZomersKeePassOneDriveSync
             using (var credential = new Credential {Target = string.Concat("KoenZomers.KeePass.OneDriveSync:", databaseFilePath), Type = CredentialType.Generic})
             {
                 credential.Load();
-                return credential.Exists() ? credential.Password : null;
+
+                // Concatenate the contents of the password and comments fields to retrieve the refresh token
+                return credential.Exists() ? credential.Password + (!string.IsNullOrEmpty(credential.Description) ? credential.Description : string.Empty) : null;
             }
         }
 

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using KoenZomers.KeePass.OneDriveSync;
+using KoenZomers.KeePass.OneDriveSync.Enums;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -35,6 +32,7 @@ namespace KoenZomersKeePassOneDriveSync
         private void ShowConfiguration()
         {
             OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : _configuration.Value.OneDriveName;
+            CloudStorageTypeTextBox.Text = _configuration.Value.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer).ToString();
             LocalKeePassPathTextbox.Text = _configuration.Key;
             RemoteKeePassPathTextbox.Text = _configuration.Value.RemoteDatabasePath;
             OneDriveRefreshTokenTextbox.Text = _configuration.Value.RefreshToken;
@@ -42,6 +40,7 @@ namespace KoenZomersKeePassOneDriveSync
             LastSyncedTextbox.Text = _configuration.Value.LastSyncedAt.HasValue ? _configuration.Value.LastSyncedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never synced yet";
             LastVerifiedTextbox.Text = _configuration.Value.LastCheckedAt.HasValue ? _configuration.Value.LastCheckedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never verified yet";
             LocalKeePassFileHashTextbox.Text = _configuration.Value.LocalFileHash;
+            OneDriveEtagTextBox.Text = _configuration.Value.ETag;
             ForceSyncButton.Enabled = !_configuration.Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(_configuration.Key, StringComparison.InvariantCultureIgnoreCase);
         }
 
@@ -63,7 +62,7 @@ namespace KoenZomersKeePassOneDriveSync
         private async void ForceSyncButton_Click(object sender, EventArgs e)
         {
             UpdateStatus("Synchronizing");
-            await KeePassDatabase.SyncDatabase(_configuration.Key, UpdateStatus);
+            await KeePassDatabase.SyncDatabase(_configuration.Key, UpdateStatus, true);
             ShowConfiguration();
         }
 

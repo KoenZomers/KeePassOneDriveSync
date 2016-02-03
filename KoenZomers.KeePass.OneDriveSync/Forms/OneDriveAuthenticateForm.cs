@@ -11,11 +11,11 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         public OneDriveApi OneDriveApi { get; private set; }
 
-        public OneDriveAuthenticateForm(string oneDriveClientId, string oneDriveClientSecret)
+        public OneDriveAuthenticateForm(OneDriveApi oneDriveApi)
         {
             InitializeComponent();
 
-            OneDriveApi = new OneDriveApi(oneDriveClientId, oneDriveClientSecret);
+            OneDriveApi = oneDriveApi;
             Utilities.ApplyProxySettings(OneDriveApi);
 
             SignOut();
@@ -50,9 +50,9 @@ namespace KoenZomersKeePassOneDriveSync
             }
 
             // If we're on this page, but we didn't get an authorization token, it means that we just signed out, proceed with signing in again
-            if (e.Url.ToString().StartsWith("https://login.live.com/oauth20_desktop.srf"))
+            if (e.Url.ToString().StartsWith(OneDriveApi.SignoutUri))
             {
-                var authenticateUri = OneDriveApi.GetAuthenticationUri("wl.offline_access wl.skydrive_update");
+                var authenticateUri = OneDriveApi.GetAuthenticationUri();
                 WebBrowser.Navigate(authenticateUri);
             }
         }

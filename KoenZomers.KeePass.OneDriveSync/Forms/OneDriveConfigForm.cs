@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KoenZomers.KeePass.OneDriveSync;
+using KoenZomers.KeePass.OneDriveSync.Enums;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -59,6 +60,7 @@ namespace KoenZomersKeePassOneDriveSync
                 configurationItem.BackColor = doesDatabaseExistLocally ? ConfigurationListView.BackColor : isRemoteDatabase ? Color.Orange : Color.Red;
                 configurationItem.ToolTipText = doesDatabaseExistLocally ? "Database has been found" : isRemoteDatabase ? "Database is a remote database which is not supported" : "Database has not been found"; 
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "OneDrive", Text = configuration.Value.DoNotSync ? "Not synced" : configuration.Value.OneDriveName });
+                configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "CloudStorage", Text = configuration.Value.CloudStorageType.HasValue ? configuration.Value.CloudStorageType.Value.ToString() : configuration.Value.DoNotSync ? "Not in cloud" : CloudStorageType.OneDriveConsumer.ToString() });
                 ConfigurationListView.Items.Add(configurationItem);
             }
 
@@ -134,7 +136,7 @@ namespace KoenZomersKeePassOneDriveSync
             }
             
             UpdateStatus("Synchronizing");
-            await KeePassDatabase.SyncDatabase(ConfigurationListView.SelectedItems[0].Text, UpdateStatus);
+            await KeePassDatabase.SyncDatabase(ConfigurationListView.SelectedItems[0].Text, UpdateStatus, true);
         }
 
         private async void ConfigurationListViewContextItemSyncNow_Click(object sender, EventArgs e)

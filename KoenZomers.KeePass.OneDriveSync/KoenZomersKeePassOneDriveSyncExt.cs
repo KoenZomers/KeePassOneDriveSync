@@ -16,14 +16,24 @@ namespace KoenZomersKeePassOneDriveSync
         #region Constants
 
         /// <summary>
-        /// Client ID to use for communication with the OneDrive API
+        /// Client ID to use for communication with the OneDrive Consumer API
         /// </summary>
-        internal const string OneDriveClientId = "000000004813F265";
+        internal const string OneDriveConsumerClientId = "000000004813F265";
 
         /// <summary>
-        /// Client Secret to use for communication with the OneDrive API
+        /// Client Secret to use for communication with the OneDrive Consumer API
         /// </summary>
-        internal const string OneDriveClientSecret = "GXpsZ6DX4AaNjRWFovMLIp1xS-FpbPgO";
+        internal const string OneDriveConsumerClientSecret = "GXpsZ6DX4AaNjRWFovMLIp1xS-FpbPgO";
+
+        /// <summary>
+        /// Client ID to use for communication with the OneDrive for Business API
+        /// </summary>
+        internal const string OneDriveForBusinessClientId = "c1b42b56-2aa9-4f01-ad76-11644ae1a859";
+
+        /// <summary>
+        /// Client Secret to use for communication with the OneDrive for Business API
+        /// </summary>
+        internal const string OneDriveForBusinessClientSecret = "SR8WNXfxxu0yLF8WK1fZU2gNBjz4owBjnfsSjU9We1U=";
 
         #endregion
 
@@ -41,7 +51,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         public override string UpdateUrl
         {
-            get {  return "http://services.zomers.eu/KeeOneDrive/VersionCheck.txt"; }
+            get { return "http://services.zomers.eu/KeeOneDrive/VersionCheck.txt"; }
         }
 
         /// <summary>
@@ -92,7 +102,7 @@ namespace KoenZomersKeePassOneDriveSync
                 return;
             }
 
-            await KeePassDatabase.SyncDatabase(fileSavedEventArgs.Database.IOConnectionInfo.Path, KeePassDatabase.UpdateStatus);
+            await KeePassDatabase.SyncDatabase(fileSavedEventArgs.Database.IOConnectionInfo.Path, KeePassDatabase.UpdateStatus, true);
             
             // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
@@ -129,7 +139,7 @@ namespace KoenZomersKeePassOneDriveSync
                 config.RefreshToken = Utilities.GetRefreshTokenFromKeePassDatabase(fileOpenedEventArgs.Database);
             }
 
-            await KeePassDatabase.SyncDatabase(fileOpenedEventArgs.Database.IOConnectionInfo.Path, KeePassDatabase.UpdateStatus);
+            await KeePassDatabase.SyncDatabase(fileOpenedEventArgs.Database.IOConnectionInfo.Path, KeePassDatabase.UpdateStatus, false);
 
             // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
