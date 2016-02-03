@@ -2,6 +2,14 @@
 
 ## Version History
 
+Version 1.3.3.1 - December 3, 2015
+
+- Finally was able to fix the issue with the PLGX. Thanks to Dominik Reichl!
+
+Version 1.3.3.0 - November 25, 2015
+
+- Added support for using a HTTP/HTTPS proxy. You can switch this on under Tools -> Options -> Advanced -> Proxy.  
+
 Version 1.3.2.0 - July 18, 2015
 
 - Added better error handling when remote databases on FTP or websites are used. These are still not supported, but now should not let the plug in crash anymore when used.

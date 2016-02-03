@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoenZomers.KeePass.OneDriveSync", "KoenZomers.KeePass.OneDriveSync\KoenZomers.KeePass.OneDriveSync.csproj", "{ED981431-32EA-4FC8-BF5B-D5A29B3AD52E}"
 EndProject
@@ -22,6 +22,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{1985E673-364B-4E4F-9DF4-7F110239AEB0}"
 	ProjectSection(SolutionItems) = preProject
 		Screenshots\AuthenticateToOneDrive.png = Screenshots\AuthenticateToOneDrive.png
+		Screenshots\ChooseCloudStorage.png = Screenshots\ChooseCloudStorage.png
 		Screenshots\ConfigurationDetails.png = Screenshots\ConfigurationDetails.png
 		Screenshots\ConfigurationsContextMenu.png = Screenshots\ConfigurationsContextMenu.png
 		Screenshots\ConfigurationsOverview.png = Screenshots\ConfigurationsOverview.png

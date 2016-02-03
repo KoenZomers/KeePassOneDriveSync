@@ -1,6 +1,6 @@
 # KeePass OneDrive Sync
 
-I've created a free plugin for KeePass that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your Windows devices.
+I've created a free plugin for KeePass that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your Windows devices.
 
 ## Download ##
 You need to download either the DLLs *OR* the PLGX and place it inside your KeePass folder, so not both:
@@ -15,20 +15,16 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## System Requirements
 
-- The plugin is written for KeePass v2.29 but should work with any KeePass version in the 2.x range
+- The plugin is written for KeePass v2.31 but should work with any KeePass version in the 2.x range
 - It requires to have the Microsoft .NET v4.5 framework installed. This means this plugin will NOT work on Windows XP as the Microsoft .NET Framework v4.5 is not available on that OS. On later operating systems, you may have to install or enable it manually.
 - It only supports KeePass databases which are opened via File -> Open -> Open File in KeePass. Databases which you open via File -> Open -> Open URL will not be able to use this plugin and will get a message stating that they're not supported.
-- It only works with a personal OneDrive. It doesn't work with OneDrive for Business yet. Support for this will be added in the future.
+- It works with a personal OneDrive and OneDrive for Business on Office 365. It doesn't work with OneDrive for Business on an on premises SharePoint 2013 or SharePoint 2016 farm.
 
 ## Latest Version
 
-Version 1.3.3.1 - December 3, 2015
+Version 1.4.0.0 - February 3, 2016
 
-- Finally was able to fix the issue with the PLGX. Thanks to Dominik Reichl!
-
-Version 1.3.3.0 - November 25, 2015
-
-- Added support for using a HTTP/HTTPS proxy. You can switch this on under Tools -> Options -> Advanced -> Proxy.  
+- Added support for OneDrive for Business based on many requests from users
 
 [Version History](./VersionHistory.md)
 
@@ -38,7 +34,8 @@ On my todo list are still:
 
 1. Add a OneDrive File browser for easier selection of a location on OneDrive 
 2. Allow a KeePass database to be opened directly from OneDrive without the need to download it yourself first
-3. Add support for OneDrive for Business on Office 365. Support for OneDrive for Business for on premises SharePoint 2013 and 2016 farms is not in the planning for now. Let me know in case you're interested in that functionality and I'll reconsider it.
+3. Proxy issues are extremely difficult for me to troubleshoot as I don't have access to a proxy which requires authentication myself. If you can help me with test access to one, let me know.
+4. Support for OneDrive for Business for on premises SharePoint 2013 and SharePoint 2016 farms if there is desire for it. Let me know in case you're interested in that functionality and I'll consider adding it.
 
 ## Special Thanks
 
