@@ -36,23 +36,21 @@
             this.WebBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.WebBrowser.Location = new System.Drawing.Point(-1, 0);
-            this.WebBrowser.Margin = new System.Windows.Forms.Padding(2);
-            this.WebBrowser.MinimumSize = new System.Drawing.Size(15, 16);
+            this.WebBrowser.Location = new System.Drawing.Point(-2, 0);
+            this.WebBrowser.MinimumSize = new System.Drawing.Size(22, 25);
             this.WebBrowser.Name = "WebBrowser";
-            this.WebBrowser.Size = new System.Drawing.Size(443, 538);
+            this.WebBrowser.Size = new System.Drawing.Size(664, 828);
             this.WebBrowser.TabIndex = 0;
             this.WebBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.WebBrowser_Navigated);
             // 
             // OneDriveAuthenticateForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 537);
+            this.ClientSize = new System.Drawing.Size(664, 826);
             this.Controls.Add(this.WebBrowser);
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(299, 273);
+            this.MinimumSize = new System.Drawing.Size(438, 390);
             this.Name = "OneDriveAuthenticateForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

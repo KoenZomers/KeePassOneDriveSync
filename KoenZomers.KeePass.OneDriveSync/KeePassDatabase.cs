@@ -18,7 +18,8 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         /// <param name="localKeePassDatabasePath">Full path to where the KeePass database resides locally</param>
         /// <param name="updateStatus">Method to call to update the status</param>
-        public static async Task SyncDatabase(string localKeePassDatabasePath, Action<string> updateStatus)
+        /// <param name="forceSync">If True, no attempts will be made to validate if the local copy differs from the remote copy and it will always sync. If False, it will try to validate if there are any changes and not sync if there are no changes.</param>
+        public static async Task SyncDatabase(string localKeePassDatabasePath, Action<string> updateStatus, bool forceSync)
         {
             // Retrieve the KeePassOneDriveSync settings
             var databaseConfig = Configuration.GetPasswordDatabaseConfiguration(localKeePassDatabasePath);
@@ -29,21 +30,26 @@ namespace KoenZomersKeePassOneDriveSync
                 return;
             }
 
-            // Check if the current database is syned with OneDrive
+            // Check if the current database is synced with OneDrive
             if (string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath))
             {
                 // Current database is not being syned with OneDrive, ask if it should be synced
                 var oneDriveAskToStartSyncingForm = new OneDriveAskToStartSyncingDialog(databaseConfig);
-                var result = oneDriveAskToStartSyncingForm.ShowDialog();
+                if (oneDriveAskToStartSyncingForm.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-                if (result != DialogResult.OK)
+                // Ask which cloud service to connect to
+                var oneDriveCloudTypeForm = new OneDriveCloudTypeForm(databaseConfig);
+                if (oneDriveCloudTypeForm.ShowDialog() != DialogResult.OK)
                 {
                     return;
                 }
             }
 
             // Connect to OneDrive
-            var oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig, KoenZomersKeePassOneDriveSyncExt.OneDriveClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveClientSecret);
+            var oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig);
 
             if (oneDriveApi == null)
             {
@@ -104,22 +110,21 @@ namespace KoenZomersKeePassOneDriveSync
                 if (newUploadResult != null)
                 {
                     databaseConfig.LastCheckedAt = DateTime.Now;
-                    databaseConfig.LastSyncedAt = DateTime.Now;                                       
+                    databaseConfig.LastSyncedAt = DateTime.Now;
+                    databaseConfig.ETag = newUploadResult.ETag;
                 }
                 Configuration.Save();
                 return;
             }
 
-            // Calculate the SHA1 hash of the local KeePass database
-            var fileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
-
-            databaseConfig.LocalFileHash = fileHash;
-            databaseConfig.LastCheckedAt = DateTime.Now;
-            Configuration.Save();
-
-            if (oneDriveItem.File.Hashes.Sha1.Equals(fileHash))
+            // Use the ETag from the OneDrive item to compare it against the local database config etag to see if the content has changed
+            if (!forceSync && oneDriveItem.ETag == databaseConfig.ETag)
             {
                 updateStatus("Databases are in sync");
+
+                databaseConfig.LastCheckedAt = DateTime.Now;
+                Configuration.Save();
+
                 return;
             }
 
@@ -159,9 +164,6 @@ namespace KoenZomersKeePassOneDriveSync
                 return;
             }
 
-            databaseConfig.LastSyncedAt = DateTime.Now;
-            Configuration.Save();
-
             // Upload the synced database
             updateStatus("Uploading the new KeePass database to OneDrive");
 
@@ -180,6 +182,12 @@ namespace KoenZomersKeePassOneDriveSync
             KoenZomersKeePassOneDriveSyncExt.Host.MainWindow.UpdateUI(false, null, true, null, true, null, false);
 
             updateStatus("KeePass database has successfully been synchronized and uploaded");
+
+            databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+            databaseConfig.ETag = uploadResult.ETag;
+            databaseConfig.LastSyncedAt = DateTime.Now;
+            databaseConfig.LastCheckedAt = DateTime.Now;
+            Configuration.Save();
         }
 
         /// <summary>

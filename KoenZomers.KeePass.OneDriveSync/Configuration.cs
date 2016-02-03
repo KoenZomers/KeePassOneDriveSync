@@ -82,6 +82,12 @@ namespace KoenZomers.KeePass.OneDriveSync
         public string LocalFileHash { get; set; }
 
         /// <summary>
+        /// The ETag of the KeePass database on OneDrive
+        /// </summary>
+        [DataMember]
+        public string ETag { get; set; }
+
+        /// <summary>
         /// Date and time at which the database last synced with OneDrive
         /// </summary>
         [DataMember]
@@ -92,6 +98,12 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         [DataMember]
         public DateTime? LastCheckedAt { get; set; }
+
+        /// <summary>
+        /// Type of cloud storage used for storing the database
+        /// </summary>
+        [DataMember]
+        public CloudStorageType? CloudStorageType { get; set; }
 
         #endregion
 
