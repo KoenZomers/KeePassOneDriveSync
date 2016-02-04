@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OneDriveAboutForm));
             this.HeaderLabel = new System.Windows.Forms.Label();
-            this.ExplanationLabel = new System.Windows.Forms.Label();
             this.CloseButton = new System.Windows.Forms.Button();
             this.NameLabel = new System.Windows.Forms.Label();
+            this.ExplanationLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // HeaderLabel
@@ -46,18 +46,6 @@
             this.HeaderLabel.TabIndex = 2;
             this.HeaderLabel.Text = "KeePass OneDriveSync";
             this.HeaderLabel.UseMnemonic = false;
-            // 
-            // ExplanationLabel
-            // 
-            this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(13, 42);
-            this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(355, 79);
-            this.ExplanationLabel.TabIndex = 3;
-            this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
-            this.ExplanationLabel.UseMnemonic = false;
             // 
             // CloseButton
             // 
@@ -82,14 +70,25 @@
             this.NameLabel.Text = "Koen Zomers <mail@koenzomers.nl>";
             this.NameLabel.UseMnemonic = false;
             // 
+            // ExplanationLabel
+            // 
+            this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExplanationLabel.Location = new System.Drawing.Point(13, 46);
+            this.ExplanationLabel.Name = "ExplanationLabel";
+            this.ExplanationLabel.Size = new System.Drawing.Size(354, 85);
+            this.ExplanationLabel.TabIndex = 7;
+            this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
+            // 
             // OneDriveAboutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(380, 197);
+            this.Controls.Add(this.ExplanationLabel);
             this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.CloseButton);
-            this.Controls.Add(this.ExplanationLabel);
             this.Controls.Add(this.HeaderLabel);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(312, 236);
@@ -105,8 +104,8 @@
         #endregion
 
         private System.Windows.Forms.Label HeaderLabel;
-        private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Label NameLabel;
+        private System.Windows.Forms.Label ExplanationLabel;
     }
 }
