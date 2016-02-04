@@ -2,6 +2,10 @@
 
 ## Version History
 
+Version 1.4.0.0 - February 3, 2016
+
+- Added support for OneDrive for Business based on many requests from users
+
 Version 1.3.3.1 - December 3, 2015
 
 - Finally was able to fix the issue with the PLGX. Thanks to Dominik Reichl!
