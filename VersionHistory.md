@@ -2,6 +2,10 @@
 
 ## Version History
 
+Version 1.4.1.0 - February 4, 2016
+
+- Fixed broken about dialog, added missing resx file. Thanks Ruslan Aleksandrovic for reporting this!
+
 Version 1.4.0.0 - February 3, 2016
 
 - Added support for OneDrive for Business based on many requests from users

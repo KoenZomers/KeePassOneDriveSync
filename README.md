@@ -22,13 +22,9 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
-Version 1.4.1.0 - February 4, 2016
+Version 1.4.2.0 - March 31, 2016
 
-- Fixed broken about dialog, added missing resx file. Thanks Ruslan Aleksandrovic for reporting this!
-
-Version 1.4.0.0 - February 3, 2016
-
-- Added support for OneDrive for Business based on many requests from users
+- Fixed the [issue](https://github.com/KoenZomers/KeePassOneDriveSync/issues/13) where not synced databases kept asking if they should be synced after restarting KeePass. Thanks to [mushak](https://github.com/mushak) for reporting this!
 
 [Version History](./VersionHistory.md)
 

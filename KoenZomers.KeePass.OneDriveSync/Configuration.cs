@@ -192,6 +192,10 @@ namespace KoenZomers.KeePass.OneDriveSync
                             Utilities.SaveRefreshTokenInWindowsCredentialManager(passwordDatabase.Key, passwordDatabase.Value.RefreshToken);
                         }
                         break;
+                    default:
+                        // Hit when user selected the do not sync database option. In that case just store the config on disk as it doesn't contain any tokens.
+                        passwordDatabasesForStoring.Add(passwordDatabase.Key, passwordDatabase.Value);
+                        break;
                 }
             }
 
