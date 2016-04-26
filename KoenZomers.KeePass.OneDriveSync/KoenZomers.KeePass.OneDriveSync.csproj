@@ -60,11 +60,6 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums\OneDriveRefreshTokenStorage.cs" />
     <Compile Include="Enums\CloudStorageType.cs" />
-    <Compile Include="Forms\OneDriveCloudTypeForm1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OneDriveCloudTypeForm.resx</DependentUpon>
-    </Compile>
     <Compile Include="KeePassDatabase.cs" />
     <Compile Include="KoenZomersKeePassOneDriveSyncExt.cs" />
     <Compile Include="Forms\OneDriveAboutForm.cs">
@@ -116,11 +111,6 @@
       <DependentUpon>OneDriveRemoteLocationDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -134,8 +124,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveCloudTypeForm.resx">
       <DependentUpon>OneDriveCloudTypeForm.cs</DependentUpon>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>OneDriveCloudTypeForm1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveRefreshTokenStorageDialog.resx">
       <DependentUpon>OneDriveRefreshTokenStorageDialog.cs</DependentUpon>
@@ -154,10 +142,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveRemoteLocationDialog.resx">
       <DependentUpon>OneDriveRemoteLocationDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

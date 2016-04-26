@@ -22,9 +22,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
-Version 1.4.2.0 - March 31, 2016
+Version 1.4.3.0 - April 26, 2016
 
-- Fixed the [issue](https://github.com/KoenZomers/KeePassOneDriveSync/issues/13) where not synced databases kept asking if they should be synced after restarting KeePass. Thanks to [mushak](https://github.com/mushak) for reporting this!
+- Fixed an issue where if you would use different filenames for your KeePass database locally and on OneDrive or OneDrive for Business, that it wouldn't sync properly anymore. Thanks to Jörgen Nydahl for reporting this!
+- Attempt to solve an issue where on Windows machines running Windows in a non English language, an error may occur. If you still run into this issue, let me know.
 
 [Version History](./VersionHistory.md)
 
@@ -36,6 +37,7 @@ On my todo list are still:
 2. Allow a KeePass database to be opened directly from OneDrive without the need to download it yourself first
 3. Proxy issues are extremely difficult for me to troubleshoot as I don't have access to a proxy which requires authentication myself. If you can help me with test access to one, let me know.
 4. Support for OneDrive for Business for on premises SharePoint 2013 and SharePoint 2016 farms if there is desire for it. Let me know in case you're interested in that functionality and I'll consider adding it.
+5. Support for storing KeePass databases within TeamSites on SharePoint
 
 ## Special Thanks
 
