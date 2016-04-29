@@ -15,3 +15,9 @@ I.e. you can choose to delete configuration of KeePass databases you no longer w
 You can also choose to view more details on the configuration kept for a KeePass database synchronization (keyboard shortcut ENTER).
 
 ![](./Screenshots/ConfigurationDetails.png)
+
+## HTTP Proxies
+
+If you're using a HTTP proxy to communicate with the internet, configure the HTTP proxy in KeePass under Tools > Options > Advanced tab > Proxy at the bottom right. The KeePassOneDriveSync plugin fully supports the use of HTTP proxies and will automatically take over these proxy settings.
+
+![](./Screenshots/KeePassProxyOptions.png)

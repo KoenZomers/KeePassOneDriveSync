@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 		Screenshots\KeePassCheckForUpdates.png = Screenshots\KeePassCheckForUpdates.png
 		Screenshots\KeePassOneDriveSyncOptions.png = Screenshots\KeePassOneDriveSyncOptions.png
 		Screenshots\KeePassPluginUpToDate.png = Screenshots\KeePassPluginUpToDate.png
+		Screenshots\KeePassProxyOptions.png = Screenshots\KeePassProxyOptions.png
 		Screenshots\KeePasstoolsPlugins.png = Screenshots\KeePasstoolsPlugins.png
 		Screenshots\KeePassVerifyPluginPresent.png = Screenshots\KeePassVerifyPluginPresent.png
 		Screenshots\OneDriveConsentToPriviledges.png = Screenshots\OneDriveConsentToPriviledges.png

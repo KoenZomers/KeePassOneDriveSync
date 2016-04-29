@@ -40,9 +40,10 @@
             this.HeaderLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.HeaderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HeaderLabel.Location = new System.Drawing.Point(12, 9);
+            this.HeaderLabel.Location = new System.Drawing.Point(16, 11);
+            this.HeaderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.HeaderLabel.Name = "HeaderLabel";
-            this.HeaderLabel.Size = new System.Drawing.Size(356, 23);
+            this.HeaderLabel.Size = new System.Drawing.Size(475, 28);
             this.HeaderLabel.TabIndex = 2;
             this.HeaderLabel.Text = "KeePass OneDriveSync";
             this.HeaderLabel.UseMnemonic = false;
@@ -51,9 +52,10 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.CloseButton.Location = new System.Drawing.Point(269, 152);
+            this.CloseButton.Location = new System.Drawing.Point(359, 187);
+            this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(99, 33);
+            this.CloseButton.Size = new System.Drawing.Size(132, 41);
             this.CloseButton.TabIndex = 5;
             this.CloseButton.Text = "&Close";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -63,9 +65,10 @@
             // 
             this.NameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.NameLabel.Location = new System.Drawing.Point(12, 131);
+            this.NameLabel.Location = new System.Drawing.Point(16, 161);
+            this.NameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.NameLabel.Name = "NameLabel";
-            this.NameLabel.Size = new System.Drawing.Size(355, 18);
+            this.NameLabel.Size = new System.Drawing.Size(473, 22);
             this.NameLabel.TabIndex = 6;
             this.NameLabel.Text = "Koen Zomers <mail@koenzomers.nl>";
             this.NameLabel.UseMnemonic = false;
@@ -75,23 +78,26 @@
             this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(13, 46);
+            this.ExplanationLabel.Location = new System.Drawing.Point(17, 57);
+            this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(354, 85);
+            this.ExplanationLabel.Size = new System.Drawing.Size(472, 105);
             this.ExplanationLabel.TabIndex = 7;
             this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
             // 
             // OneDriveAboutForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(380, 197);
+            this.ClientSize = new System.Drawing.Size(507, 242);
             this.Controls.Add(this.ExplanationLabel);
             this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.HeaderLabel);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(312, 236);
+            this.MinimumSize = new System.Drawing.Size(410, 280);
             this.Name = "OneDriveAboutForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

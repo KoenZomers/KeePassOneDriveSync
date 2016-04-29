@@ -2,6 +2,13 @@
 
 ## Version History
 
+Version 1.4.3.0 - April 26, 2016
+
+- Fixed an issue where if you would use different filenames for your KeePass database locally and on OneDrive or OneDrive for Business, that it wouldn't sync properly anymore. Thanks to Jörgen Nydahl for reporting this!
+- Attempt to solve an issue where on Windows machines running Windows in a non English language, an error may occur. If you still run into this issue, let me know.
+
+[Version History](./VersionHistory.md)
+
 Version 1.4.2.0 - March 31, 2016
 
 - Fixed the [issue](https://github.com/KoenZomers/KeePassOneDriveSync/issues/13) where not synced databases kept asking if they should be synced after restarting KeePass. Thanks to [mushak](https://github.com/mushak) for reporting this!
