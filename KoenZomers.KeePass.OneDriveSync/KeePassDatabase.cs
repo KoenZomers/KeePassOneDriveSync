@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using KeePass.DataExchange;
 using KeePassLib.Serialization;
 using KoenZomers.KeePass.OneDriveSync;
+using KoenZomers.KeePass.OneDriveSync.Enums;
+using KoenZomers.OneDrive.Api;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -53,7 +55,12 @@ namespace KoenZomersKeePassOneDriveSync
 
             if (oneDriveApi == null)
             {
-                updateStatus("Failed to connect to OneDrive");
+                switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
+                {
+                    case CloudStorageType.OneDriveConsumer: updateStatus("Failed to connect to OneDrive"); break;
+                    case CloudStorageType.OneDriveForBusiness: updateStatus("Failed to connect to OneDrive for Business"); break;
+                    default: updateStatus("Failed to connect to cloud service");break;
+                }                
                 return;
             }
 

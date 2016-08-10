@@ -22,10 +22,9 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
-Version 1.4.4.0 - April 29, 2016
+Version 1.4.5.0 - August 10, 2016
 
-- Updated [OneDrive API](https://github.com/KoenZomers/OneDriveAPI) to version 1.5.0.0 which now supports the use of HTTP proxies throughout all functionality. This should fix the plugin bypassing the proxy on writing updates back to OneDrive\OneDrive for Business
-- Fixed the resources exception when opening the about box
+- Bugfix: you should no longer receive a crash when logging in to your KeePass database that is synced with a cloud service while not having an active internet connection. Thanks to Daniel Matschull for reporting this issue!
 
 [Version History](./VersionHistory.md)
 

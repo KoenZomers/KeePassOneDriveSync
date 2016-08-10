@@ -145,7 +145,7 @@ namespace KoenZomersKeePassOneDriveSync
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
             {
                 fileOpenedEventArgs.Database.Save(null);
-            }
+            } 
         }
 
         /// <summary>

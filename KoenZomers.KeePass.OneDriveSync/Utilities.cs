@@ -95,7 +95,7 @@ namespace KoenZomersKeePassOneDriveSync
                 await cloudStorage.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
                 return cloudStorage;
             }
-            catch (WebException)
+            catch (Exception)
             {
                 // Occurs if no connection can be made with the OneDrive service. It will be handled properly in the calling code.
                 return null;

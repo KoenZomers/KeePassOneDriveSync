@@ -2,12 +2,15 @@
 
 ## Version History
 
+Version 1.4.4.0 - April 29, 2016
+
+- Updated [OneDrive API](https://github.com/KoenZomers/OneDriveAPI) to version 1.5.0.0 which now supports the use of HTTP proxies throughout all functionality. This should fix the plugin bypassing the proxy on writing updates back to OneDrive\OneDrive for Business
+- Fixed the resources exception when opening the about box
+
 Version 1.4.3.0 - April 26, 2016
 
 - Fixed an issue where if you would use different filenames for your KeePass database locally and on OneDrive or OneDrive for Business, that it wouldn't sync properly anymore. Thanks to Jörgen Nydahl for reporting this!
 - Attempt to solve an issue where on Windows machines running Windows in a non English language, an error may occur. If you still run into this issue, let me know.
-
-[Version History](./VersionHistory.md)
 
 Version 1.4.2.0 - March 31, 2016
 
