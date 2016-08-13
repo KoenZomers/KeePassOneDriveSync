@@ -133,6 +133,11 @@ namespace KoenZomersKeePassOneDriveSync
                     oneDriveApi.UseProxy = true;
                     break;
             }
+
+            if (KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Default)
+            {
+                oneDriveApi.ProxyConfiguration.UseDefaultCredentials = true;
+            }
         }
 
         #endregion

@@ -23,6 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.5.1.0 - August 13, 2016
+
+- Attempt to fix the proxy issue when using NTLM as reported [here](https://github.com/KoenZomers/KeePassOneDriveSync/issues/10)
+
 Version 1.5.0.0 - August 13, 2016
 
 - Introduced an easy to use OneDrive file picker dialog to select the location where you want to store your KeePass database. The #1 issue people contacted me about was that they misunderstood the previous single open text dialog. Hopefully that's fixed with introducing this dialog. Check out the extra options under the right click in the OneDrive location picker dialog!
