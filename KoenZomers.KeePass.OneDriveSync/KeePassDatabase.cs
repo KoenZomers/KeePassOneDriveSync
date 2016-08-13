@@ -88,7 +88,7 @@ namespace KoenZomersKeePassOneDriveSync
                 {
                     return;
                 }                
-                databaseConfig.RemoteDatabasePath = oneDriveFileSaveAsDialog.CurrentOneDriveItem.ParentReference?.Path + "/" + oneDriveFileSaveAsDialog.CurrentOneDriveItem.Name + "/" + oneDriveFileSaveAsDialog.FileName;
+                databaseConfig.RemoteDatabasePath = (oneDriveFileSaveAsDialog.CurrentOneDriveItem.ParentReference != null ? oneDriveFileSaveAsDialog.CurrentOneDriveItem.ParentReference.Path : "") + "/" + oneDriveFileSaveAsDialog.CurrentOneDriveItem.Name + "/" + oneDriveFileSaveAsDialog.FileName;
                 databaseConfig.RemoteFolderId = oneDriveFileSaveAsDialog.CurrentOneDriveItem.Id;
                 databaseConfig.RemoteFileName = oneDriveFileSaveAsDialog.FileName;
                 Configuration.Save();

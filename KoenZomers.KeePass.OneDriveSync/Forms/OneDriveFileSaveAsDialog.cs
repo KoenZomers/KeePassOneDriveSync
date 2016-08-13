@@ -53,7 +53,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                  itemCollection = await _oneDriveApi.GetChildrenByFolderId(parentItemId);
                  CurrentOneDriveItem = await _oneDriveApi.GetItemById(parentItemId);
                  UpButton.Enabled = CurrentOneDriveItem.ParentReference != null;
-                 UpButton.Tag = CurrentOneDriveItem.ParentReference?.Id;
+                 UpButton.Tag = CurrentOneDriveItem.ParentReference != null ? CurrentOneDriveItem.ParentReference.Id : null;
                  CloudLocationPath.Text = CurrentOneDriveItem.ParentReference != null ? CurrentOneDriveItem.ParentReference.Path + "/" + CurrentOneDriveItem.Name : "";
              }
 
@@ -89,7 +89,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
         private async void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await LoadFolderItems(CurrentOneDriveItem?.Id);
+            await LoadFolderItems(CurrentOneDriveItem != null ? CurrentOneDriveItem.Id : null);
         }
 
         private void OneDriveFileSaveAsDialog_KeyUp(object sender, KeyEventArgs e)
@@ -199,7 +199,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 if (operationSuccessful)
                 {
                     MessageBox.Show("Item has been renamed", "Rename item", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    await LoadFolderItems(CurrentOneDriveItem?.Id);
+                    await LoadFolderItems(CurrentOneDriveItem != null ? CurrentOneDriveItem.Id : null);
                 }
                 else
                 {
