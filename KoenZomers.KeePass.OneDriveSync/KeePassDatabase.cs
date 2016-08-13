@@ -6,7 +6,8 @@ using KeePass.DataExchange;
 using KeePassLib.Serialization;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
-using KoenZomers.OneDrive.Api;
+using KoenZomers.OneDrive.Api.Entities;
+using KoenZomersKeePassOneDriveSync.Forms;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -33,7 +34,7 @@ namespace KoenZomersKeePassOneDriveSync
             }
 
             // Check if the current database is synced with OneDrive
-            if (string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath))
+            if (string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath) && string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && string.IsNullOrEmpty(databaseConfig.RemoteFileName))
             {
                 // Current database is not being syned with OneDrive, ask if it should be synced
                 var oneDriveAskToStartSyncingForm = new OneDriveAskToStartSyncingDialog(databaseConfig);
@@ -77,38 +78,50 @@ namespace KoenZomersKeePassOneDriveSync
             Configuration.Save();
 
             // Check if we have a location on OneDrive to sync with
-            if (string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath))
+            if (string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath) && string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && string.IsNullOrEmpty(databaseConfig.RemoteFileName))
             {
                 // Have the user enter a location for the database on OneDrive 
-                var oneDriveRemoteLocationForm = new OneDriveRemoteLocationDialog(databaseConfig);
-                var result = oneDriveRemoteLocationForm.ShowDialog();
-                if (result != DialogResult.OK || string.IsNullOrWhiteSpace(oneDriveRemoteLocationForm.OneDriveRemotePathTextBox.Text))
+                var oneDriveFileSaveAsDialog = new OneDriveFileSaveAsDialog(oneDriveApi);                
+                await oneDriveFileSaveAsDialog.LoadFolderItems();
+                var result1 = oneDriveFileSaveAsDialog.ShowDialog();
+                if (result1 != DialogResult.OK || string.IsNullOrEmpty(oneDriveFileSaveAsDialog.FileName))
                 {
                     return;
-                }
-                databaseConfig.RemoteDatabasePath = oneDriveRemoteLocationForm.OneDriveRemotePathTextBox.Text.Replace('\\', '/').TrimStart('/');
+                }                
+                databaseConfig.RemoteDatabasePath = oneDriveFileSaveAsDialog.CurrentOneDriveItem.ParentReference?.Path + "/" + oneDriveFileSaveAsDialog.CurrentOneDriveItem.Name + "/" + oneDriveFileSaveAsDialog.FileName;
+                databaseConfig.RemoteFolderId = oneDriveFileSaveAsDialog.CurrentOneDriveItem.Id;
+                databaseConfig.RemoteFileName = oneDriveFileSaveAsDialog.FileName;
                 Configuration.Save();
             }
 
             // Retrieve the KeePass database from OneDrive
-            var oneDriveItem = await oneDriveApi.GetItem(databaseConfig.RemoteDatabasePath);
+            var oneDriveItem = string.IsNullOrEmpty(databaseConfig.RemoteFolderId) ? await oneDriveApi.GetItem(databaseConfig.RemoteDatabasePath) : await oneDriveApi.GetItemInFolder(databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName);
 
             if (oneDriveItem == null)
             {
                 // KeePass database not found on OneDrive
                 updateStatus("Database does not exist yet on OneDrive, uploading it now");
 
-                // Create or retrieve the folder in which to store the database on OneDrive
-                var oneDriveFolder = databaseConfig.RemoteDatabasePath.Contains("/") ? await oneDriveApi.GetFolderOrCreate(databaseConfig.RemoteDatabasePath.Remove(databaseConfig.RemoteDatabasePath.LastIndexOf("/", StringComparison.Ordinal))) : await oneDriveApi.GetDriveRoot();
+                OneDriveItem oneDriveFolder;
+                string fileName;
+                if (string.IsNullOrEmpty(databaseConfig.RemoteFolderId))
+                {
+                    oneDriveFolder = databaseConfig.RemoteDatabasePath.Contains("/") ? await oneDriveApi.GetFolderOrCreate(databaseConfig.RemoteDatabasePath.Remove(databaseConfig.RemoteDatabasePath.LastIndexOf("/", StringComparison.Ordinal))) : await oneDriveApi.GetDriveRoot();
+                    fileName = databaseConfig.RemoteDatabasePath.Contains("/") ? databaseConfig.RemoteDatabasePath.Remove(0, databaseConfig.RemoteDatabasePath.LastIndexOf("/", StringComparison.Ordinal) + 1) : databaseConfig.RemoteDatabasePath;
+                }
+                else
+                {
+                    oneDriveFolder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
+                    fileName = databaseConfig.RemoteFileName;
+                }
+
                 if (oneDriveFolder == null)
                 {
                     updateStatus("Unable to upload database to OneDrive. Remote path is invalid.");
                     return;
                 }
-                
-                // Upload the database to OneDrive
-                var fileName = databaseConfig.RemoteDatabasePath.Contains("/") ? databaseConfig.RemoteDatabasePath.Remove(0, databaseConfig.RemoteDatabasePath.LastIndexOf("/", StringComparison.Ordinal) + 1) : databaseConfig.RemoteDatabasePath;
-                
+
+                // Upload the database to OneDrive                
                 var newUploadResult = await oneDriveApi.UploadFileAs(localKeePassDatabasePath, fileName, oneDriveFolder);
 
                 updateStatus(newUploadResult == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to OneDrive");
@@ -174,7 +187,7 @@ namespace KoenZomersKeePassOneDriveSync
             // Upload the synced database
             updateStatus("Uploading the new KeePass database to OneDrive");
 
-            var uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase) ? await oneDriveApi.GetDriveRoot() : await oneDriveApi.GetItem(oneDriveItem.ParentReference.Path.Remove(0, 13)));
+            var uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase) ? await oneDriveApi.GetDriveRoot() : await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
 
             if (uploadResult == null)
             {

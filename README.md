@@ -12,6 +12,7 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 - [Configuration options](./Configuration.md)
 - [Checking for updates](./UpdateCheck.md)
 - [Troubleshooting](./Troubleshooting.md)
+- [Frequently Asked Questions](./Faq.md)
 
 ## System Requirements
 
@@ -22,9 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
-Version 1.4.5.0 - August 10, 2016
+Version 1.5.0.0 - August 13, 2016
 
-- Bugfix: you should no longer receive a crash when logging in to your KeePass database that is synced with a cloud service while not having an active internet connection. Thanks to Daniel Matschull for reporting this issue!
+- Introduced an easy to use OneDrive file picker dialog to select the location where you want to store your KeePass database. The #1 issue people contacted me about was that they misunderstood the previous single open text dialog. Hopefully that's fixed with introducing this dialog. Check out the extra options under the right click in the OneDrive location picker dialog!
+- Introduced the ability to store the KeePass database in a OneDrive folder that is located on another OneDrive and has been shared with you. Check out the [FAQ](./Faq.md) for instructions on how to do this.
 
 [Version History](./VersionHistory.md)
 
@@ -32,10 +34,9 @@ Version 1.4.5.0 - August 10, 2016
 
 On my todo list are still:
 
-1. Add a OneDrive File browser for easier selection of a location on OneDrive 
-2. Allow a KeePass database to be opened directly from OneDrive without the need to download it yourself first
-3. Support for OneDrive for Business for on premises SharePoint 2013 and SharePoint 2016 farms if there is desire for it. Let me know in case you're interested in that functionality and I'll consider adding it.
-4. Support for storing KeePass databases within TeamSites on SharePoint
+1. Allow a KeePass database to be opened directly from OneDrive without the need to download it yourself first
+2. Support for OneDrive for Business for on premises SharePoint 2013 and SharePoint 2016 farms if there is desire for it. Let me know in case you're interested in that functionality and I'll consider adding it.
+3. Support for storing KeePass databases within TeamSites on SharePoint
 
 ## Special Thanks
 
