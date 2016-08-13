@@ -26,7 +26,7 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 Version 1.5.0.0 - August 13, 2016
 
 - Introduced an easy to use OneDrive file picker dialog to select the location where you want to store your KeePass database. The #1 issue people contacted me about was that they misunderstood the previous single open text dialog. Hopefully that's fixed with introducing this dialog. Check out the extra options under the right click in the OneDrive location picker dialog!
-- Introduced the ability to store the KeePass database in a OneDrive folder that is located on another OneDrive and has been shared with you. Check out the [FAQ](./Faq.md) for instructions on how to do this.
+- Introduced the ability to store the KeePass database in a OneDrive folder that is located on another OneDrive and has been shared with you. Check out the [FAQ](./Faq.md) for instructions on how to do this. This was the #2 most requested option and allows you to share a KeePass database with others without having to give away your credentials to your OneDrive.
 
 [Version History](./VersionHistory.md)
 
