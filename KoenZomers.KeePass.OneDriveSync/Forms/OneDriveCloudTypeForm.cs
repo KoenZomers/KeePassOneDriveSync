@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
 
 namespace KoenZomersKeePassOneDriveSync
@@ -8,24 +7,30 @@ namespace KoenZomersKeePassOneDriveSync
     public partial class OneDriveCloudTypeForm : Form
     {
         /// <summary>
-        /// Configuration of the database for which this question is being asked for
+        /// The cloud storage provider that was chosen in this dialog
         /// </summary>
-        private readonly Configuration _configuration;
+        public CloudStorageType ChosenCloudStorageType { get; private set; }
 
-        public OneDriveCloudTypeForm(Configuration configuration)
+        /// <summary>
+        /// Gets or sets the explanation text in the dialog
+        /// </summary>
+        public string ExplanationText
+        {
+            get { return ExplanationLabel.Text; }
+            set { ExplanationLabel.Text = value; }
+        }
+
+        public OneDriveCloudTypeForm()
         {
             InitializeComponent();
 
             OneDriveConsumerPicture.Image = Resources.OneDriveConsumer;
             OneDriveForBusinessPicture.Image = Resources.OneDriveForBusiness;
-
-            _configuration = configuration;
         }
 
         private void OneDriveConsumerPicture_Click(object sender, EventArgs e)
         {
-            _configuration.CloudStorageType = CloudStorageType.OneDriveConsumer;
-            Configuration.Save();
+            ChosenCloudStorageType = CloudStorageType.OneDriveConsumer;
             DialogResult = DialogResult.OK;
 
             Close();
@@ -33,8 +38,7 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void OneDriveForBusinessPicture_Click(object sender, EventArgs e)
         {
-            _configuration.CloudStorageType = CloudStorageType.OneDriveForBusiness;
-            Configuration.Save();
+            ChosenCloudStorageType = CloudStorageType.OneDriveForBusiness;
             DialogResult = DialogResult.OK;
 
             Close();

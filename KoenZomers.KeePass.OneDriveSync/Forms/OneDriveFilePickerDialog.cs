@@ -7,7 +7,7 @@ using KoenZomers.OneDrive.Api.Entities;
 
 namespace KoenZomersKeePassOneDriveSync.Forms
 {
-     public partial class OneDriveFileSaveAsDialog : Form
+     public partial class OneDriveFilePickerDialog : Form
     {
         /// <summary>
         /// Instance of the OneDrive API that can be used to communicate with the cloud service
@@ -28,7 +28,25 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             set { FileNameTextBox.Text = value; }
         }
 
-        public OneDriveFileSaveAsDialog(OneDriveApi oneDriveApi)
+        /// <summary>
+        /// Gets or sets the text to explain the purpose of the dialog
+        /// </summary>
+        public string ExplanationText
+        {
+            get { return ExplanationLabel.Text; }
+            set { ExplanationLabel.Text = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets if the user can enter a filename which does not exist yet on their OneDrive
+        /// </summary>
+        public bool AllowEnteringNewFileName
+        {
+            get { return FileNameTextBox.Enabled; }
+            set { FileNameTextBox.Enabled = value; }
+        }
+
+        public OneDriveFilePickerDialog(OneDriveApi oneDriveApi)
         {
             InitializeComponent();
 

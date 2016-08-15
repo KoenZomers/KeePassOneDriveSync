@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CredentialManagement, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -60,11 +61,11 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums\OneDriveRefreshTokenStorage.cs" />
     <Compile Include="Enums\CloudStorageType.cs" />
-    <Compile Include="Forms\OneDriveFileSaveAsDialog.cs">
+    <Compile Include="Forms\OneDriveFilePickerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OneDriveFileSaveAsDialog.Designer.cs">
-      <DependentUpon>OneDriveFileSaveAsDialog.cs</DependentUpon>
+    <Compile Include="Forms\OneDriveFilePickerDialog.Designer.cs">
+      <DependentUpon>OneDriveFilePickerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OneDriveRequestInputDialog.cs">
       <SubType>Form</SubType>
@@ -131,8 +132,8 @@
     <EmbeddedResource Include="Forms\OneDriveCloudTypeForm.resx">
       <DependentUpon>OneDriveCloudTypeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OneDriveFileSaveAsDialog.resx">
-      <DependentUpon>OneDriveFileSaveAsDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OneDriveFilePickerDialog.resx">
+      <DependentUpon>OneDriveFilePickerDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveRequestInputDialog.resx">
       <DependentUpon>OneDriveRequestInputDialog.cs</DependentUpon>
@@ -168,6 +169,7 @@
     <Content Include="Images\KeePassO365.png" />
     <Content Include="Images\OneDriveConsumer.png" />
     <Content Include="Images\OneDriveForBusiness.png" />
+    <None Include="Resources\OneDriveIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

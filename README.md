@@ -19,9 +19,13 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 - The plugin is written for KeePass v2.31 but should work with any KeePass version in the 2.x range
 - It requires to have the Microsoft .NET v4.5 framework installed. This means this plugin will NOT work on Windows XP as the Microsoft .NET Framework v4.5 is not available on that OS. On later operating systems, you may have to install or enable it manually.
 - It only supports KeePass databases which are opened via File -> Open -> Open File in KeePass. Databases which you open via File -> Open -> Open URL will not be able to use this plugin and will get a message stating that they're not supported.
-- It works with a personal OneDrive and OneDrive for Business on Office 365. It doesn't work with OneDrive for Business on an on premises SharePoint 2013 or SharePoint 2016 farm.
+- It works with a personal OneDrive and OneDrive for Business on Office 365. It doesn't work with OneDrive for Business on an on premises SharePoint 2013 or SharePoint 2016 farm. Nor does it allow syncing to SharePoint Online (besides OneDrive for Business) at this time.
 
 ## Latest Version
+
+Version 1.6.0.0 - August 15, 2016
+
+- Added the option to open a KeePass database directly from OneDrive Consumer or OneDrive for Business under File > Open > Open from OneDrive. It will automatically set up the sync connection between your cloud hosting and local mapping.
 
 Version 1.5.1.0 - August 13, 2016
 
@@ -38,9 +42,8 @@ Version 1.5.0.0 - August 13, 2016
 
 On my todo list are still:
 
-1. Allow a KeePass database to be opened directly from OneDrive without the need to download it yourself first
-2. Support for OneDrive for Business for on premises SharePoint 2013 and SharePoint 2016 farms if there is desire for it. Let me know in case you're interested in that functionality and I'll consider adding it.
-3. Support for storing KeePass databases within TeamSites on SharePoint
+1. Support for OneDrive for Business for on premises SharePoint 2013 and SharePoint 2016 farms if there is desire for it. Let me know in case you're interested in that functionality and I'll consider adding it.
+2. Support for storing KeePass databases within TeamSites on SharePoint
 
 ## Special Thanks
 

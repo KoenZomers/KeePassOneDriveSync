@@ -46,6 +46,25 @@ namespace KoenZomersKeePassOneDriveSync
 
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// Separator line in the tools menu
+        /// </summary>
+        private ToolStripSeparator _toolsMenuSeparator;
+
+        /// <summary>
+        /// Config option item in the Tools menu
+        /// </summary>
+        private ToolStripMenuItem _toolsMenuConfigMenuItem;
+
+        /// <summary>
+        /// Open from OneDrive option in File > Open menu
+        /// </summary>
+        private ToolStripMenuItem _fileOpenMenuItem;
+
+        #endregion
+
         /// <summary>
         /// Returns the URL where KeePass can check for updates of this plugin
         /// </summary>
@@ -71,14 +90,51 @@ namespace KoenZomersKeePassOneDriveSync
             Host.MainWindow.FileClosed += OnKeePassDatabaseClosed;
 
             // Add the menu option for configuration under Tools
-            var menu = Host.MainWindow.ToolsMenu.DropDownItems;
-            menu.Add(new ToolStripSeparator());
-            var menuItem = new ToolStripMenuItem("OneDriveSync Options");
-            menuItem.Click += MenuOptionsOnClick;
-            menu.Add(menuItem);
+            var optionsmenu = Host.MainWindow.ToolsMenu.DropDownItems;
+
+            _toolsMenuSeparator = new ToolStripSeparator();
+            optionsmenu.Add(_toolsMenuSeparator);
+
+            _toolsMenuConfigMenuItem = new ToolStripMenuItem("OneDriveSync Options", Resources.OneDriveIcon);
+            _toolsMenuConfigMenuItem.Click += MenuOptionsOnClick;
+            optionsmenu.Add(_toolsMenuConfigMenuItem);
+
+            // Add the menu option for configuration under File > Open
+            var filemenu = Host.MainWindow.MainMenu.Items["m_menuFile"] as ToolStripMenuItem;
+            if (filemenu != null)
+            {
+                var openmenu = filemenu.DropDownItems["m_menuFileOpen"] as ToolStripMenuItem;
+                if (openmenu != null)
+                {
+                    _fileOpenMenuItem = new ToolStripMenuItem("Open from OneDrive...", Resources.OneDriveIcon);
+                    _fileOpenMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.O;
+                    _fileOpenMenuItem.Click += MenuFileOpenFromOneDriveOnClick;
+                    openmenu.DropDownItems.Add(_fileOpenMenuItem);
+                }
+            }
 
             // Indicate that the plugin started successfully
             return true;
+        }
+
+        /// <summary>
+        /// Called when the Plugin is being terminated
+        /// </summary>
+        public override void Terminate()
+        {
+            // Remove custom items from the menu as per recommendations on http://keepass.info/help/v2_dev/plg_index.html
+            var optionsmenu = Host.MainWindow.ToolsMenu.DropDownItems;
+
+            _toolsMenuConfigMenuItem.Click -= MenuOptionsOnClick;
+            optionsmenu.Remove(_toolsMenuSeparator);
+            optionsmenu.Remove(_toolsMenuConfigMenuItem);
+
+            var openmenu = Host.MainWindow.MainMenu.Items["m_menuFile"] as ToolStripMenuItem;
+            if (openmenu != null)
+            {
+                _fileOpenMenuItem.Click -= MenuFileOpenFromOneDriveOnClick;
+                openmenu.DropDownItems.Remove(_fileOpenMenuItem);
+            }
         }
 
         /// <summary>
@@ -118,6 +174,14 @@ namespace KoenZomersKeePassOneDriveSync
         {
             var oneDriveConfigForm = new OneDriveConfigForm();
             oneDriveConfigForm.ShowDialog();
+        }
+
+        /// <summary>
+        /// Triggered when clicking on the Open from OneDrive menu item under File > Open
+        /// </summary>
+        private async static void MenuFileOpenFromOneDriveOnClick(object sender, EventArgs e)
+        {
+            await KeePassDatabase.OpenDatabaseFromCloudService();
         }
 
         /// <summary>

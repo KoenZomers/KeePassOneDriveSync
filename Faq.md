@@ -22,6 +22,10 @@ No I cannot.
 
 No I will not. Lots of functionality inside the plugin depends on the async development patterns introduced in the .NET 4.5 framework. I will not take the extreme efforts to use alternative approaches for this. Just install .NET 4.5 or later. If you can't because you're still on Windows XP: dude, upgrade your operating system!
 
+### Why do I manually have to download the KeePass database first from OneDrive? ###
+
+You don't have to anymore. With version 1.6.0.0 I've introduced the option under File -> Open -> Open from OneDrive to directly open the KeePass from OneDrive and set it up for synchronization locally with just a few steps.
+
 ### Other questions ###
 
 Feel free to e-mail me at mail@koenzomers.nl
