@@ -95,8 +95,14 @@ namespace KoenZomersKeePassOneDriveSync
                 await cloudStorage.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
                 return cloudStorage;
             }
+            catch (KoenZomers.OneDrive.Api.Exceptions.TokenRetrievalFailedException e)
+            {
+                // Something went wrong with retrieving the access token
+                throw;
+            }
             catch (Exception e)
             {
+                // If specifically the HttpRequestException occurred, it likely contains more information on what went wrong, so pass it up to the callstack
                 if (e.GetType().ToString() == "System.Net.Http.HttpRequestException")
                 {
                     throw;

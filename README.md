@@ -23,7 +23,11 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
-Version 1.6.1.0 - October 10, 2016
+Version 1.6.2.0 - October 14, 2016
+
+- If for whatever reason it can't get an OneDrive instance, it will now prompt you to log in again. This could i.e. happen if you change your OneDrive/OneDrive for Business credentials. This invalidates all existing oAuth refresh tokens. If you change your credentials, the plugin will now detect that the refresh token is no longer valid and will simply request you to log in once with your new credentials to get a new working refresh token. Thanks to Carl Craft for bringing this issue to my attention.
+
+Version 1.6.1.0 - October 13, 2016
 
 - Thanks to pointers from Filip Hasa I managed to set up a Squid on Windows proxy server so I can finally test the proxy scenarios myself. Fixed several proxy issues, mainly when using the "Default Credentials" and/or "Use system proxy settings" things could go wrong. If you're still encountering proxy issues with this version, please let me know.
 

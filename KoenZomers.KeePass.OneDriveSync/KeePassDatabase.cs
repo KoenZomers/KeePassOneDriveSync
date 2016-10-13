@@ -172,32 +172,49 @@ namespace KoenZomersKeePassOneDriveSync
 
             // Connect to OneDrive
             OneDriveApi oneDriveApi = null;
-            try
+            bool retryGettingApiInstance;
+            do
             {
-                oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig);
-            }
-            catch (Exception e)
-            {
-                // Build the error text to show to the end user
-                var errorMessage = new System.Text.StringBuilder();
-                errorMessage.Append("Failed to connect to ");
-                switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
+                retryGettingApiInstance = false;
+                try
                 {
-                    case CloudStorageType.OneDriveConsumer: errorMessage.Append("OneDrive"); break;
-                    case CloudStorageType.OneDriveForBusiness: errorMessage.Append("OneDrive for Business"); break;
-                    default: errorMessage.Append("cloud storage provider"); break;
+                    oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig);
                 }
-                errorMessage.AppendLine(":");
-                errorMessage.AppendLine();
-                errorMessage.AppendLine(e.Message);
+                catch (KoenZomers.OneDrive.Api.Exceptions.TokenRetrievalFailedException e)
+                {
+                    // Failed to get a OneDrive API instance because retrieving an oAuth token failed. This could be because the oAuth token expired or has been removed. Show the login dialog again so we can get a new token.
+                    databaseConfig.RefreshToken = null;
+                    retryGettingApiInstance = true;
+                }
+                catch (Exception e)
+                {
+                    // Build the error text to show to the end user
+                    var errorMessage = new System.Text.StringBuilder();
+                    errorMessage.Append("Failed to connect to ");
+                    switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
+                    {
+                        case CloudStorageType.OneDriveConsumer:
+                            errorMessage.Append("OneDrive");
+                            break;
+                        case CloudStorageType.OneDriveForBusiness:
+                            errorMessage.Append("OneDrive for Business");
+                            break;
+                        default:
+                            errorMessage.Append("cloud storage provider");
+                            break;
+                    }
+                    errorMessage.AppendLine(":");
+                    errorMessage.AppendLine();
+                    errorMessage.AppendLine(e.Message);
 
-                // If there's an inner exception, show its message as well as it typically gives more detail why it went wrong
-                if (e.InnerException != null)
-                {
-                    errorMessage.AppendLine(e.InnerException.Message);
+                    // If there's an inner exception, show its message as well as it typically gives more detail why it went wrong
+                    if (e.InnerException != null)
+                    {
+                        errorMessage.AppendLine(e.InnerException.Message);
+                    }
+                    MessageBox.Show(errorMessage.ToString(), "Connection failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 }
-                MessageBox.Show(errorMessage.ToString(), "Connection failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-            }
+            } while (retryGettingApiInstance);
 
             if (oneDriveApi == null)
             {
