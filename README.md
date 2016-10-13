@@ -23,6 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.7.0.0 - October 14, 2016
+
+- The plugin now also supports relative paths. If you store your KeePass database in the same folder as from where you run KeePass or from a folder below the folder from where you run KeePass, it will automatically reference the database by its path relative to the KeePass executable folder. This allows for portable usage when using KeePass on i.e. a thumb drive. If your KeePass database is located in a different folder below the KeePass executable or from a different drive, it will keep referencing it by its full path. Thanks to Devin Jenson for making this request.
+
 Version 1.6.2.0 - October 14, 2016
 
 - If for whatever reason it can't get an OneDrive instance, it will now prompt you to log in again. This could i.e. happen if you change your OneDrive/OneDrive for Business credentials. This invalidates all existing oAuth refresh tokens. If you change your credentials, the plugin will now detect that the refresh token is no longer valid and will simply request you to log in once with your new credentials to get a new working refresh token. Thanks to Carl Craft for bringing this issue to my attention.

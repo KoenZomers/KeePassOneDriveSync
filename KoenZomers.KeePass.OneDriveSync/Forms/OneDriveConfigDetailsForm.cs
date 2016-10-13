@@ -62,7 +62,7 @@ namespace KoenZomersKeePassOneDriveSync
         private async void ForceSyncButton_Click(object sender, EventArgs e)
         {
             UpdateStatus("Synchronizing");
-            await KeePassDatabase.SyncDatabase(_configuration.Key, UpdateStatus, true);
+            await KeePassDatabase.SyncDatabase(_configuration.Key, UpdateStatus, true, null);
             ShowConfiguration();
         }
 

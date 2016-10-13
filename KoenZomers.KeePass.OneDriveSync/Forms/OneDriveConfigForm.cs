@@ -136,7 +136,7 @@ namespace KoenZomersKeePassOneDriveSync
             }
             
             UpdateStatus("Synchronizing");
-            await KeePassDatabase.SyncDatabase(ConfigurationListView.SelectedItems[0].Text, UpdateStatus, true);
+            await KeePassDatabase.SyncDatabase(ConfigurationListView.SelectedItems[0].Text, UpdateStatus, true, configuration.Value);
         }
 
         private async void ConfigurationListViewContextItemSyncNow_Click(object sender, EventArgs e)

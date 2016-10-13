@@ -135,13 +135,16 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// Checks if a newer database exists on OneDrive compared to the locally opened version and syncs them if so
         /// </summary>
-        /// <param name="localKeePassDatabasePath">Full path to where the KeePass database resides locally</param>
+        /// <param name="localKeePassDatabasePath">Full path or relative path from the KeePass executable folder to where the KeePass database resides locally</param>
         /// <param name="updateStatus">Method to call to update the status</param>
         /// <param name="forceSync">If True, no attempts will be made to validate if the local copy differs from the remote copy and it will always sync. If False, it will try to validate if there are any changes and not sync if there are no changes.</param>
-        public static async Task SyncDatabase(string localKeePassDatabasePath, Action<string> updateStatus, bool forceSync)
+        public static async Task SyncDatabase(string localKeePassDatabasePath, Action<string> updateStatus, bool forceSync, Configuration databaseConfig)
         {
             // Retrieve the KeePassOneDriveSync settings
-            var databaseConfig = Configuration.GetPasswordDatabaseConfiguration(localKeePassDatabasePath);
+            if (databaseConfig == null)
+            {
+                databaseConfig = Configuration.GetPasswordDatabaseConfiguration(localKeePassDatabasePath);
+            }
 
             // Check if this database explicitly does not allow to be synced with OneDrive and if syncing is enabled on this database
             if (databaseConfig.DoNotSync || !databaseConfig.SyncingEnabled)
