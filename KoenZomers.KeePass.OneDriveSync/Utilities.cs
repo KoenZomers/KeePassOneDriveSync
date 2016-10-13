@@ -95,8 +95,12 @@ namespace KoenZomersKeePassOneDriveSync
                 await cloudStorage.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
                 return cloudStorage;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                if (e.GetType().ToString() == "System.Net.Http.HttpRequestException")
+                {
+                    throw;
+                }
                 // Occurs if no connection can be made with the OneDrive service. It will be handled properly in the calling code.
                 return null;
             }
@@ -116,6 +120,7 @@ namespace KoenZomersKeePassOneDriveSync
             {
                 case ProxyServerType.None:
                     oneDriveApi.UseProxy = false;
+                    oneDriveApi.ProxyConfiguration = null;
                     return;
 
                 case ProxyServerType.Manual:
@@ -131,12 +136,16 @@ namespace KoenZomersKeePassOneDriveSync
 
                 case ProxyServerType.System:
                     oneDriveApi.UseProxy = true;
+                    oneDriveApi.ProxyConfiguration = new WebProxy();
                     break;
             }
 
             if (KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Default)
             {
-                oneDriveApi.ProxyConfiguration.UseDefaultCredentials = true;
+                if (oneDriveApi.ProxyConfiguration != null)
+                {
+                    oneDriveApi.ProxyConfiguration.UseDefaultCredentials = true;
+                }
             }
         }
 

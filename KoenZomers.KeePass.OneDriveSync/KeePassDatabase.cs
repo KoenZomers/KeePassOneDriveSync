@@ -6,6 +6,7 @@ using KeePass.DataExchange;
 using KeePassLib.Serialization;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
+using KoenZomers.OneDrive.Api;
 using KoenZomers.OneDrive.Api.Entities;
 using KoenZomersKeePassOneDriveSync.Forms;
 
@@ -170,7 +171,33 @@ namespace KoenZomersKeePassOneDriveSync
             }
 
             // Connect to OneDrive
-            var oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig);
+            OneDriveApi oneDriveApi = null;
+            try
+            {
+                oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig);
+            }
+            catch (Exception e)
+            {
+                // Build the error text to show to the end user
+                var errorMessage = new System.Text.StringBuilder();
+                errorMessage.Append("Failed to connect to ");
+                switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
+                {
+                    case CloudStorageType.OneDriveConsumer: errorMessage.Append("OneDrive"); break;
+                    case CloudStorageType.OneDriveForBusiness: errorMessage.Append("OneDrive for Business"); break;
+                    default: errorMessage.Append("cloud storage provider"); break;
+                }
+                errorMessage.AppendLine(":");
+                errorMessage.AppendLine();
+                errorMessage.AppendLine(e.Message);
+
+                // If there's an inner exception, show its message as well as it typically gives more detail why it went wrong
+                if (e.InnerException != null)
+                {
+                    errorMessage.AppendLine(e.InnerException.Message);
+                }
+                MessageBox.Show(errorMessage.ToString(), "Connection failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            }
 
             if (oneDriveApi == null)
             {
