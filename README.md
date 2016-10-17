@@ -23,6 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.7.1.0 - October 17, 2016
+
+- Fixed an issue when using a proxy with the system default settings and the system default credentials which I introduced in 1.7.0.0. Thanks everyone for reporting this!
+
 Version 1.7.0.0 - October 14, 2016
 
 - The plugin now also supports relative paths. If you store your KeePass database in the same folder as from where you run KeePass or from a folder below the folder from where you run KeePass, it will automatically reference the database by its path relative to the KeePass executable folder. This allows for portable usage when using KeePass on i.e. a thumb drive. If your KeePass database is located in a different folder below the KeePass executable or from a different drive, it will keep referencing it by its full path. Thanks to Devin Jenson for making this request.

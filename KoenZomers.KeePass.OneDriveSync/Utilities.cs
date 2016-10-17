@@ -122,37 +122,24 @@ namespace KoenZomersKeePassOneDriveSync
         /// <param name="oneDriveApi">OneDriveApi instance to apply the proper proxy settings to</param>
         public static void ApplyProxySettings(OneDriveApi oneDriveApi)
         {
+            // Configure thr proxy to use
             switch (KeePass.Program.Config.Integration.ProxyType)
             {
                 case ProxyServerType.None:
-                    oneDriveApi.UseProxy = false;
                     oneDriveApi.ProxyConfiguration = null;
                     return;
 
                 case ProxyServerType.Manual:
-                    oneDriveApi.UseProxy = true;
                     oneDriveApi.ProxyConfiguration = new WebProxy(string.Concat(KeePass.Program.Config.Integration.ProxyAddress, ":", KeePass.Program.Config.Integration.ProxyPort));
-                    oneDriveApi.ProxyConfiguration.UseDefaultCredentials = KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Auto || KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Default;
-
-                    if (KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Manual)
-                    {
-                        oneDriveApi.ProxyConfiguration.Credentials = new NetworkCredential(KeePass.Program.Config.Integration.ProxyUserName, KeePass.Program.Config.Integration.ProxyPassword);
-                    }
                     break;
 
                 case ProxyServerType.System:
-                    oneDriveApi.UseProxy = true;
-                    oneDriveApi.ProxyConfiguration = new WebProxy();
+                    oneDriveApi.ProxyConfiguration = WebRequest.DefaultWebProxy;
                     break;
             }
 
-            if (KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Default)
-            {
-                if (oneDriveApi.ProxyConfiguration != null)
-                {
-                    oneDriveApi.ProxyConfiguration.UseDefaultCredentials = true;
-                }
-            }
+            // Configure the credentials to use for the proxy
+            oneDriveApi.ProxyCredential = KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Manual ? new NetworkCredential(KeePass.Program.Config.Integration.ProxyUserName, KeePass.Program.Config.Integration.ProxyPassword) : null;
         }
 
         #endregion
