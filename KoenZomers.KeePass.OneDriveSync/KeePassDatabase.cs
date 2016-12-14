@@ -99,7 +99,9 @@ namespace KoenZomersKeePassOneDriveSync
             var saveFiledialog = new SaveFileDialog
             {
                 Filter = "KeePass databases (*.kdbx)|*.kdbx|All Files (*.*)|*.*",
-                Title = "Select where to store the KeePass database locally"
+                Title = "Select where to store the KeePass database locally",
+                CheckFileExists = false,
+                FileName = oneDriveItem.Name
             };
 
             var saveFileDialogResult = saveFiledialog.ShowDialog();
