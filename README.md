@@ -23,6 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.7.3.0 - December 14, 2016
+
+- When being offline, it would show a modal dialog with an error which you would need to dismiss. Now instead it will just display an offline message in the status bar to make it more user friendly.
+
 Version 1.7.2.0 - December 14, 2016
 
 - When using the File -> Open from OneDrive option and getting to saving the KeePass database locally, it will now assume the same file name as it is stored under on OneDrive as the default filename

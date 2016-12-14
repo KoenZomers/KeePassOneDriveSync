@@ -216,7 +216,16 @@ namespace KoenZomersKeePassOneDriveSync
                     if (e.InnerException != null)
                     {
                         errorMessage.AppendLine(e.InnerException.Message);
+
+                        // Verify if we're offline
+                        if (e.InnerException.Message.Contains("remote name could not be resolved"))
+                        {
+                            // Offline, don't display a modal dialog but use the status bar instead
+                            UpdateStatus("Can't connect. Working offline.");
+                            return;
+                        }
                     }
+
                     MessageBox.Show(errorMessage.ToString(), "Connection failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 }
             } while (retryGettingApiInstance);
