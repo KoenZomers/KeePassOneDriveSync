@@ -25,7 +25,7 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 Version 1.8.0.0 - December 16, 2016
 
-- If you had two or more KeePass databases open at the same time and you would cause a sync of one database by i.e. pressing ctrl+s while switching to another open database in KeePass before the sync was done, it would try to merge the first database with the other open database. A check has been added to stop the sync in this scenario so two different databases will never become merged. [issue 25](./issues/25)
+- If you had two or more KeePass databases open at the same time and you would cause a sync of one database by i.e. pressing ctrl+s while switching to another open database in KeePass before the sync was done, it would try to merge the first database with the other open database. A check has been added to stop the sync in this scenario so two different databases will never become merged. [issue 25](../../issues/25)
 
 Version 1.7.3.0 - December 14, 2016
 
