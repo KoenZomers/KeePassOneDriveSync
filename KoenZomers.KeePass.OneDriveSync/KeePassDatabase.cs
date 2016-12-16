@@ -343,6 +343,13 @@ namespace KoenZomersKeePassOneDriveSync
             // Sync database
             updateStatus("KeePass database downloaded, going to sync");
 
+            // Ensure the database that needs to be synced is still the database currently selected in KeePass to avoid merging the downloaded database with the wrong database in KeePass
+            if (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath)
+            {
+                updateStatus("Failed to sync. Please don't switch to another database before done.");
+                return;
+            }
+
             var connectionInfo = IOConnectionInfo.FromPath(temporaryKeePassDatabasePath);
             var formatter = KoenZomersKeePassOneDriveSyncExt.Host.FileFormatPool.Find("KeePass KDBX (2.x)");
 
