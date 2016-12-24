@@ -23,6 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.8.1.0 - December 24, 2016
+
+- Bugfix of a bug introduced in 1.8.0.0 where having a KeePass database stored in the same folder or in a folder under the folder where the KeePass executable resides gave the error "Failed to sync. Please don't switch to another database before done." when trying to save the changes of the KeePass database. Thanks to DazzaQLD for reporting it [issue 26](../../issues/26)
+
 Version 1.8.0.0 - December 16, 2016
 
 - If you had two or more KeePass databases open at the same time and you would cause a sync of one database by i.e. pressing ctrl+s while switching to another open database in KeePass before the sync was done, it would try to merge the first database with the other open database. A check has been added to stop the sync in this scenario so two different databases will never become merged. [issue 25](../../issues/25)

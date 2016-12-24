@@ -344,7 +344,8 @@ namespace KoenZomersKeePassOneDriveSync
             updateStatus("KeePass database downloaded, going to sync");
 
             // Ensure the database that needs to be synced is still the database currently selected in KeePass to avoid merging the downloaded database with the wrong database in KeePass
-            if (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath)
+            if ((!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath) || 
+                (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Remove(0, Environment.CurrentDirectory.Length + 1) != localKeePassDatabasePath))
             {
                 updateStatus("Failed to sync. Please don't switch to another database before done.");
                 return;
