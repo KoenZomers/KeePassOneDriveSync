@@ -26,6 +26,10 @@ No I will not. Lots of functionality inside the plugin depends on the async deve
 
 You don't have to anymore. With version 1.6.0.0 I've introduced the option under File -> Open -> Open from OneDrive to directly open the KeePass from OneDrive and set it up for synchronization locally with just a few steps.
 
+### What happens to my KeePass database if multiple changes on multiple devices have been made? ###
+
+When triggering a save (ctrl+s) or opening a KeePass database, the plugin will automatically verify against OneDrive Consumer / OneDrive for Business if the file hosted there has been updated since the last time that specific client downloaded it. If not, it will not do anything. If so, it will download a copy of that KeePass database to a temporary location on your harddrive and merge all changes from the downloaded copy with your local KeePass database. So changes in both the version stored online as well as in your local copy will be retained. Not at any time will one overwrite the other. This is ideal in situations where you're using KeePass on clients that are not always online (i.e. laptops). As soon as you get online and trigger a sync, everything will be merged again. Once the changes are merged, an updated copy of the KeePass database will automatically be uploaded to OneDrive / OneDrive for Business again so your other devices can grab the updated copy.
+
 ### Other questions ###
 
 Feel free to e-mail me at mail@koenzomers.nl
