@@ -23,6 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.8.2.0 - May 9, 2017
+
+- Improved the OneDrive platform selection dialog to aid visually impaired. Thanks to Oire for reporting it [issue 28](../../issues/28)
+
 Version 1.8.1.0 - December 24, 2016
 
 - Bugfix of a bug introduced in 1.8.0.0 where having a KeePass database stored in the same folder or in a folder under the folder where the KeePass executable resides gave the error "Failed to sync. Please don't switch to another database before done." when trying to save the changes of the KeePass database. Thanks to DazzaQLD for reporting it [issue 26](../../issues/26)
