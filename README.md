@@ -3,9 +3,9 @@
 I've created a free plugin for KeePass that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your Windows devices.
 
 ## Download ##
-You need to download either the DLLs *OR* the PLGX and place it inside your KeePass\Plugins folder (typically C:\Program Files (x86)\KeePass Password Safe 2\Plugins), so not both:
-- [Direct download PLGX](../../raw/master/KeeOneDriveSync.plgx)
-- OR [Direct download DLLs](../../raw/master/KeeOneDriveSync.zip)
+You need to download either the DLLs *OR* the PLGX and place it inside your KeePass\Plugins folder (typically C:\Program Files (x86)\KeePass Password Safe 2\Plugins), so not both. I've switched to using the GitHub releases functionality.
+
+[You can find the latest stable version here](../../releases/latest)
 
 ## Documentation ##
 - [Installation instructions](./Installaton%20Instructions.md)
