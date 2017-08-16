@@ -2,6 +2,22 @@
 
 ## Version History
 
+Version 1.7.3.0 - December 14, 2016
+
+- When being offline, it would show a modal dialog with an error which you would need to dismiss. Now instead it will just display an offline message in the status bar to make it more user friendly.
+
+Version 1.7.2.0 - December 14, 2016
+
+- When using the File -> Open from OneDrive option and getting to saving the KeePass database locally, it will now assume the same file name as it is stored under on OneDrive as the default filename
+
+Version 1.7.1.0 - October 17, 2016
+
+- Fixed an issue when using a proxy with the system default settings and the system default credentials which I introduced in 1.7.0.0. Thanks everyone for reporting this!
+
+Version 1.7.0.0 - October 14, 2016
+
+- The plugin now also supports relative paths. If you store your KeePass database in the same folder as from where you run KeePass or from a folder below the folder from where you run KeePass, it will automatically reference the database by its path relative to the KeePass executable folder. This allows for portable usage when using KeePass on i.e. a thumb drive. If your KeePass database is located in a different folder below the KeePass executable or from a different drive, it will keep referencing it by its full path. Thanks to Devin Jenson for making this request.
+
 Version 1.6.2.0 - October 14, 2016
 
 - If for whatever reason it can't get an OneDrive instance, it will now prompt you to log in again. This could i.e. happen if you change your OneDrive/OneDrive for Business credentials. This invalidates all existing oAuth refresh tokens. If you change your credentials, the plugin will now detect that the refresh token is no longer valid and will simply request you to log in once with your new credentials to get a new working refresh token. Thanks to Carl Craft for bringing this issue to my attention.
@@ -34,7 +50,7 @@ Version 1.4.4.0 - April 29, 2016
 
 Version 1.4.3.0 - April 26, 2016
 
-- Fixed an issue where if you would use different filenames for your KeePass database locally and on OneDrive or OneDrive for Business, that it wouldn't sync properly anymore. Thanks to Jörgen Nydahl for reporting this!
+- Fixed an issue where if you would use different filenames for your KeePass database locally and on OneDrive or OneDrive for Business, that it wouldn't sync properly anymore. Thanks to JÃ¶rgen Nydahl for reporting this!
 - Attempt to solve an issue where on Windows machines running Windows in a non English language, an error may occur. If you still run into this issue, let me know.
 
 Version 1.4.2.0 - March 31, 2016
