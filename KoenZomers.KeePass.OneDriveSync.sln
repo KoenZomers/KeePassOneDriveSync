@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoenZomers.KeePass.OneDriveSync", "KoenZomers.KeePass.OneDriveSync\KoenZomers.KeePass.OneDriveSync.csproj", "{ED981431-32EA-4FC8-BF5B-D5A29B3AD52E}"
 EndProject
@@ -15,8 +15,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C51FE94D-1D06-497B-97AA-5B80030F6E7A}"
 	ProjectSection(SolutionItems) = preProject
 		create-plgx.cmd = create-plgx.cmd
-		KeeOneDriveSync.plgx = KeeOneDriveSync.plgx
-		KeeOneDriveSync.zip = KeeOneDriveSync.zip
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{1985E673-364B-4E4F-9DF4-7F110239AEB0}"
