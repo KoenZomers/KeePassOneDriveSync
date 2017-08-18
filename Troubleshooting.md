@@ -18,3 +18,11 @@ If you're receiving an error after KeePass has started and you're setting up a s
 ### Proxy Issues ###
 
 Every now and then I get e-mails from people that state that KeePass OneDrive Sync won't work through their proxy setup. This plugin takes over the proxy settings you define inside KeePass. You can find these in KeePass under Tools > Options > Advanced tab > Proxy at the bottom right. Make sure these settings are correct for your environment. If taking the default system proxy and credentials don't work, try if it does work if you explicitly configure them in KeePass.
+
+### Exceptions when opening KeePass OneDrive Sync Properties
+
+If you get an exception thrown by the plugin when you try to open the KeePass OneDriveSync properties dialog, your config may have gotten corrupted. Close KeePass. Open the following file in notepad:
+
+C:\Users\\\<your username>\AppData\Roaming\KeePass\KeePass.config.xml
+
+Look for a section \<Custom>\\\<Item>\\\<Key>KeeOneDrive\</Key>. Remove this whole \<Item>...\</Item> section from the file and save it. Restart KeePass and reconfigure your KeePass OneDriveSync connections.
