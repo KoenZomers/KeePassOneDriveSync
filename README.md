@@ -23,6 +23,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 1.8.3.0 - August 18, 2017
+
+- Fixed an issue where having unsaved changes to your KeePass database and then exiting KeePass would not get the changes uploaded to OneDrive/OneDrive for Business before KeePass would exit. It will now wait with closing KeePass until the changes are saved. Thanks to Darko Jamnik for reporting this issue.
+
 Version 1.8.2.0 - May 9, 2017
 
 - Improved the OneDrive platform selection dialog to aid visually impaired. Thanks to Oire for reporting it [issue 28](../../issues/28)

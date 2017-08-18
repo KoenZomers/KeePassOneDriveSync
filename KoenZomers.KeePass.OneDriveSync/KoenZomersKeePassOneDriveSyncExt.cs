@@ -4,6 +4,7 @@ using KeePass.Forms;
 using KeePass.Plugins;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
+using System.Threading.Tasks;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -63,6 +64,11 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         private ToolStripMenuItem _fileOpenMenuItem;
 
+        /// <summary>
+        /// Boolean to indicate if some process is still running that we need to wait for before we shut down KeePass
+        /// </summary>
+        internal static bool IsSomethingStillRunning { get; set; }
+
         #endregion
 
         /// <summary>
@@ -88,6 +94,7 @@ namespace KoenZomersKeePassOneDriveSync
             Host.MainWindow.FileOpened += OnKeePassDatabaseOpened;
             Host.MainWindow.FileSaved += MainWindowOnFileSaved;
             Host.MainWindow.FileClosed += OnKeePassDatabaseClosed;
+            Host.MainWindow.FileClosingPost += OnKeePassDatabaseClosing;
 
             // Add the menu option for configuration under Tools
             var optionsmenu = Host.MainWindow.ToolsMenu.DropDownItems;
@@ -118,7 +125,7 @@ namespace KoenZomersKeePassOneDriveSync
         }
 
         /// <summary>
-        /// Called when the Plugin is being terminated
+        /// Triggered when the Plugin is being terminated
         /// </summary>
         public override void Terminate()
         {
@@ -134,6 +141,23 @@ namespace KoenZomersKeePassOneDriveSync
             {
                 _fileOpenMenuItem.Click -= MenuFileOpenFromOneDriveOnClick;
                 openmenu.DropDownItems.Remove(_fileOpenMenuItem);
+            }
+        }
+
+        /// <summary>
+        /// Triggered when a KeePass database is closing after the database has been saved
+        /// </summary>
+        private void OnKeePassDatabaseClosing(object sender, FileClosingEventArgs e)
+        {
+            // Check if there's still a process running that we need to wait for before allowing KeePass to terminate
+            if (IsSomethingStillRunning)
+            {
+                Host.MainWindow.SetStatusEx("Waiting for OneDriveSync to complete...");
+                do
+                {
+                    System.Threading.Thread.Sleep(1);
+                    Application.DoEvents();
+                } while (IsSomethingStillRunning);
             }
         }
 
