@@ -23,6 +23,11 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 2.0.0.0 - August 23, 2017
+
+- Replaced DLLs in the solution with NuGet package references. This does increase the PLGX file size, but does ease keeping this plugin updated with the latest versions for developers
+- Upgraded KoenZomers.OneDrive.Api to v2.0.1.0 which has support for the Microsoft Graph API
+
 Version 1.8.3.0 - August 18, 2017
 
 - Fixed an issue where having unsaved changes to your KeePass database and then exiting KeePass would not get the changes uploaded to OneDrive/OneDrive for Business before KeePass would exit. It will now wait with closing KeePass until the changes are saved. Thanks to Darko Jamnik for reporting this issue.
