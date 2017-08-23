@@ -2,6 +2,15 @@
 
 ## Troubleshooting ##
 
+### Known issues ###
+
+The following issues are known issues:
+
+- Removing custom icons and then syncing the database again will return the removed icons. This is a defect in KeePass itself and not something I can fix.
+- Removing history items of an entry in KeePass and then syncing the database again will return the removed history entries. This is also a defect in KeePass itself and not something I can fix.
+
+If the issue you're facing is not in the list above, perform the following steps:
+
 If you're receiving an error when starting KeePass after placing the PLGX or DLL files inside your KeePass folder, follow these steps:
 
 1. Ensure you have the very latest version of the plugin as available here on GitHub
