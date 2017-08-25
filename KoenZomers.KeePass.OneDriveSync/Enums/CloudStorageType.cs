@@ -18,6 +18,6 @@
         /// <summary>
         /// Microsoft Graph API
         /// </summary>
-        MicrosoftGraph
+        MicrosoftGraph = 2
     }
 }

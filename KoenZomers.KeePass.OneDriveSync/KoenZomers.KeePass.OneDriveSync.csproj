@@ -168,6 +168,9 @@
     <Content Include="Images\KeePassO365.png" />
     <Content Include="Images\OneDriveConsumer.png" />
     <Content Include="Images\OneDriveForBusiness.png" />
+    <None Include="Resources\OneDriveForBusiness.png" />
+    <None Include="Resources\OneDrive.png" />
+    <None Include="Resources\MSGraph.png" />
     <None Include="packages.config" />
     <None Include="Resources\OneDriveIcon.png" />
   </ItemGroup>
