@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.OneDrive.Api;
 
 namespace KoenZomersKeePassOneDriveSync

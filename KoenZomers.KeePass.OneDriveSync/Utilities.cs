@@ -58,6 +58,10 @@ namespace KoenZomersKeePassOneDriveSync
                     cloudStorage = new OneDriveForBusinessO365Api(KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientSecret);
                     break;
 
+                case CloudStorageType.MicrosoftGraph:
+                    cloudStorage = new OneDriveGraphApi(KoenZomersKeePassOneDriveSyncExt.GraphApiApplicationId);
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException(string.Format("Cloud storage type {0} is not supported", databaseConfig.CloudStorageType));
             }

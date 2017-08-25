@@ -93,7 +93,8 @@ namespace KoenZomersKeePassOneDriveSync.Forms
              var selectedItem = CloudLocationPicker.SelectedItems[0];
              if (selectedItem.ImageKey == "File" && OKButton.Enabled)
              {
-                 OKButton_Click(sender, e);
+                OKButton_Click(sender, e);
+                return;
              }
 
              await LoadFolderItems(selectedItem.Tag.ToString());

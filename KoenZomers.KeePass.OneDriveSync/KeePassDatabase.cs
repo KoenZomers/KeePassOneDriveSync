@@ -50,6 +50,7 @@ namespace KoenZomersKeePassOneDriveSync
                 {
                     case CloudStorageType.OneDriveConsumer: UpdateStatus("Failed to connect to OneDrive"); break;
                     case CloudStorageType.OneDriveForBusiness: UpdateStatus("Failed to connect to OneDrive for Business"); break;
+                    case CloudStorageType.MicrosoftGraph: UpdateStatus("Failed to connect to Microsoft Graph"); break;
                     default: UpdateStatus("Failed to connect to cloud service"); break;
                 }
                 return;
@@ -90,6 +91,7 @@ namespace KoenZomersKeePassOneDriveSync
                 {
                     case CloudStorageType.OneDriveConsumer: UpdateStatus("Unable to find the database on your OneDrive"); break;
                     case CloudStorageType.OneDriveForBusiness: UpdateStatus("Unable to find the database on your OneDrive for Business"); break;
+                    case CloudStorageType.MicrosoftGraph: UpdateStatus("Unable to find the database on through Microsoft Graph"); break;
                     default: UpdateStatus("Failed to connect to cloud service"); break;
                 }
                 return;
@@ -219,6 +221,9 @@ namespace KoenZomersKeePassOneDriveSync
                         case CloudStorageType.OneDriveForBusiness:
                             errorMessage.Append("OneDrive for Business");
                             break;
+                        case CloudStorageType.MicrosoftGraph:
+                            errorMessage.Append("Microsoft Graph");
+                            break;
                         default:
                             errorMessage.Append("cloud storage provider");
                             break;
@@ -255,6 +260,7 @@ namespace KoenZomersKeePassOneDriveSync
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus("Failed to connect to OneDrive"); break;
                     case CloudStorageType.OneDriveForBusiness: updateStatus("Failed to connect to OneDrive for Business"); break;
+                    case CloudStorageType.MicrosoftGraph: updateStatus("Failed to connect to Microsoft Graph"); break;
                     default: updateStatus("Failed to connect to cloud service");break;
                 }
 

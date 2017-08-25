@@ -23,11 +23,13 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
-Version 2.0.0.0 - August 23, 2017
+Version 2.0.0.0 - August 25, 2017
 
 - Replaced DLLs in the solution with NuGet package references. This does increase the PLGX file size, but does ease keeping this plugin updated with the latest versions for developers
 - Upgraded KoenZomers.OneDrive.Api to v2.0.1.0 which has support for the Microsoft Graph API
 - Plugin is now compiled against the Microsoft .NET Framework v4.5.2 as v4.5 is out of support
+- Added the option to use the Microsoft Graph API to store the KeePass database on OneDrive or OneDrive for Business. The API will automatically define if it's the Consumer OneDrive or OneDrive for Business based on the login you use. Using the Microsoft Graph API option is now the recommended option.
+- Made preparations to support on-premises SharePoint 2013 and 2016 farms. This functionality will become available in a future version.
 
 Version 1.8.3.0 - August 18, 2017
 
@@ -63,4 +65,4 @@ Special thanks to Oleksandr Senyuk for making [KeeSkyDrive](http://sourceforge.n
 Comments\suggestions\bug reports are welcome!
 
 Koen Zomers
-mail@koenzomers.nl
+koen@zomers.eu

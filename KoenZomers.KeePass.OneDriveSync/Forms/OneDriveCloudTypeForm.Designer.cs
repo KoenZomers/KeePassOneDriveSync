@@ -31,17 +31,17 @@
             this.CancelButton = new System.Windows.Forms.Button();
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.CloudPlatformTabs = new System.Windows.Forms.TabControl();
-            this.OnlineTab = new System.Windows.Forms.TabPage();
+            this.OneDriveTab = new System.Windows.Forms.TabPage();
             this.GraphPictureButton = new System.Windows.Forms.Button();
-            this.OnPremisesTab = new System.Windows.Forms.TabPage();
+            this.SharePointTab = new System.Windows.Forms.TabPage();
             this.OnPremisesComingLabel = new System.Windows.Forms.Label();
             this.OtherTab = new System.Windows.Forms.TabPage();
             this.OtherLabel = new System.Windows.Forms.Label();
             this.OneDriveForBusinessPictureButton = new System.Windows.Forms.Button();
             this.OneDriveConsumerPictureButton = new System.Windows.Forms.Button();
             this.CloudPlatformTabs.SuspendLayout();
-            this.OnlineTab.SuspendLayout();
-            this.OnPremisesTab.SuspendLayout();
+            this.OneDriveTab.SuspendLayout();
+            this.SharePointTab.SuspendLayout();
             this.OtherTab.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,8 +73,8 @@
             this.CloudPlatformTabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloudPlatformTabs.Controls.Add(this.OnlineTab);
-            this.CloudPlatformTabs.Controls.Add(this.OnPremisesTab);
+            this.CloudPlatformTabs.Controls.Add(this.OneDriveTab);
+            this.CloudPlatformTabs.Controls.Add(this.SharePointTab);
             this.CloudPlatformTabs.Controls.Add(this.OtherTab);
             this.CloudPlatformTabs.Location = new System.Drawing.Point(26, 48);
             this.CloudPlatformTabs.Name = "CloudPlatformTabs";
@@ -82,21 +82,21 @@
             this.CloudPlatformTabs.Size = new System.Drawing.Size(514, 379);
             this.CloudPlatformTabs.TabIndex = 0;
             // 
-            // OnlineTab
+            // OneDriveTab
             // 
-            this.OnlineTab.Controls.Add(this.GraphPictureButton);
-            this.OnlineTab.Location = new System.Drawing.Point(4, 29);
-            this.OnlineTab.Name = "OnlineTab";
-            this.OnlineTab.Size = new System.Drawing.Size(506, 346);
-            this.OnlineTab.TabIndex = 0;
-            this.OnlineTab.Text = "Online";
-            this.OnlineTab.UseVisualStyleBackColor = true;
+            this.OneDriveTab.Controls.Add(this.GraphPictureButton);
+            this.OneDriveTab.Location = new System.Drawing.Point(4, 29);
+            this.OneDriveTab.Name = "OneDriveTab";
+            this.OneDriveTab.Size = new System.Drawing.Size(506, 346);
+            this.OneDriveTab.TabIndex = 0;
+            this.OneDriveTab.Text = "OneDrive";
+            this.OneDriveTab.UseVisualStyleBackColor = true;
             // 
             // GraphPictureButton
             // 
             this.GraphPictureButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.GraphPictureButton.BackColor = System.Drawing.Color.White;
+            this.GraphPictureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GraphPictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.GraphPictureButton.Location = new System.Drawing.Point(11, 17);
             this.GraphPictureButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -109,15 +109,15 @@
             this.GraphPictureButton.UseVisualStyleBackColor = false;
             this.GraphPictureButton.Click += new System.EventHandler(this.GraphPictureButton_Click);
             // 
-            // OnPremisesTab
+            // SharePointTab
             // 
-            this.OnPremisesTab.Controls.Add(this.OnPremisesComingLabel);
-            this.OnPremisesTab.Location = new System.Drawing.Point(4, 29);
-            this.OnPremisesTab.Name = "OnPremisesTab";
-            this.OnPremisesTab.Size = new System.Drawing.Size(506, 346);
-            this.OnPremisesTab.TabIndex = 1;
-            this.OnPremisesTab.Text = "On-Premises";
-            this.OnPremisesTab.UseVisualStyleBackColor = true;
+            this.SharePointTab.Controls.Add(this.OnPremisesComingLabel);
+            this.SharePointTab.Location = new System.Drawing.Point(4, 29);
+            this.SharePointTab.Name = "SharePointTab";
+            this.SharePointTab.Size = new System.Drawing.Size(506, 346);
+            this.SharePointTab.TabIndex = 1;
+            this.SharePointTab.Text = "SharePoint";
+            this.SharePointTab.UseVisualStyleBackColor = true;
             // 
             // OnPremisesComingLabel
             // 
@@ -153,7 +153,7 @@
             this.OtherLabel.Name = "OtherLabel";
             this.OtherLabel.Size = new System.Drawing.Size(478, 34);
             this.OtherLabel.TabIndex = 9;
-            this.OtherLabel.Text = "Only use these if the Online tab doesn\'t work";
+            this.OtherLabel.Text = "Only use these if the OneDrive tab doesn\'t work";
             this.OtherLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // OneDriveForBusinessPictureButton
@@ -206,8 +206,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose Cloud Platform";
             this.CloudPlatformTabs.ResumeLayout(false);
-            this.OnlineTab.ResumeLayout(false);
-            this.OnPremisesTab.ResumeLayout(false);
+            this.OneDriveTab.ResumeLayout(false);
+            this.SharePointTab.ResumeLayout(false);
             this.OtherTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -218,9 +218,9 @@
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.TabControl CloudPlatformTabs;
-        private System.Windows.Forms.TabPage OnlineTab;
+        private System.Windows.Forms.TabPage OneDriveTab;
         private System.Windows.Forms.Button GraphPictureButton;
-        private System.Windows.Forms.TabPage OnPremisesTab;
+        private System.Windows.Forms.TabPage SharePointTab;
         private System.Windows.Forms.Label OnPremisesComingLabel;
         private System.Windows.Forms.TabPage OtherTab;
         private System.Windows.Forms.Label OtherLabel;
