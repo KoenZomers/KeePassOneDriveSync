@@ -46,6 +46,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Installaton Instructions.md = Installaton Instructions.md
 		OneDriveRefreshToken.md = OneDriveRefreshToken.md
 		README.md = README.md
+		SystemRequirements.md = SystemRequirements.md
 		Troubleshooting.md = Troubleshooting.md
 		UpdateCheck.md = UpdateCheck.md
 		VersionHistory.md = VersionHistory.md

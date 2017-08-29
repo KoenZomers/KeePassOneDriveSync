@@ -18,7 +18,7 @@ I have to admit it was a rather vague dialog screen. As from version 1.5.0.0 thi
 
 No I cannot.
 
-### Can you make a version that works with an older .NET Framework version than 4.5? ###
+### Can you make a version that works with an older .NET Framework version than 4.5.2? ###
 
 No I will not. Lots of functionality inside the plugin depends on the async development patterns introduced in the .NET 4.5 framework. I will not take the extreme efforts to use alternative approaches for this. Just install .NET 4.5 or later. If you can't because you're still on Windows XP: dude, upgrade your operating system!
 
@@ -32,4 +32,4 @@ When triggering a save (ctrl+s) or opening a KeePass database, the plugin will a
 
 ### Other questions ###
 
-Feel free to e-mail me at mail@koenzomers.nl
+Feel free to e-mail me at koen@zomers.eu

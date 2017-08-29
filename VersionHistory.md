@@ -2,6 +2,22 @@
 
 ## Version History
 
+Version 1.8.3.0 - August 18, 2017
+
+- Fixed an issue where having unsaved changes to your KeePass database and then exiting KeePass would not get the changes uploaded to OneDrive/OneDrive for Business before KeePass would exit. It will now wait with closing KeePass until the changes are saved. Thanks to Darko Jamnik for reporting this issue.
+
+Version 1.8.2.0 - May 9, 2017
+
+- Improved the OneDrive platform selection dialog to aid visually impaired. Thanks to Oire for reporting it [issue 28](../../issues/28)
+
+Version 1.8.1.0 - December 24, 2016
+
+- Bugfix of a bug introduced in 1.8.0.0 where having a KeePass database stored in the same folder or in a folder under the folder where the KeePass executable resides gave the error "Failed to sync. Please don't switch to another database before done." when trying to save the changes of the KeePass database. Thanks to DazzaQLD for reporting it [issue 26](../../issues/26)
+
+Version 1.8.0.0 - December 16, 2016
+
+- If you had two or more KeePass databases open at the same time and you would cause a sync of one database by i.e. pressing ctrl+s while switching to another open database in KeePass before the sync was done, it would try to merge the first database with the other open database. A check has been added to stop the sync in this scenario so two different databases will never become merged. [issue 25](../../issues/25)
+
 Version 1.7.3.0 - December 14, 2016
 
 - When being offline, it would show a modal dialog with an error which you would need to dismiss. Now instead it will just display an offline message in the status bar to make it more user friendly.

@@ -145,10 +145,16 @@ namespace KoenZomersKeePassOneDriveSync
         public static async Task SyncDatabase(string localKeePassDatabasePath, Action<string> updateStatus, bool forceSync, Configuration databaseConfig)
         {
             // If something is already syncing, abort this attempt. This happens when the Import saves the resulting KeePass database. That by itself triggers another sync which doesn't have to go through the sync process as it just regards the temp database.
-            if (KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning) return;
+            if (KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning)
+            {
+                UpdateStatus("A synchronization is already in progress");
+                return;
+            }
 
             // Set flag to block exiting KeePass until this is done
             KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = true;
+
+            UpdateStatus("Starting database synchronization");
 
             // Retrieve the KeePassOneDriveSync settings
             if (databaseConfig == null)
