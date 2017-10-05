@@ -462,17 +462,14 @@ namespace KoenZomersKeePassOneDriveSync
                 databaseConfig.LastSyncedAt = DateTime.Now;
                 databaseConfig.LastCheckedAt = DateTime.Now;
                 Configuration.Save();
-
-                // Set flag to allow exiting KeePass
-                KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = false;
             }
             catch(Exception e)
             {
                 updateStatus(string.Concat("Failed to sync database: ", e.Message));
-
-                // Set flag to allow exiting KeePass
-                KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = false;
             }
+
+            // Set flag to allow exiting KeePass
+            KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = false;
         }
 
         /// <summary>
