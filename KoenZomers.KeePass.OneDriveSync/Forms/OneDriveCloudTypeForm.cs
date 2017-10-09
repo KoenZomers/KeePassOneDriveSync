@@ -27,6 +27,7 @@ namespace KoenZomersKeePassOneDriveSync
             OneDriveConsumerPictureButton.BackgroundImage = Resources.OneDrive;
             OneDriveForBusinessPictureButton.BackgroundImage = Resources.OneDriveForBusiness;
             GraphPictureButton.BackgroundImage = Resources.MSGraph;
+            SharePointPictureButton.BackgroundImage = Resources.SharePoint;
         }
 
         private void OneDriveConsumerPicture_Click(object sender, EventArgs e)
@@ -67,6 +68,19 @@ namespace KoenZomersKeePassOneDriveSync
             DialogResult = DialogResult.OK;
 
             Close();
+        }
+
+        private void SharePointPictureButton_Click(object sender, EventArgs e)
+        {
+            ChosenCloudStorageType = CloudStorageType.SharePoint;
+            DialogResult = DialogResult.OK;
+
+            Close();
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -45,7 +45,7 @@ namespace KoenZomers.KeePass.OneDriveSync
         #region Serializable Properties
 
         /// <summary>
-        /// Gets or sets refresh token that can be used to get an Access Token for OneDrive access
+        /// Gets or sets refresh token that can be used to get an Access Token for OneDrive access. Will be set to ClientId;ClientSecret in the case of a SharePoint configuration.
         /// </summary>
         [DataMember]
         public string RefreshToken { get; set; }
@@ -57,19 +57,19 @@ namespace KoenZomers.KeePass.OneDriveSync
         public Enums.OneDriveRefreshTokenStorage? RefreshTokenStorage { get; set; } 
 
         /// <summary>
-        /// Gets or sets the name of the OneDrive the KeePass database is synchronized with
+        /// Gets or sets the name of the OneDrive the KeePass database is synchronized with. Will be set to the SharePoint site title in the scenario of a SharePoint configuration.
         /// </summary>
         [DataMember]
         public string OneDriveName { get; set; }
 
         /// <summary>
-        /// Gets or sets database file path on OneDrive relative to the user 
+        /// Gets or sets database file path on OneDrive relative to the user. Will be set to the site URL in the case of a SharePoint configuration.
         /// </summary>
         [DataMember]
         public string RemoteDatabasePath { get; set; }
 
         /// <summary>
-        /// Gets or sets the unique identifier of the folder on OneDrive in which the file is stored
+        /// Gets or sets the unique identifier of the folder on OneDrive in which the file is stored. Will be set to the Document Library title in the case of a SharePoint configuration.
         /// </summary>
         [DataMember]
         public string RemoteFolderId { get; set; }

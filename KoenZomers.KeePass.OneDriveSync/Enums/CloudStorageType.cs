@@ -18,6 +18,11 @@
         /// <summary>
         /// Microsoft Graph API
         /// </summary>
-        MicrosoftGraph = 2
+        MicrosoftGraph = 2,
+
+        /// <summary>
+        /// Microsoft SharePoint
+        /// </summary>
+        SharePoint
     }
 }
