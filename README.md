@@ -23,7 +23,7 @@ Version 2.0.0.0 - December 24, 2017
 - Upgraded KoenZomers.OneDrive.Api to v2.0.1.0 which has support for the Microsoft Graph API
 - Plugin is now compiled against the Microsoft .NET Framework v4.5.2 as v4.5 is out of support
 - Added the option to use the Microsoft Graph API to store the KeePass database on OneDrive or OneDrive for Business. The API will automatically define if it's the Consumer OneDrive or OneDrive for Business based on the login you use. Using the Microsoft Graph API option is now the recommended option.
-- Added support for synchronizing with a SharePoint 2013, 2016 or SharePoint Online site when using Low Trust oAuth (ACS). More information on (./Configuration.md).
+- Added support for synchronizing with a SharePoint 2013, 2016 or SharePoint Online site when using Low Trust oAuth (ACS). More information [here](./Configuration.md).
 - Fixed issue with not being able to close the database anymore if something would go wrong during a sync attempt (i.e. network not available)
 - Added a OneDriveSync Offline option under the File menu. If for whatever reason you temporarily don't want OneDriveSync to communicate with where you stored your database online during opening or saving, you can enable this option. If it's in offline mode, you can still force a sync in KeeOneDriveSync settings. Thanks to Albert Krawczyk for suggesting this option.
 
