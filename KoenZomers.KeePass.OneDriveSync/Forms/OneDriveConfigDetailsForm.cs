@@ -31,6 +31,9 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ShowConfiguration()
         {
+            LocationNameLabel.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? "SharePoint site:" : "OneDrive:";
+            LastSyncedLabel.Text = string.Format(LastSyncedLabel.Text, _configuration.Value.CloudStorageType);
+            LastVerifiedLabel.Text = string.Format(LastVerifiedLabel.Text, _configuration.Value.CloudStorageType);
             OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : _configuration.Value.OneDriveName;
             CloudStorageTypeTextBox.Text = _configuration.Value.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer).ToString();
             LocalKeePassPathTextbox.Text = _configuration.Key;

@@ -36,6 +36,8 @@
             this.OKButton = new System.Windows.Forms.Button();
             this.CloudLocationPath = new System.Windows.Forms.TextBox();
             this.ExplanationLabel = new System.Windows.Forms.Label();
+            this.FileNameLabel = new System.Windows.Forms.Label();
+            this.FileNameTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // SharePointDocumentLibraryPicker
@@ -78,7 +80,6 @@
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKButton.Enabled = false;
             this.OKButton.Location = new System.Drawing.Point(487, 491);
             this.OKButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OKButton.Name = "OKButton";
@@ -110,11 +111,32 @@
             this.ExplanationLabel.TabIndex = 8;
             this.ExplanationLabel.Text = "Select the document library in which you want to store the KeePass database.";
             // 
+            // FileNameLabel
+            // 
+            this.FileNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FileNameLabel.Location = new System.Drawing.Point(12, 499);
+            this.FileNameLabel.Name = "FileNameLabel";
+            this.FileNameLabel.Size = new System.Drawing.Size(77, 22);
+            this.FileNameLabel.TabIndex = 11;
+            this.FileNameLabel.Text = "Filename:";
+            // 
+            // FileNameTextBox
+            // 
+            this.FileNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FileNameTextBox.Location = new System.Drawing.Point(95, 499);
+            this.FileNameTextBox.Name = "FileNameTextBox";
+            this.FileNameTextBox.Size = new System.Drawing.Size(386, 22);
+            this.FileNameTextBox.TabIndex = 10;
+            // 
             // SharePointDocumentLibraryPickerDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(698, 539);
+            this.Controls.Add(this.FileNameLabel);
+            this.Controls.Add(this.FileNameTextBox);
             this.Controls.Add(this.ExplanationLabel);
             this.Controls.Add(this.CloudLocationPath);
             this.Controls.Add(this.CancelButton);
@@ -139,5 +161,7 @@
         private System.Windows.Forms.TextBox CloudLocationPath;
         private System.Windows.Forms.ImageList IconsList;
         private System.Windows.Forms.Label ExplanationLabel;
+        private System.Windows.Forms.Label FileNameLabel;
+        private System.Windows.Forms.TextBox FileNameTextBox;
     }
 }

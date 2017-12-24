@@ -69,7 +69,7 @@ namespace KoenZomers.KeePass.OneDriveSync
         public string RemoteDatabasePath { get; set; }
 
         /// <summary>
-        /// Gets or sets the unique identifier of the folder on OneDrive in which the file is stored. Will be set to the Document Library title in the case of a SharePoint configuration.
+        /// Gets or sets the unique identifier of the folder on OneDrive in which the file is stored. Will be set to the Document Library server relative URL in the case of a SharePoint configuration.
         /// </summary>
         [DataMember]
         public string RemoteFolderId { get; set; }

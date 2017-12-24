@@ -10,9 +10,9 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         #region Properties
 
         /// <summary>
-        /// Returns the Id of the selected SharePoint Document Library
+        /// Returns the server relative URL of the selected SharePoint Document Library
         /// </summary>
-        public string SelectedDocumentLibraryId { get { return SharePointDocumentLibraryPicker.SelectedItems.Count == 0 ? null : SharePointDocumentLibraryPicker.SelectedItems[0].Tag.ToString(); } }
+        public string SelectedDocumentLibraryServerRelativeUrl { get { return SharePointDocumentLibraryPicker.SelectedItems.Count == 0 ? null : SharePointDocumentLibraryPicker.SelectedItems[0].Tag.ToString(); } }
 
         #endregion
 
@@ -21,6 +21,15 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         /// </summary>
         private readonly ClientContext _clientContext;
 
+        /// <summary>
+        /// Gets or the filename in the textbox on the screen
+        /// </summary>
+        public string FileName
+        {
+            get { return FileNameTextBox.Text; }
+            set { FileNameTextBox.Text = value; }
+        }
+
         public SharePointDocumentLibraryPickerDialog(ClientContext clientContext)
         {
             InitializeComponent();
@@ -28,17 +37,20 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             _clientContext = clientContext;
         }
 
+        /// <summary>
+        /// Gets the document library items that are not hidden and renders them in the form
+        /// </summary>
         public void LoadDocumentLibraryItems()
         {
             SharePointDocumentLibraryPicker.Items.Clear();
 
-            _clientContext.Load(_clientContext.Web.Lists, l => l.Include(li => li.Id, li => li.Title, li => li.BaseTemplate));
+            _clientContext.Load(_clientContext.Web.Lists, l => l.Include(li => li.RootFolder.ServerRelativeUrl, li => li.Title, li => li.BaseTemplate, li => li.Hidden));
             _clientContext.ExecuteQuery();
 
-            foreach (var listViewItem in _clientContext.Web.Lists.Where(l => l.BaseTemplate == 101).Select(documentLibraryItem => new ListViewItem
+            foreach (var listViewItem in _clientContext.Web.Lists.Where(l => l.BaseTemplate == 101 && !l.Hidden).Select(documentLibraryItem => new ListViewItem
             {
                 Text = documentLibraryItem.Title,
-                Tag = documentLibraryItem.Id,
+                Tag = documentLibraryItem.RootFolder.ServerRelativeUrl,
                 ImageKey = "Folder"
             }))
             {
@@ -50,7 +62,6 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         {
             if (SharePointDocumentLibraryPicker.SelectedItems.Count == 0) return;
 
-            var selectedItem = SharePointDocumentLibraryPicker.SelectedItems[0];
             if (OKButton.Enabled)
             {
                 OKButton_Click(sender, e);
@@ -59,13 +70,25 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
         private void OKButton_Click(object sender, EventArgs e)
         {
+            if(SharePointDocumentLibraryPicker.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Select a document library to store the KeePass database in", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if(string.IsNullOrWhiteSpace(FileName))
+            {
+                MessageBox.Show("Enter the filename under which you wish to store the database", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             DialogResult = DialogResult.OK;
             Close();
         }
 
         private void SharePointDocumentLibraryPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            OKButton.Enabled = SharePointDocumentLibraryPicker.SelectedItems.Count > 0;
+            
         }
     }
 }

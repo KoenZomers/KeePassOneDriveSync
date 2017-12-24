@@ -1,6 +1,7 @@
 ﻿using KoenZomers.KeePass.OneDriveSync;
 using Microsoft.SharePoint.Client;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -86,119 +87,191 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     // Ask the user where to store the database on SharePoint
                     var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(clientContext);
                     sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
+                    sharePointDocumentLibraryPickerDialog.FileName = !string.IsNullOrEmpty(databaseConfig.RemoteFileName) ? databaseConfig.RemoteFileName : new FileInfo(localKeePassDatabasePath).Name;
                     var result = sharePointDocumentLibraryPickerDialog.ShowDialog();
-                    if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryId))
+                    if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl))
                     {
                         return false;
                     }
-                    databaseConfig.RemoteFolderId = sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryId;
+                    databaseConfig.RemoteFolderId = sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl;
+                    databaseConfig.RemoteFileName = sharePointDocumentLibraryPickerDialog.FileName;
                     Configuration.Save();
                 }
+
+                // Retrieve the KeePass database from SharePoint
+                var serverRelativeSharePointUrl = string.Concat(databaseConfig.RemoteFolderId, "/", databaseConfig.RemoteFileName);
+                var sharePointItem = TryGetFileByServerRelativeUrl(clientContext.Web, serverRelativeSharePointUrl);
+
+                if(sharePointItem == null)
+                {
+                    // KeePass database not found on OneDrive
+                    updateStatus("Database does not exist yet on SharePoint, uploading it now");
+
+                    // Upload the database to SharePoint
+                    sharePointItem = UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, clientContext);
+
+                    updateStatus(sharePointItem == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to SharePoint");
+
+                    databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+                    if (sharePointItem != null)
+                    {
+                        databaseConfig.LastCheckedAt = DateTime.Now;
+                        databaseConfig.LastSyncedAt = DateTime.Now;
+                        databaseConfig.ETag = sharePointItem.ETag;
+                    }
+                    Configuration.Save();
+                    return false;
+                }
+
+                // Use the ETag from the SharePoint item to compare it against the local database config etag to see if the content has changed
+                if (!forceSync && sharePointItem.ETag == databaseConfig.ETag)
+                {
+                    updateStatus("Databases are in sync");
+
+                    databaseConfig.LastCheckedAt = DateTime.Now;
+                    Configuration.Save();
+
+                    return false;
+                }
+
+                // Download the database from SharePoint
+                updateStatus("Downloading KeePass database from SharePoint");
+
+                var temporaryKeePassDatabasePath = Path.GetTempFileName();
+                var downloadSuccessful = DownloadFile(temporaryKeePassDatabasePath, serverRelativeSharePointUrl, clientContext);
+
+                if (!downloadSuccessful)
+                {
+                    updateStatus("Failed to download the KeePass database from SharePoint");
+
+                    return false;
+                }
+
+                // Sync database
+                updateStatus("KeePass database downloaded, going to sync");
+
+                // Ensure the database that needs to be synced is still the database currently selected in KeePass to avoid merging the downloaded database with the wrong database in KeePass
+                if ((!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath) ||
+                    (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Remove(0, Environment.CurrentDirectory.Length + 1) != localKeePassDatabasePath))
+                {
+                    updateStatus("Failed to sync. Please don't switch to another database before done.");
+
+                    return false;
+                }
+
+                // Merge the downloaded database with the currently open KeePass database
+                var syncSuccessful = KeePassDatabase.MergeDatabases(databaseConfig, temporaryKeePassDatabasePath);
+
+                if (!syncSuccessful)
+                {
+                    updateStatus("Failed to synchronize the KeePass databases");
+                    return false;
+                }
+
+                // Upload the synced database
+                updateStatus("Uploading the new KeePass database to SharePoint");
+
+                var uploadResult = UploadFile(temporaryKeePassDatabasePath, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, clientContext);
+                if (uploadResult == null)
+                {
+                    updateStatus("Failed to upload the KeePass database");
+                    return false;
+                }
+
+                // Delete the temporary database used for merging
+                System.IO.File.Delete(temporaryKeePassDatabasePath);
+
+                databaseConfig.ETag = uploadResult.ETag;
+                return true;
             }
+        }
 
-            // Retrieve the KeePass database from SharePoint
-            //var oneDriveItem = string.IsNullOrEmpty(databaseConfig.RemoteFolderId) ? await oneDriveApi.GetItem(databaseConfig.RemoteDatabasePath) : await oneDriveApi.GetItemInFolder(databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName);
+        /// <summary>
+        /// Tries to retrieve the file at the provided server relative URL from SharePoint
+        /// </summary>
+        /// <param name="web">Web in which the file resides</param>
+        /// <param name="serverRelativeUrl">Server relative URL of the file to try to retrieve</param>
+        /// <returns>File instance of the file or NULL if unable to find the file</returns>
+        public static Microsoft.SharePoint.Client.File TryGetFileByServerRelativeUrl(Web web, string serverRelativeUrl)
+        {
+            var ctx = web.Context;
+            try
+            {
+                var file = web.GetFileByServerRelativeUrl(serverRelativeUrl);
+                ctx.Load(file, f => f.ETag);
+                ctx.ExecuteQuery();
+                return file;
+            }
+            catch (ServerException ex)
+            {
+                if (ex.ServerErrorTypeName == "System.IO.FileNotFoundException")
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
 
-            //if (oneDriveItem == null)
-            //{
-            //    // KeePass database not found on OneDrive
-            //    updateStatus("Database does not exist yet on OneDrive, uploading it now");
+        /// <summary>
+        /// Uploads a file to SharePoint
+        /// </summary>
+        /// <param name="localDatabasePath">Full path to where the file to upload resides locally</param>
+        /// <param name="serverRelativeUrl">Server relative URL where the file should be uploaded. Should not include the filename.</param>
+        /// <param name="fileName">Filename under which to store the file in SharePoint</param>
+        /// <param name="context">SharePoint Context to use for the SharePoint communication</param>
+        /// <returns>File instance representing the uploaded file if successful, NULL if it failed</returns>
+        public static Microsoft.SharePoint.Client.File UploadFile(string localDatabasePath, string serverRelativeUrl, string fileName, ClientContext context)
+        {
+            try
+            {
+                var list = context.Web.GetList(serverRelativeUrl);
+                var fileCreationInformation = new FileCreationInformation
+                {
+                    Content = System.IO.File.ReadAllBytes(localDatabasePath),
+                    Url = fileName,
+                    Overwrite = true
+                };
+                var file = list.RootFolder.Files.Add(fileCreationInformation);
+                context.Load(file, f => f.ETag);
+                context.ExecuteQuery();
 
-            //    OneDriveItem oneDriveFolder;
-            //    string fileName;
-            //    if (string.IsNullOrEmpty(databaseConfig.RemoteFolderId))
-            //    {
-            //        oneDriveFolder = databaseConfig.RemoteDatabasePath.Contains("/") ? await oneDriveApi.GetFolderOrCreate(databaseConfig.RemoteDatabasePath.Remove(databaseConfig.RemoteDatabasePath.LastIndexOf("/", StringComparison.Ordinal))) : await oneDriveApi.GetDriveRoot();
-            //        fileName = databaseConfig.RemoteDatabasePath.Contains("/") ? databaseConfig.RemoteDatabasePath.Remove(0, databaseConfig.RemoteDatabasePath.LastIndexOf("/", StringComparison.Ordinal) + 1) : databaseConfig.RemoteDatabasePath;
-            //    }
-            //    else
-            //    {
-            //        oneDriveFolder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
-            //        fileName = databaseConfig.RemoteFileName;
-            //    }
+                return file;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
-            //    if (oneDriveFolder == null)
-            //    {
-            //        updateStatus("Unable to upload database to OneDrive. Remote path is invalid.");
-            //        return false;
-            //    }
-
-            //    // Upload the database to OneDrive                
-            //    var newUploadResult = await oneDriveApi.UploadFileAs(localKeePassDatabasePath, fileName, oneDriveFolder);
-
-            //    updateStatus(newUploadResult == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to OneDrive");
-
-            //    databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
-            //    if (newUploadResult != null)
-            //    {
-            //        databaseConfig.LastCheckedAt = DateTime.Now;
-            //        databaseConfig.LastSyncedAt = DateTime.Now;
-            //        databaseConfig.ETag = newUploadResult.ETag;
-            //    }
-            //    Configuration.Save();
-            //    return false;
-            //}
-
-            //// Use the ETag from the OneDrive item to compare it against the local database config etag to see if the content has changed
-            //if (!forceSync && oneDriveItem.ETag == databaseConfig.ETag)
-            //{
-            //    updateStatus("Databases are in sync");
-
-            //    databaseConfig.LastCheckedAt = DateTime.Now;
-            //    Configuration.Save();
-
-            //    return false;
-            //}
-
-            //// Download the database from OneDrive
-            //updateStatus("Downloading KeePass database from OneDrive");
-
-            //var temporaryKeePassDatabasePath = Path.GetTempFileName();
-            //var downloadSuccessful = await oneDriveApi.DownloadItemAndSaveAs(oneDriveItem, temporaryKeePassDatabasePath);
-
-            //if (!downloadSuccessful)
-            //{
-            //    updateStatus("Failed to download the KeePass database from OneDrive");
-
-            //    return false;
-            //}
-
-            //// Sync database
-            //updateStatus("KeePass database downloaded, going to sync");
-
-            //// Ensure the database that needs to be synced is still the database currently selected in KeePass to avoid merging the downloaded database with the wrong database in KeePass
-            //if ((!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath) ||
-            //    (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Remove(0, Environment.CurrentDirectory.Length + 1) != localKeePassDatabasePath))
-            //{
-            //    updateStatus("Failed to sync. Please don't switch to another database before done.");
-
-            //    return false;
-            //}
-
-            //// Merge the downloaded database with the currently open KeePass database
-            //var syncSuccessful = MergeDatabases(databaseConfig, temporaryKeePassDatabasePath);
-
-            //if (!syncSuccessful)
-            //{
-            //    updateStatus("Failed to synchronize the KeePass databases");
-            //    return false;
-            //}
-
-            //// Upload the synced database
-            //updateStatus("Uploading the new KeePass database to OneDrive");
-
-            //var uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase) ? await oneDriveApi.GetDriveRoot() : await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
-            //if (uploadResult == null)
-            //{
-            //    updateStatus("Failed to upload the KeePass database");
-            //    return false;
-            //}
-
-            //// Delete the temporary database used for merging
-            //File.Delete(temporaryKeePassDatabasePath);
-
-            //databaseConfig.ETag = uploadResult.ETag;
-            return true;
+        /// <summary>
+        /// Downloads a file from SharePoint
+        /// </summary>
+        /// <param name="localDatabasePath">Full path to where to download the file to</param>
+        /// <param name="serverRelativeUrl">Server relative URL where the file should be downloaded from. Should include the filename.</param>
+        /// <param name="context">SharePoint Context to use for the SharePoint communication</param>
+        /// <returns>File instance representing the uploaded file if successful, NULL if it failed</returns>
+        public static bool DownloadFile(string localDatabasePath, string serverRelativeUrl, ClientContext context)
+        {
+            try
+            {
+                var file = context.Web.GetFileByServerRelativeUrl(serverRelativeUrl);
+                var streamResult = file.OpenBinaryStream();
+                context.ExecuteQuery();
+                
+                using (var fileStream = System.IO.File.Create(localDatabasePath))
+                {
+                    streamResult.Value.CopyTo(fileStream);
+                }
+                
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
 
         /// <summary>

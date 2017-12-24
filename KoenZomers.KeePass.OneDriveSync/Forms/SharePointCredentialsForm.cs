@@ -77,22 +77,34 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             }
 
             // Test the connection
-            using (var clientContext = Providers.SharePointProvider.CreateSharePointClientContext(new Uri(SharePointUrl), SharePointClientId, SharePointClientSecret))
+            try
             {
-                if (Providers.SharePointProvider.TestConnection(clientContext))
+                using (var clientContext = Providers.SharePointProvider.CreateSharePointClientContext(new Uri(SharePointUrl), SharePointClientId, SharePointClientSecret))
                 {
-                    MessageBox.Show("Connection successful", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (Providers.SharePointProvider.TestConnection(clientContext))
+                    {
+                        MessageBox.Show("Connection successful", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Connection failed", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("Connection failed", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Connection failed: '" + ex.Message + "'. Check your entered Client ID and Client Secret.", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
         private void SharePointUrlTextBox_KeyUp(object sender, KeyEventArgs e)
         {
 
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }
