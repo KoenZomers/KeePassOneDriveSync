@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace KoenZomersKeePassOneDriveSync.Forms
@@ -99,12 +92,39 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
         private void SharePointUrlTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-
+            if (e.KeyCode == Keys.V && e.Control)
+            {
+                var clipText = Clipboard.GetText();
+                var clipTextSplitted = clipText.Split(new[] { '\r', '\n' });
+                if (clipTextSplitted.Length == 5)
+                {
+                    SharePointUrlTextBox.Text = clipTextSplitted[0];
+                    ClientIdTextBox.Text = clipTextSplitted[2];
+                    ClientSecretTextBox.Text = clipTextSplitted[4];
+                    e.SuppressKeyPress = false;
+                }                
+            }
+            e.SuppressKeyPress = true;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void SharePointUrlTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ClientIdTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            SharePointUrlTextBox_KeyUp(sender, e);
+        }
+
+        private void ClientSecretTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            SharePointUrlTextBox_KeyUp(sender, e);
         }
     }
 }

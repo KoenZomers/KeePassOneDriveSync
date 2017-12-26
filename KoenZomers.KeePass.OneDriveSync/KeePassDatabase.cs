@@ -5,7 +5,6 @@ using KeePass.DataExchange;
 using KeePassLib.Serialization;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
-using KoenZomersKeePassOneDriveSync.Forms;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -17,7 +16,8 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// Allows a KeePass database to be opened directly from a cloud service
         /// </summary>
-        public static async Task OpenDatabaseFromCloudService()
+        /// <param name="updateStatus">Method to call to update the status</param> 
+        public static async Task OpenDatabaseFromCloudService(Action<string> updateStatus)
         {
             // Ask which cloud service to connect to
             var cloudStorageProviderForm = new OneDriveCloudTypeForm {ExplanationText = "Choose the cloud service you wish to open the KeePass database from:"};
@@ -38,96 +38,39 @@ namespace KoenZomersKeePassOneDriveSync
                 return;
             }
 
-            // Connect to OneDrive
-            var oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig);
-
-            if (oneDriveApi == null)
+            string localKeePassDatabasePath = null;
+            switch (databaseConfig.CloudStorageType)
             {
-                switch (databaseConfig.CloudStorageType.Value)
-                {
-                    case CloudStorageType.OneDriveConsumer: UpdateStatus("Failed to connect to OneDrive"); break;
-                    case CloudStorageType.OneDriveForBusiness: UpdateStatus("Failed to connect to OneDrive for Business"); break;
-                    case CloudStorageType.MicrosoftGraph: UpdateStatus("Failed to connect to Microsoft Graph"); break;
-                    default: UpdateStatus("Failed to connect to cloud service"); break;
-                }
+                case CloudStorageType.MicrosoftGraph:
+                case CloudStorageType.OneDriveConsumer:
+                case CloudStorageType.OneDriveForBusiness:
+                    localKeePassDatabasePath = await Providers.OneDriveProvider.OpenFromOneDriveCloudProvider(databaseConfig, updateStatus);
+                    break;
+
+                case CloudStorageType.SharePoint:
+                    localKeePassDatabasePath = Providers.SharePointProvider.OpenFromOneDriveCloudProvider(databaseConfig, updateStatus);
+                    break;
+            }
+            
+            if(localKeePassDatabasePath == null)
+            {
                 return;
             }
-
-            // Save the RefreshToken in the configuration so we can use it again next time
-            databaseConfig.RefreshToken = oneDriveApi.AccessToken.RefreshToken;
-
-            // Fetch details about this OneDrive account
-            var oneDriveAccount = await oneDriveApi.GetDrive();
-            databaseConfig.OneDriveName = oneDriveAccount.Owner.User.DisplayName;
-
-            // Ask the user to select the database to open on OneDrive
-            var oneDriveFilePickerDialog = new OneDriveFilePickerDialog(oneDriveApi)
-            {
-                ExplanationText = "Select the KeePass database to open. Right click for additional options.",
-                AllowEnteringNewFileName = false
-            };
-            await oneDriveFilePickerDialog.LoadFolderItems();
-            var result = oneDriveFilePickerDialog.ShowDialog();
-            if (result != DialogResult.OK || string.IsNullOrEmpty(oneDriveFilePickerDialog.FileName))
-            {
-                UpdateStatus("Open KeePass database from OneDrive aborted");
-                return;
-            }
-
-            databaseConfig.RemoteDatabasePath = (oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.Path : "") + "/" + oneDriveFilePickerDialog.CurrentOneDriveItem.Name + "/" + oneDriveFilePickerDialog.FileName;
-            databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
-            databaseConfig.RemoteFileName = oneDriveFilePickerDialog.FileName;
-
-            // Retrieve the KeePass database from OneDrive
-            var oneDriveItem = await oneDriveApi.GetItemInFolder(databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName);
-
-            if (oneDriveItem == null)
-            {
-                // KeePass database not found on OneDrive
-                switch (databaseConfig.CloudStorageType.Value)
-                {
-                    case CloudStorageType.OneDriveConsumer: UpdateStatus("Unable to find the database on your OneDrive"); break;
-                    case CloudStorageType.OneDriveForBusiness: UpdateStatus("Unable to find the database on your OneDrive for Business"); break;
-                    case CloudStorageType.MicrosoftGraph: UpdateStatus("Unable to find the database on through Microsoft Graph"); break;
-                    default: UpdateStatus("Failed to connect to cloud service"); break;
-                }
-                return;
-            }
-
-            // Show the save as dialog to select a location locally where to store the KeePass database
-            var saveFiledialog = new SaveFileDialog
-            {
-                Filter = "KeePass databases (*.kdbx)|*.kdbx|All Files (*.*)|*.*",
-                Title = "Select where to store the KeePass database locally",
-                CheckFileExists = false,
-                FileName = oneDriveItem.Name
-            };
-
-            var saveFileDialogResult = saveFiledialog.ShowDialog();
-            if (saveFileDialogResult != DialogResult.OK || string.IsNullOrEmpty(saveFiledialog.FileName))
-            {
-                UpdateStatus("Open KeePass database from OneDrive aborted");
-                return;
-            }
-
-            // Download the KeePass database to the selected location
-            UpdateStatus("Downloading KeePass database");
-            await oneDriveApi.DownloadItemAndSaveAs(oneDriveItem, saveFiledialog.FileName);
 
             // Register the KeePass database sync information
             UpdateStatus("Configuring KeePass database");
-            databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(saveFiledialog.FileName);
-            databaseConfig.ETag = oneDriveItem.ETag;
+            databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+            //databaseConfig.ETag = oneDriveItem.ETag;
             databaseConfig.LastSyncedAt = DateTime.Now;
             databaseConfig.LastCheckedAt = DateTime.Now;
 
-            Configuration.PasswordDatabases.Add(saveFiledialog.FileName, databaseConfig);
+            Configuration.PasswordDatabases[localKeePassDatabasePath] = databaseConfig;
             Configuration.Save();
 
             UpdateStatus("Opening KeePass database");
 
             // Open the KeePass database
-            var databaseFile = IOConnectionInfo.FromPath(saveFiledialog.FileName);
+            var databaseFile = IOConnectionInfo.FromPath(localKeePassDatabasePath);
             KoenZomersKeePassOneDriveSyncExt.Host.MainWindow.OpenDatabase(databaseFile, null, false);
 
             UpdateStatus("KeePass database is ready to be used");
@@ -200,7 +143,7 @@ namespace KoenZomersKeePassOneDriveSync
                     case CloudStorageType.SharePoint:
                         syncSuccessful = Providers.SharePointProvider.SyncUsingSharePointPlatform(databaseConfig, localKeePassDatabasePath, forceSync, updateStatus);
                         break;
-                }                
+                }
 
                 if(!syncSuccessful)
                 {

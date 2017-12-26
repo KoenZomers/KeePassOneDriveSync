@@ -69,6 +69,7 @@
             this.SharePointUrlTextBox.Name = "SharePointUrlTextBox";
             this.SharePointUrlTextBox.Size = new System.Drawing.Size(415, 22);
             this.SharePointUrlTextBox.TabIndex = 3;
+            this.SharePointUrlTextBox.TextChanged += new System.EventHandler(this.SharePointUrlTextBox_TextChanged);
             this.SharePointUrlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SharePointUrlTextBox_KeyUp);
             // 
             // label2
@@ -88,6 +89,7 @@
             this.ClientIdTextBox.Name = "ClientIdTextBox";
             this.ClientIdTextBox.Size = new System.Drawing.Size(415, 22);
             this.ClientIdTextBox.TabIndex = 5;
+            this.ClientIdTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ClientIdTextBox_KeyUp);
             // 
             // ClientSecretTextBox
             // 
@@ -97,6 +99,7 @@
             this.ClientSecretTextBox.Name = "ClientSecretTextBox";
             this.ClientSecretTextBox.Size = new System.Drawing.Size(415, 22);
             this.ClientSecretTextBox.TabIndex = 7;
+            this.ClientSecretTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ClientSecretTextBox_KeyUp);
             // 
             // label3
             // 
@@ -150,7 +153,6 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(588, 207);
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.OKButton);

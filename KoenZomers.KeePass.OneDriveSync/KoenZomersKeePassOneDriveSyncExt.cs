@@ -237,7 +237,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         private async static void MenuFileOpenFromOneDriveOnClick(object sender, EventArgs e)
         {
-            await KeePassDatabase.OpenDatabaseFromCloudService();
+            await KeePassDatabase.OpenDatabaseFromCloudService(KeePassDatabase.UpdateStatus);
         }
 
         /// <summary>

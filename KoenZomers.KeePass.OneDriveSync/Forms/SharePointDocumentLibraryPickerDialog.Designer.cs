@@ -38,6 +38,14 @@
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.FileNameLabel = new System.Windows.Forms.Label();
             this.FileNameTextBox = new System.Windows.Forms.TextBox();
+            this.UpButton = new System.Windows.Forms.Button();
+            this.ListViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToRootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.showHiddenLibrariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ListViewContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // SharePointDocumentLibraryPicker
@@ -45,6 +53,7 @@
             this.SharePointDocumentLibraryPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.SharePointDocumentLibraryPicker.ContextMenuStrip = this.ListViewContextMenu;
             this.SharePointDocumentLibraryPicker.LargeImageList = this.IconsList;
             this.SharePointDocumentLibraryPicker.Location = new System.Drawing.Point(12, 52);
             this.SharePointDocumentLibraryPicker.MultiSelect = false;
@@ -63,7 +72,7 @@
             this.IconsList.TransparentColor = System.Drawing.Color.Transparent;
             this.IconsList.Images.SetKeyName(0, "File");
             this.IconsList.Images.SetKeyName(1, "Folder");
-            this.IconsList.Images.SetKeyName(2, "RemoteFolder");
+            this.IconsList.Images.SetKeyName(2, "DocLib");
             // 
             // CancelButton
             // 
@@ -113,8 +122,7 @@
             // 
             // FileNameLabel
             // 
-            this.FileNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FileNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.FileNameLabel.Location = new System.Drawing.Point(12, 499);
             this.FileNameLabel.Name = "FileNameLabel";
             this.FileNameLabel.Size = new System.Drawing.Size(77, 22);
@@ -130,11 +138,73 @@
             this.FileNameTextBox.Size = new System.Drawing.Size(386, 22);
             this.FileNameTextBox.TabIndex = 10;
             // 
+            // UpButton
+            // 
+            this.UpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.UpButton.Enabled = false;
+            this.UpButton.Location = new System.Drawing.Point(631, 6);
+            this.UpButton.Name = "UpButton";
+            this.UpButton.Size = new System.Drawing.Size(55, 40);
+            this.UpButton.TabIndex = 12;
+            this.UpButton.Text = "Up";
+            this.UpButton.UseVisualStyleBackColor = true;
+            this.UpButton.Click += new System.EventHandler(this.UpButton_Click);
+            // 
+            // ListViewContextMenu
+            // 
+            this.ListViewContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.ListViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshToolStripMenuItem,
+            this.goToRootToolStripMenuItem,
+            this.goupToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.showHiddenLibrariesToolStripMenuItem});
+            this.ListViewContextMenu.Name = "ListViewContextMenu";
+            this.ListViewContextMenu.Size = new System.Drawing.Size(222, 134);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.refreshToolStripMenuItem.Text = "&Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
+            // 
+            // goToRootToolStripMenuItem
+            // 
+            this.goToRootToolStripMenuItem.Name = "goToRootToolStripMenuItem";
+            this.goToRootToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
+            this.goToRootToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.goToRootToolStripMenuItem.Text = "&Go to root";
+            this.goToRootToolStripMenuItem.Click += new System.EventHandler(this.goToRootToolStripMenuItem_Click);
+            // 
+            // goupToolStripMenuItem
+            // 
+            this.goupToolStripMenuItem.Enabled = false;
+            this.goupToolStripMenuItem.Name = "goupToolStripMenuItem";
+            this.goupToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
+            this.goupToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.goupToolStripMenuItem.Text = "Go &up";
+            this.goupToolStripMenuItem.Click += new System.EventHandler(this.goupToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(218, 6);
+            // 
+            // showHiddenLibrariesToolStripMenuItem
+            // 
+            this.showHiddenLibrariesToolStripMenuItem.Name = "showHiddenLibrariesToolStripMenuItem";
+            this.showHiddenLibrariesToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.showHiddenLibrariesToolStripMenuItem.Text = "Show hidden libraries";
+            this.showHiddenLibrariesToolStripMenuItem.Click += new System.EventHandler(this.showHiddenLibrariesToolStripMenuItem_Click);
+            // 
             // SharePointDocumentLibraryPickerDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(698, 539);
+            this.Controls.Add(this.UpButton);
             this.Controls.Add(this.FileNameLabel);
             this.Controls.Add(this.FileNameTextBox);
             this.Controls.Add(this.ExplanationLabel);
@@ -148,6 +218,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select location";
+            this.ListViewContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,5 +234,12 @@
         private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.Label FileNameLabel;
         private System.Windows.Forms.TextBox FileNameTextBox;
+        private System.Windows.Forms.Button UpButton;
+        private System.Windows.Forms.ContextMenuStrip ListViewContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem goToRootToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem goupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem showHiddenLibrariesToolStripMenuItem;
     }
 }
