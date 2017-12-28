@@ -68,7 +68,7 @@
             this.SharePointUrlTextBox.Location = new System.Drawing.Point(161, 67);
             this.SharePointUrlTextBox.Name = "SharePointUrlTextBox";
             this.SharePointUrlTextBox.Size = new System.Drawing.Size(415, 22);
-            this.SharePointUrlTextBox.TabIndex = 3;
+            this.SharePointUrlTextBox.TabIndex = 0;
             this.SharePointUrlTextBox.TextChanged += new System.EventHandler(this.SharePointUrlTextBox_TextChanged);
             this.SharePointUrlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SharePointUrlTextBox_KeyUp);
             // 
@@ -88,7 +88,7 @@
             this.ClientIdTextBox.Location = new System.Drawing.Point(161, 96);
             this.ClientIdTextBox.Name = "ClientIdTextBox";
             this.ClientIdTextBox.Size = new System.Drawing.Size(415, 22);
-            this.ClientIdTextBox.TabIndex = 5;
+            this.ClientIdTextBox.TabIndex = 1;
             this.ClientIdTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ClientIdTextBox_KeyUp);
             // 
             // ClientSecretTextBox
@@ -98,7 +98,7 @@
             this.ClientSecretTextBox.Location = new System.Drawing.Point(161, 124);
             this.ClientSecretTextBox.Name = "ClientSecretTextBox";
             this.ClientSecretTextBox.Size = new System.Drawing.Size(415, 22);
-            this.ClientSecretTextBox.TabIndex = 7;
+            this.ClientSecretTextBox.TabIndex = 2;
             this.ClientSecretTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ClientSecretTextBox_KeyUp);
             // 
             // label3
@@ -118,7 +118,7 @@
             this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(149, 35);
-            this.CancelButton.TabIndex = 8;
+            this.CancelButton.TabIndex = 5;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
@@ -131,7 +131,7 @@
             this.OKButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(149, 35);
-            this.OKButton.TabIndex = 9;
+            this.OKButton.TabIndex = 4;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
@@ -143,7 +143,7 @@
             this.TestButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(149, 35);
-            this.TestButton.TabIndex = 10;
+            this.TestButton.TabIndex = 3;
             this.TestButton.Text = "Test Connection";
             this.TestButton.UseVisualStyleBackColor = true;
             this.TestButton.Click += new System.EventHandler(this.TestButton_Click);

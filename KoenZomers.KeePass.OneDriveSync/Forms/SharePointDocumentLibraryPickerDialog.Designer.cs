@@ -224,7 +224,7 @@
             this.FileNameTextBox.Location = new System.Drawing.Point(95, 499);
             this.FileNameTextBox.Name = "FileNameTextBox";
             this.FileNameTextBox.Size = new System.Drawing.Size(386, 22);
-            this.FileNameTextBox.TabIndex = 10;
+            this.FileNameTextBox.TabIndex = 1;
             this.FileNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FileNameTextBox_KeyUp);
             // 
             // UpButton
@@ -234,7 +234,7 @@
             this.UpButton.Location = new System.Drawing.Point(631, 6);
             this.UpButton.Name = "UpButton";
             this.UpButton.Size = new System.Drawing.Size(55, 40);
-            this.UpButton.TabIndex = 12;
+            this.UpButton.TabIndex = 4;
             this.UpButton.Text = "Up";
             this.UpButton.UseVisualStyleBackColor = true;
             this.UpButton.Click += new System.EventHandler(this.UpButton_Click);
