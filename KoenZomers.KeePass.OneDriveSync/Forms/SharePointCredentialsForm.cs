@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace KoenZomersKeePassOneDriveSync.Forms
@@ -61,7 +62,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         /// <summary>
         /// Uses the information provided in the form to try to establish a connection with SharePoint
         /// </summary>
-        private void TestButton_Click(object sender, EventArgs e)
+        private async void TestButton_Click(object sender, EventArgs e)
         {
             // Ensure all fields contain a value
             if(!EnsureAllFieldsEntered())
@@ -72,9 +73,9 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             // Test the connection
             try
             {
-                using (var clientContext = Providers.SharePointProvider.CreateSharePointClientContext(new Uri(SharePointUrl), SharePointClientId, SharePointClientSecret))
+                using (var clientContext = Providers.SharePointProvider.CreateSharePointHttpClient(new Uri(SharePointUrl), SharePointClientId, SharePointClientSecret))
                 {
-                    if (Providers.SharePointProvider.TestConnection(clientContext))
+                    if (await Providers.SharePointProvider.TestConnection(clientContext))
                     {
                         MessageBox.Show("Connection successful", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }

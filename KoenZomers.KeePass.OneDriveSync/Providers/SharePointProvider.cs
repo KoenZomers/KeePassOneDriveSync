@@ -1,7 +1,10 @@
 ﻿using KoenZomers.KeePass.OneDriveSync;
-using Microsoft.SharePoint.Client;
+using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace KoenZomersKeePassOneDriveSync.Providers
@@ -16,28 +19,22 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// <param name="forceSync">Flag to indicate if the sync should always take place</param>
         /// <param name="updateStatus">Action to write status messages to to display in the UI</param>
         /// <returns>True if successful, false if failed</returns>
-        public static bool SyncUsingSharePointPlatform(Configuration databaseConfig, string localKeePassDatabasePath, bool forceSync, Action<string> updateStatus)
+        public static async Task<bool> SyncUsingSharePointPlatform(Configuration databaseConfig, string localKeePassDatabasePath, bool forceSync, Action<string> updateStatus)
         {
-            if(!EnsureSharePointCredentials(databaseConfig))
+            if(! await EnsureSharePointCredentials(databaseConfig))
             {
                 return false;
             }
 
-            using (var clientContext = CreateSharePointClientContext(databaseConfig))
+            using (var httpClient = CreateSharePointHttpClient(databaseConfig))
             {
-                if (clientContext == null)
-                {
-                    updateStatus("Failed to connect to SharePoint");
-                    return false;
-                }
-
                 // Check if we have a Document Library on SharePoint to sync with
                 if (string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && string.IsNullOrEmpty(databaseConfig.RemoteFileName))
                 {
                     // Ask the user where to store the database on SharePoint
-                    var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(clientContext);
-                    sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
-                    sharePointDocumentLibraryPickerDialog.FileName = !string.IsNullOrEmpty(databaseConfig.RemoteFileName) ? databaseConfig.RemoteFileName : new FileInfo(localKeePassDatabasePath).Name;
+                    var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(httpClient);
+                    await sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
+                    sharePointDocumentLibraryPickerDialog.FileName = !string.IsNullOrEmpty(databaseConfig.RemoteFileName) ? databaseConfig.RemoteFileName : new System.IO.FileInfo(localKeePassDatabasePath).Name;
                     var result = sharePointDocumentLibraryPickerDialog.ShowDialog();
                     if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl))
                     {
@@ -48,33 +45,41 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     Configuration.Save();
                 }
 
+                // Ensure we have the SharePoint site name
+                if(string.IsNullOrEmpty(databaseConfig.OneDriveName))
+                {
+                    // We don't have the SharePoint site name yet, retrieve it now by triggering TestConnection
+                    await TestConnection(httpClient, databaseConfig);
+                    Configuration.Save();
+                }
+
                 // Retrieve the KeePass database from SharePoint
                 var serverRelativeSharePointUrl = string.Concat(databaseConfig.RemoteFolderId, "/", databaseConfig.RemoteFileName);
-                var sharePointItem = TryGetFileByServerRelativeUrl(clientContext.Web, serverRelativeSharePointUrl);
+                var eTag = await GetEtagOfFile(httpClient, serverRelativeSharePointUrl);
 
-                if (sharePointItem == null)
+                if (eTag == null)
                 {
                     // KeePass database not found on OneDrive
                     updateStatus("Database does not exist yet on SharePoint, uploading it now");
 
                     // Upload the database to SharePoint
-                    sharePointItem = UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, clientContext);
+                    eTag = await UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient);
 
-                    updateStatus(sharePointItem == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to SharePoint");
+                    updateStatus(eTag == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to SharePoint");
 
                     databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
-                    if (sharePointItem != null)
+                    if (eTag != null)
                     {
                         databaseConfig.LastCheckedAt = DateTime.Now;
                         databaseConfig.LastSyncedAt = DateTime.Now;
-                        databaseConfig.ETag = sharePointItem.ETag;
+                        databaseConfig.ETag = eTag;
                     }
                     Configuration.Save();
                     return false;
                 }
 
                 // Use the ETag from the SharePoint item to compare it against the local database config etag to see if the content has changed
-                if (!forceSync && sharePointItem.ETag == databaseConfig.ETag)
+                if (!forceSync && eTag == databaseConfig.ETag)
                 {
                     updateStatus("Databases are in sync");
 
@@ -87,10 +92,10 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 // Download the database from SharePoint
                 updateStatus("Downloading KeePass database from SharePoint");
 
-                var temporaryKeePassDatabasePath = Path.GetTempFileName();
-                var downloadSuccessful = DownloadFile(temporaryKeePassDatabasePath, serverRelativeSharePointUrl, clientContext);
+                var temporaryKeePassDatabasePath = System.IO.Path.GetTempFileName();
+                var downloadSuccessful = DownloadFile(temporaryKeePassDatabasePath, serverRelativeSharePointUrl, httpClient);
 
-                if (!downloadSuccessful)
+                if (! await downloadSuccessful)
                 {
                     updateStatus("Failed to download the KeePass database from SharePoint");
 
@@ -121,7 +126,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 // Upload the synced database
                 updateStatus("Uploading the new KeePass database to SharePoint");
 
-                var uploadResult = UploadFile(temporaryKeePassDatabasePath, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, clientContext);
+                var uploadResult = await UploadFile(temporaryKeePassDatabasePath, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient);
                 if (uploadResult == null)
                 {
                     updateStatus("Failed to upload the KeePass database");
@@ -131,38 +136,41 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 // Delete the temporary database used for merging
                 System.IO.File.Delete(temporaryKeePassDatabasePath);
 
-                databaseConfig.ETag = uploadResult.ETag;
+                databaseConfig.ETag = uploadResult;
                 return true;
             }
         }
 
         /// <summary>
-        /// Tries to retrieve the file at the provided server relative URL from SharePoint
+        /// Tries to retrieve the ETag of the file at the provided server relative URL from SharePoint
         /// </summary>
-        /// <param name="web">Web in which the file resides</param>
-        /// <param name="serverRelativeUrl">Server relative URL of the file to try to retrieve</param>
-        /// <returns>File instance of the file or NULL if unable to find the file</returns>
-        public static Microsoft.SharePoint.Client.File TryGetFileByServerRelativeUrl(Web web, string serverRelativeUrl)
+        /// <param name="httpClient">HttpClientt to use for the SharePoint communication</param>
+        /// <param name="serverRelativeUrl">Server relative URL of the file to query for</param>
+        /// <returns>ETag of the file or NULL if unable to find the file</returns>
+        public static async Task<string> GetEtagOfFile(HttpClient httpClient, string serverRelativeUrl)
         {
-            var ctx = web.Context;
-            try
+            // Retrieve the ETag of the file
+            using (var response = await httpClient.GetAsync("web/GetFileByServerRelativeUrl('" + serverRelativeUrl + "')?$select=ETag"))
             {
-                var file = web.GetFileByServerRelativeUrl(serverRelativeUrl);
-                ctx.Load(file, f => f.ETag);
-                ctx.ExecuteQuery();
-                return file;
-            }
-            catch (ServerException ex)
-            {
-                if (ex.ServerErrorTypeName == "System.IO.FileNotFoundException")
+                // Check if the attempt was successful
+                if(!response.IsSuccessStatusCode)
                 {
+                    // Attempt failed
                     return null;
                 }
-                else
+
+                // Attempt was successful, parse the JSON response
+                var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+                // Validate if ETag node exists in the result
+                if (responseJson.TryGetValue("ETag", out JToken value))
                 {
-                    throw;
+                    // ETag node exists, return it
+                    return value.Value<string>();
                 }
             }
+
+            return null;
         }
 
         /// <summary>
@@ -171,26 +179,59 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// <param name="localDatabasePath">Full path to where the file to upload resides locally</param>
         /// <param name="serverRelativeUrl">Server relative URL where the file should be uploaded. Should not include the filename.</param>
         /// <param name="fileName">Filename under which to store the file in SharePoint</param>
-        /// <param name="context">SharePoint Context to use for the SharePoint communication</param>
-        /// <returns>File instance representing the uploaded file if successful, NULL if it failed</returns>
-        public static Microsoft.SharePoint.Client.File UploadFile(string localDatabasePath, string serverRelativeUrl, string fileName, ClientContext context)
+        /// <param name="httpClient">HttpClientt to use for the SharePoint communication</param>
+        /// <returns>ETag of the uploaded file if successful, NULL if it failed</returns>
+        public static async Task<string> UploadFile(string localDatabasePath, string serverRelativeUrl, string fileName, HttpClient httpClient)
         {
             try
             {
-                var list = context.Web.GetList(serverRelativeUrl);
-                var fileCreationInformation = new FileCreationInformation
-                {
-                    Content = System.IO.File.ReadAllBytes(localDatabasePath),
-                    Url = fileName,
-                    Overwrite = true
-                };
-                var file = list.RootFolder.Files.Add(fileCreationInformation);
-                context.Load(file, f => f.ETag);
-                context.ExecuteQuery();
+                // Get a FormDigest to send to SharePoint
+                var formDigest = await GetFormDigest(httpClient);
 
-                return file;
+                // Validate that the FormDigest was retrieved successfully
+                if(string.IsNullOrEmpty(formDigest))
+                {
+                    // No FormDigest available
+                    return null;
+                }
+
+                // Construct a new HTTP message
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFolderByServerRelativeUrl('" + serverRelativeUrl + "')/Files/Add(url='" + fileName + "',overwrite=true)?$select=ETag"))
+                {
+                    // Add the FormDiges to the request header
+                    httpRequest.Headers.Add("X-RequestDigest", formDigest);                    
+
+                    // Open the local file to upload
+                    using (var fileContent = new StreamContent(System.IO.File.OpenRead(localDatabasePath)))
+                    {
+                        // Set the BODY content to the file byes
+                        httpRequest.Content = fileContent;
+
+                        // Send the bytes of the local file to the upload location on SharePoint
+                        var response = await httpClient.SendAsync(httpRequest);
+
+                        // Verify if the file was uploaded successfully
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            // Upload failed
+                            return null;
+                        }
+
+                        // Upload was successful. Parse the result of the request.
+                        var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+                        // Validate if a ETag node exists in the result
+                        if (responseJson.TryGetValue("ETag", out JToken value))
+                        {
+                            // ETag node exists, return it
+                            return value.Value<string>();
+                        }
+                    }
+                }
+
+                return null;
             }
-            catch
+            catch(Exception)
             {
                 return null;
             }
@@ -201,19 +242,21 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// </summary>
         /// <param name="localDatabasePath">Full path to where to download the file to</param>
         /// <param name="serverRelativeUrl">Server relative URL where the file should be downloaded from. Should include the filename.</param>
-        /// <param name="context">SharePoint Context to use for the SharePoint communication</param>
+        /// <param name="httpClient">HttpClient to use for the SharePoint communication</param>
         /// <returns>File instance representing the uploaded file if successful, NULL if it failed</returns>
-        public static bool DownloadFile(string localDatabasePath, string serverRelativeUrl, ClientContext context)
+        public static async Task<bool> DownloadFile(string localDatabasePath, string serverRelativeUrl, HttpClient httpClient)
         {
             try
             {
-                var file = context.Web.GetFileByServerRelativeUrl(serverRelativeUrl);
-                var streamResult = file.OpenBinaryStream();
-                context.ExecuteQuery();
-
-                using (var fileStream = System.IO.File.Create(localDatabasePath))
+                // Request the file contents
+                using (var response = await httpClient.GetStreamAsync("web/GetFileByServerRelativeUrl('" + serverRelativeUrl + "')/$value"))
                 {
-                    streamResult.Value.CopyTo(fileStream);
+                    // Open the local file
+                    using (var fileStream = System.IO.File.Create(localDatabasePath))
+                    {
+                        // Copy the downloaded bytes to the local file
+                        await response.CopyToAsync(fileStream);
+                    }
                 }
 
                 return true;
@@ -225,18 +268,329 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         }
 
         /// <summary>
+        /// Deletes a file at the provided location in SharePoint
+        /// </summary>
+        /// <param name="serverRelativeFilePath">Server relative URL to the file to delete</param>
+        /// <param name="httpClient">HttpClient to use for the SharePoint communication</param>
+        /// <returns>True if successful, false if failed</returns>
+        public static async Task<bool> DeleteFile(string serverRelativeFilePath, HttpClient httpClient)
+        {
+            try
+            {
+                // Get a FormDigest to send to SharePoint
+                var formDigest = await GetFormDigest(httpClient);
+
+                // Validate that the FormDigest was retrieved successfully
+                if (string.IsNullOrEmpty(formDigest))
+                {
+                    // No FormDigest available
+                    return false;
+                }
+
+                // Construct a new HTTP message
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFileByServerRelativeUrl('" + serverRelativeFilePath + "')"))
+                {
+                    // Add the FormDiges to the request header
+                    httpRequest.Headers.Add("X-RequestDigest", formDigest);
+
+                    // Disable concurrency control
+                    httpRequest.Headers.Add("If-Match", "*");
+
+                    // Instruct to perform a DELETE operation   
+                    httpRequest.Headers.Add("X-HTTP-Method", "DELETE");
+
+                    // Send the request to SharePoint
+                    var response = await httpClient.SendAsync(httpRequest);
+
+                    // Verify if the request was processed successfully
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Request failed
+                        return false;
+                    }
+
+                    // Request was successful
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Deletes a folder at the provided location in SharePoint
+        /// </summary>
+        /// <param name="serverRelativeFolderPath">Server relative URL to the folder to delete</param>
+        /// <param name="httpClient">HttpClient to use for the SharePoint communication</param>
+        /// <returns>True if successful, false if failed</returns>
+        public static async Task<bool> DeleteFolder(string serverRelativeFolderPath, HttpClient httpClient)
+        {
+            try
+            {
+                // Get a FormDigest to send to SharePoint
+                var formDigest = await GetFormDigest(httpClient);
+
+                // Validate that the FormDigest was retrieved successfully
+                if (string.IsNullOrEmpty(formDigest))
+                {
+                    // No FormDigest available
+                    return false;
+                }
+
+                // Construct a new HTTP message
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFolderByServerRelativeUrl('" + serverRelativeFolderPath + "')"))
+                {
+                    // Add the FormDiges to the request header
+                    httpRequest.Headers.Add("X-RequestDigest", formDigest);
+
+                    // Disable concurrency control
+                    httpRequest.Headers.Add("If-Match", "*");
+
+                    // Instruct to perform a DELETE operation   
+                    httpRequest.Headers.Add("X-HTTP-Method", "DELETE");
+
+                    // Send the request to SharePoint
+                    var response = await httpClient.SendAsync(httpRequest);
+
+                    // Verify if the request was processed successfully
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Request failed
+                        return false;
+                    }
+
+                    // Request was successful
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Renames a folder at the provided location in SharePoint
+        /// </summary>
+        /// <param name="newFolderName">The new name to assign to the folder</param>
+        /// <param name="serverRelativeFolderPath">Server relative URL to the folder to rename</param>
+        /// <param name="httpClient">HttpClient to use for the SharePoint communication</param>
+        /// <returns>True if successful, false if failed</returns>
+        public static async Task<bool> RenameFolder(string newFolderName, string serverRelativeFolderPath, HttpClient httpClient)
+        {
+            try
+            {
+                // Get a FormDigest to send to SharePoint
+                var formDigest = await GetFormDigest(httpClient);
+
+                // Validate that the FormDigest was retrieved successfully
+                if (string.IsNullOrEmpty(formDigest))
+                {
+                    // No FormDigest available
+                    return false;
+                }
+               
+                // Define the server relative url of the parent folder in which the folder resides
+                var parentPath = serverRelativeFolderPath.Remove(serverRelativeFolderPath.LastIndexOf('/'));
+
+                // Construct a new HTTP message
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFolderByServerRelativeUrl('" + serverRelativeFolderPath + "')/moveto(newurl='" + parentPath + "/" + newFolderName + "')"))
+                {
+                    // Add the FormDiges to the request header
+                    httpRequest.Headers.Add("X-RequestDigest", formDigest);
+
+                    // Disable concurrency control
+                    httpRequest.Headers.Add("If-Match", "*");
+
+                    // Instruct to perform a MERGE operation   
+                    httpRequest.Headers.Add("X-HTTP-Method", "MERGE");
+
+                    // Provide the POST body content
+                    //httpRequest.Content = new StringContent("{ '__metadata': { 'type': 'SP.Folder' }, 'Name': '" + newFolderName + "' }", System.Text.Encoding.UTF8, "application/json");                    
+
+                    // Send the request to SharePoint
+                    var response = await httpClient.SendAsync(httpRequest);
+
+                    // Verify if the request was processed successfully
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Request failed
+                        return false;
+                    }
+
+                    // Request was successful
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Renames a file at the provided location in SharePoint
+        /// </summary>
+        /// <param name="newFileName">The new name to assign to the file</param>
+        /// <param name="serverRelativeFilePath">Server relative URL to the file to rename</param>
+        /// <param name="httpClient">HttpClient to use for the SharePoint communication</param>
+        /// <returns>True if successful, false if failed</returns>
+        public static async Task<bool> RenameFile(string newFileName, string serverRelativeFilePath, HttpClient httpClient)
+        {
+            try
+            {
+                // Get a FormDigest to send to SharePoint
+                var formDigest = await GetFormDigest(httpClient);
+
+                // Validate that the FormDigest was retrieved successfully
+                if (string.IsNullOrEmpty(formDigest))
+                {
+                    // No FormDigest available
+                    return false;
+                }
+
+                // Define the server relative url of the folder in which the file resides
+                var parentPath = serverRelativeFilePath.Remove(serverRelativeFilePath.LastIndexOf('/'));
+
+                // Construct a new HTTP message
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFileByServerRelativeUrl('" + serverRelativeFilePath + "')/moveto(newurl='" + parentPath + "/" + newFileName + "',flags=0)"))
+                {
+                    // Add the FormDiges to the request header
+                    httpRequest.Headers.Add("X-RequestDigest", formDigest);
+
+                    // Disable concurrency control
+                    httpRequest.Headers.Add("If-Match", "*");
+
+                    // Instruct to perform a MERGE operation   
+                    httpRequest.Headers.Add("X-HTTP-Method", "MERGE");
+
+                    // Send the request to SharePoint
+                    var response = await httpClient.SendAsync(httpRequest);
+
+                    // Verify if the request was processed successfully
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Request failed
+                        return false;
+                    }
+
+                    // Request was successful
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new folder at the provided location in SharePoint
+        /// </summary>
+        /// <param name="folderName">Name of the new folder to create</param>
+        /// <param name="serverRelativeUrl">Server relative URL to the location where to create the new folder</param>
+        /// <param name="httpClient">HttpClient to use for the SharePoint communication</param>
+        /// <returns>Server relative URL of the new folder if successful or NULL if failed to create the new folder</returns>
+        public static async Task<string> CreateFolder(string folderName, string serverRelativeUrl, HttpClient httpClient)
+        {
+            try
+            {
+                // Get a FormDigest to send to SharePoint
+                var formDigest = await GetFormDigest(httpClient);
+
+                // Validate that the FormDigest was retrieved successfully
+                if (string.IsNullOrEmpty(formDigest))
+                {
+                    // No FormDigest available
+                    return null;
+                }
+
+                // Construct a new HTTP message
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFolderByServerRelativeUrl('" + serverRelativeUrl + "')/Folders/Add('" + folderName + "')?$select=ServerRelativeUrl"))
+                {
+                    // Add the FormDiges to the request header
+                    httpRequest.Headers.Add("X-RequestDigest", formDigest);
+
+                    // Send the request to SharePoint
+                    var response = await httpClient.SendAsync(httpRequest);
+
+                    // Verify if the request was processed successfully
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Request failed
+                        return null;
+                    }
+
+                    // Request was successful. Parse the result of the request.
+                    var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+                    // Validate if a ServerRelativeUrl node exists in the result
+                    if (responseJson.TryGetValue("ServerRelativeUrl", out JToken value))
+                    {
+                        // ServerRelativeUrl node exists, return it
+                        return value.Value<string>();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Requests a FormDigest from SharePoint which is needed when requesting changes to SharePoint
+        /// </summary>
+        /// <param name="httpClient">HttpClient to use for the SharePoint communication</param>
+        /// <returns>FormDirect if successful or NULL if unable to retrieve the FormDigest</returns>
+        public static async Task<string> GetFormDigest(HttpClient httpClient)
+        {
+            try
+            {
+                // Request a RequestDigest to allow uploading to SharePoint
+                using (var response = await httpClient.PostAsync("contextInfo", new StringContent("Hello")))
+                {
+                    // Verify if the RequestDigest was retrieved successfully
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Request failed
+                        return null;
+                    }
+
+                    // Request was successful. Parse the result of the request.
+                    var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+                    // Validate if a FormDigestValue node exists in the result
+                    if (responseJson.TryGetValue("FormDigestValue", out JToken value))
+                    {
+                        // FormDigestValue node exists, return it
+                        return value.Value<string>();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Creates a SharePoint ClientContext based on a Configuration file specific for a SharePoint synchronization
         /// </summary>
         /// <param name="databaseConfig">Configuration set to be specific for a SharePoint synchronization</param>
-        /// <returns>SharePoint ClientContext or NULL if unable to establish one based on the provided configuration</returns>
-        public static ClientContext CreateSharePointClientContext(Configuration databaseConfig)
+        /// <returns>SharePoint HttpClient or NULL if unable to establish one based on the provided configuration</returns>
+        public static HttpClient CreateSharePointHttpClient(Configuration databaseConfig)
         {
             // Collect the SharePoint variables required to connect
             var sharePointUri = new Uri(databaseConfig.RemoteDatabasePath);
             var sharePointClientId = databaseConfig.RefreshToken.Remove(databaseConfig.RefreshToken.IndexOf(';'));
             var sharePointClientSecret = databaseConfig.RefreshToken.Remove(0, databaseConfig.RefreshToken.IndexOf(';') + 1);
 
-            return CreateSharePointClientContext(sharePointUri, sharePointClientId, sharePointClientSecret);
+            return CreateSharePointHttpClient(sharePointUri, sharePointClientId, sharePointClientSecret);
         }
 
         /// <summary>
@@ -245,8 +599,8 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// <param name="sharePointUri">Uri of the SharePoint site to connect to</param>
         /// <param name="sharePointClientId">ClientId to use for the Low Trust to connect to SharePoint</param>
         /// <param name="sharePointClientSecret">ClientSecret to use for the Low Trust to connect to SharePoint</param>
-        /// <returns>SharePoint ClientContext or NULL if unable to establish one based on the provided configuration</returns>
-        public static ClientContext CreateSharePointClientContext(Uri sharePointUri, string sharePointClientId, string sharePointClientSecret)
+        /// <returns>SharePoint HttpClient or NULL if unable to establish one based on the provided configuration</returns>
+        public static HttpClient CreateSharePointHttpClient(Uri sharePointUri, string sharePointClientId, string sharePointClientSecret)
         {
             // Get the realm for the SharePoint site
             var realm = TokenHelper.GetRealmFromTargetUrl(sharePointUri);
@@ -255,8 +609,29 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             var accessToken = TokenHelper.GetAppOnlyAccessToken(TokenHelper.SharePointPrincipal, sharePointUri.Authority, realm, sharePointClientId, sharePointClientSecret).AccessToken;
 
             // Connect to SharePoint
-            var clientContext = TokenHelper.GetClientContextWithAccessToken(sharePointUri.ToString(), accessToken);
-            return clientContext;
+            var httpClientHandler = new HttpClientHandler()
+            {
+                Proxy = Utilities.GetProxySettings(),
+                PreAuthenticate = true,
+                UseDefaultCredentials = false,
+                Credentials = Utilities.GetProxyCredentials()
+            };
+
+            // Set the base URI to use for all calls
+            var httpClient = new HttpClient(httpClientHandler)
+            {
+                BaseAddress = new Uri(sharePointUri.OriginalString + "/_api/")
+            };
+
+            // Configure the HTTP headers for each request
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json; odata=nometadata");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var assemblyVersion = Assembly.GetCallingAssembly().GetName().Version;
+            httpClient.DefaultRequestHeaders.Add("User-Agent", string.Format("KoenZomers KeePass OneDriveSync v{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
+
+            return httpClient;
         }
 
         /// <summary>
@@ -282,24 +657,45 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         }
 
         /// <summary>
-        /// Test the connection with the provided ClientContext
+        /// Test the connection with the provided HttpClient
         /// </summary>
-        /// <param name="clientContext">The ClientContext to use to test the connection</param>
+        /// <param name="httpClient">The HttpClient to use to test the connection</param>
         /// <param name="databaseConfig">If config is provided, the drive name will be updated with the actual title (optional)</param>
         /// <returns>True if connection successful, False if the test failed</returns>
-        public static bool TestConnection(ClientContext clientContext, Configuration databaseConfig = null)
+        public static async Task<bool> TestConnection(HttpClient httpClient, Configuration databaseConfig = null)
         {
             try
             {
-                clientContext.Load(clientContext.Web, w => w.Title);
-                clientContext.ExecuteQuery();
-
-                if (databaseConfig != null)
+                // Perform a simple get operation to test the access to SharePoint
+                using (var response = await httpClient.GetAsync("web?$select=Title"))
                 {
-                    databaseConfig.OneDriveName = clientContext.Web.Title;
+
+                    // Verify if the request was successful
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Request failed
+                        return false;
+                    }
+
+                    // Request was successful. Check if a database config was provided which we can update with the actual site title.
+                    if (databaseConfig == null)
+                    {
+                        // No database config was provided. No need to parse the result.
+                        return true;
+                    }
+
+                    // Database config was provided. Parse the result of the request.
+                    var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+                    // Validate if a Title node exists in the result
+                    if (responseJson.TryGetValue("Title", out JToken value))
+                    {
+                        // Title node exists, update the database config with the site title
+                        databaseConfig.OneDriveName = value.Value<string>();
+                    }
                 }
 
-                return true;
+                return true;                
             }
             catch (Exception)
             {
@@ -312,7 +708,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// </summary>
         /// <param name="databaseConfig">Databaseconfig to check for the presence of SharePoint authentication information</param>
         /// <returns>True if succeeded to get SharePoint authentication information, false if failed</returns>
-        public static bool EnsureSharePointCredentials(Configuration databaseConfig)
+        public static async Task<bool> EnsureSharePointCredentials(Configuration databaseConfig)
         {
             if (string.IsNullOrEmpty(databaseConfig.RefreshToken) || databaseConfig.RefreshToken.IndexOf(';') == -1 || string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath))
             {
@@ -330,9 +726,9 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                             return false;
                         }
 
-                        using (var clientContext = CreateSharePointClientContext(databaseConfig))
+                        using (var httpClient = CreateSharePointHttpClient(databaseConfig))
                         {
-                            if (!TestConnection(clientContext, databaseConfig))
+                            if (! await TestConnection(httpClient, databaseConfig))
                             {
                                 MessageBox.Show("Connection failed. Please ensure you are able to connect to the SharePoint farm", "Connecting to SharePoint", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 retryGettingApiInstance = true;
@@ -371,27 +767,27 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         }
 
         /// <summary>
-        /// Uses a Microsoft OneDrive Cloud Storage Provider (OneDrive Consumer, OneDrive for Business, Microsoft Graph) to download a KeePass database
+        /// Download a KeePass database from SharePoint
         /// </summary>
         /// <param name="databaseConfig">Configuration of the database to sync</param>
         /// <param name="updateStatus">Action to write status messages to to display in the UI</param>
         /// <returns>Path to the local KeePass database or NULL if the process has been aborted</returns>
-        public static string OpenFromOneDriveCloudProvider(Configuration databaseConfig, Action<string> updateStatus)
+        public static async Task<string> OpenFromSharePoint(Configuration databaseConfig, Action<string> updateStatus)
         {
-            if(!EnsureSharePointCredentials(databaseConfig))
+            if(! await EnsureSharePointCredentials(databaseConfig))
             {
                 return null;
             }
 
-            using (var clientContext = CreateSharePointClientContext(databaseConfig))
+            using (var httpClient = CreateSharePointHttpClient(databaseConfig))
             {
                 // Ask the user where to store the database on SharePoint
-                var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(clientContext)
+                var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(httpClient)
                 {
                     ExplanationText = "Select the KeePass database to open. Right click for additional options.",
                     AllowEnteringNewFileName = false
                 };
-                sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
+                await sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
 
                 var result = sharePointDocumentLibraryPickerDialog.ShowDialog();
                 if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl))
@@ -423,7 +819,10 @@ namespace KoenZomersKeePassOneDriveSync.Providers
 
                 // Retrieve the KeePass database from SharePoint
                 var serverRelativeSharePointUrl = string.Concat(databaseConfig.RemoteFolderId, "/", databaseConfig.RemoteFileName);
-                var downloadSuccessful = DownloadFile(saveFiledialog.FileName, serverRelativeSharePointUrl, clientContext);
+                var downloadSuccessful = await DownloadFile(saveFiledialog.FileName, serverRelativeSharePointUrl, httpClient);
+
+                // Get the ETag of the database so we can determine if it's in sync
+                databaseConfig.ETag = await GetEtagOfFile(httpClient, serverRelativeSharePointUrl);
 
                 return downloadSuccessful ? saveFiledialog.FileName : null;
             }

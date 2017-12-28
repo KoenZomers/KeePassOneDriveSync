@@ -31,6 +31,16 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SharePointDocumentLibraryPickerDialog));
             this.SharePointDocumentLibraryPicker = new System.Windows.Forms.ListView();
+            this.ListViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToRootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.newFoldertoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.showHiddenLibrariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.IconsList = new System.Windows.Forms.ImageList(this.components);
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
@@ -39,12 +49,6 @@
             this.FileNameLabel = new System.Windows.Forms.Label();
             this.FileNameTextBox = new System.Windows.Forms.TextBox();
             this.UpButton = new System.Windows.Forms.Button();
-            this.ListViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.goToRootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.goupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.showHiddenLibrariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ListViewContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,6 +58,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SharePointDocumentLibraryPicker.ContextMenuStrip = this.ListViewContextMenu;
+            this.SharePointDocumentLibraryPicker.HideSelection = false;
             this.SharePointDocumentLibraryPicker.LargeImageList = this.IconsList;
             this.SharePointDocumentLibraryPicker.Location = new System.Drawing.Point(12, 52);
             this.SharePointDocumentLibraryPicker.MultiSelect = false;
@@ -65,6 +70,88 @@
             this.SharePointDocumentLibraryPicker.UseCompatibleStateImageBehavior = false;
             this.SharePointDocumentLibraryPicker.SelectedIndexChanged += new System.EventHandler(this.SharePointDocumentLibraryPicker_SelectedIndexChanged);
             this.SharePointDocumentLibraryPicker.DoubleClick += new System.EventHandler(this.SharePointDocumentLibraryPicker_DoubleClick);
+            // 
+            // ListViewContextMenu
+            // 
+            this.ListViewContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.ListViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshToolStripMenuItem,
+            this.goToRootToolStripMenuItem,
+            this.goupToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.newFoldertoolStripMenuItem,
+            this.renameToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.showHiddenLibrariesToolStripMenuItem});
+            this.ListViewContextMenu.Name = "ListViewContextMenu";
+            this.ListViewContextMenu.Size = new System.Drawing.Size(222, 184);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.refreshToolStripMenuItem.Text = "&Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
+            // 
+            // goToRootToolStripMenuItem
+            // 
+            this.goToRootToolStripMenuItem.Name = "goToRootToolStripMenuItem";
+            this.goToRootToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
+            this.goToRootToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.goToRootToolStripMenuItem.Text = "&Go to root";
+            this.goToRootToolStripMenuItem.Click += new System.EventHandler(this.goToRootToolStripMenuItem_Click);
+            // 
+            // goupToolStripMenuItem
+            // 
+            this.goupToolStripMenuItem.Enabled = false;
+            this.goupToolStripMenuItem.Name = "goupToolStripMenuItem";
+            this.goupToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
+            this.goupToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.goupToolStripMenuItem.Text = "Go &up";
+            this.goupToolStripMenuItem.Click += new System.EventHandler(this.goupToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(218, 6);
+            // 
+            // newFoldertoolStripMenuItem
+            // 
+            this.newFoldertoolStripMenuItem.Name = "newFoldertoolStripMenuItem";
+            this.newFoldertoolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newFoldertoolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.newFoldertoolStripMenuItem.Text = "&New Folder";
+            this.newFoldertoolStripMenuItem.Click += new System.EventHandler(this.newFoldertoolStripMenuItem_Click);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.renameToolStripMenuItem.Text = "&Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.deleteToolStripMenuItem.Text = "&Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(218, 6);
+            // 
+            // showHiddenLibrariesToolStripMenuItem
+            // 
+            this.showHiddenLibrariesToolStripMenuItem.Name = "showHiddenLibrariesToolStripMenuItem";
+            this.showHiddenLibrariesToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
+            this.showHiddenLibrariesToolStripMenuItem.Text = "Show hidden libraries";
+            this.showHiddenLibrariesToolStripMenuItem.Click += new System.EventHandler(this.showHiddenLibrariesToolStripMenuItem_Click);
             // 
             // IconsList
             // 
@@ -89,6 +176,7 @@
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKButton.Enabled = false;
             this.OKButton.Location = new System.Drawing.Point(487, 491);
             this.OKButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OKButton.Name = "OKButton";
@@ -137,6 +225,7 @@
             this.FileNameTextBox.Name = "FileNameTextBox";
             this.FileNameTextBox.Size = new System.Drawing.Size(386, 22);
             this.FileNameTextBox.TabIndex = 10;
+            this.FileNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FileNameTextBox_KeyUp);
             // 
             // UpButton
             // 
@@ -149,55 +238,6 @@
             this.UpButton.Text = "Up";
             this.UpButton.UseVisualStyleBackColor = true;
             this.UpButton.Click += new System.EventHandler(this.UpButton_Click);
-            // 
-            // ListViewContextMenu
-            // 
-            this.ListViewContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.ListViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem,
-            this.goToRootToolStripMenuItem,
-            this.goupToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.showHiddenLibrariesToolStripMenuItem});
-            this.ListViewContextMenu.Name = "ListViewContextMenu";
-            this.ListViewContextMenu.Size = new System.Drawing.Size(222, 134);
-            // 
-            // refreshToolStripMenuItem
-            // 
-            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
-            this.refreshToolStripMenuItem.Text = "&Refresh";
-            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
-            // 
-            // goToRootToolStripMenuItem
-            // 
-            this.goToRootToolStripMenuItem.Name = "goToRootToolStripMenuItem";
-            this.goToRootToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.goToRootToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
-            this.goToRootToolStripMenuItem.Text = "&Go to root";
-            this.goToRootToolStripMenuItem.Click += new System.EventHandler(this.goToRootToolStripMenuItem_Click);
-            // 
-            // goupToolStripMenuItem
-            // 
-            this.goupToolStripMenuItem.Enabled = false;
-            this.goupToolStripMenuItem.Name = "goupToolStripMenuItem";
-            this.goupToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.goupToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
-            this.goupToolStripMenuItem.Text = "Go &up";
-            this.goupToolStripMenuItem.Click += new System.EventHandler(this.goupToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(218, 6);
-            // 
-            // showHiddenLibrariesToolStripMenuItem
-            // 
-            this.showHiddenLibrariesToolStripMenuItem.Name = "showHiddenLibrariesToolStripMenuItem";
-            this.showHiddenLibrariesToolStripMenuItem.Size = new System.Drawing.Size(221, 24);
-            this.showHiddenLibrariesToolStripMenuItem.Text = "Show hidden libraries";
-            this.showHiddenLibrariesToolStripMenuItem.Click += new System.EventHandler(this.showHiddenLibrariesToolStripMenuItem_Click);
             // 
             // SharePointDocumentLibraryPickerDialog
             // 
@@ -241,5 +281,9 @@
         private System.Windows.Forms.ToolStripMenuItem goupToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem showHiddenLibrariesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newFoldertoolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
     }
 }

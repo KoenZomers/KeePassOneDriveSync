@@ -114,6 +114,8 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ViewDetails()
         {
+            if (ConfigurationListView.SelectedItems.Count == 0) return;
+
             var oneDriveConfigDetailsForm = new OneDriveConfigDetailsForm((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag);
             oneDriveConfigDetailsForm.ShowDialog();
 
