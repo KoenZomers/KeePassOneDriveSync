@@ -41,9 +41,11 @@ Starting with version 2.0.0.0 it is now also possible to sync your KeePass datab
 9. Paste the Client Id from the previous steps in the App Id field and click on Lookup
 10. In the Permission Request XML field paste:
 
+```XML
   <AppPermissionRequests AllowAppOnlyPolicy="true">
     <AppPermissionRequest Scope="http://sharepoint/content/sitecollection/web" Right="FullControl" />
   </AppPermissionRequests>
+```
 
 11. Click on the Create button
 12. Consent to the trust dialog
