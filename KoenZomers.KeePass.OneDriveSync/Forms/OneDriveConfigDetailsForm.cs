@@ -31,10 +31,13 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ShowConfiguration()
         {
-            OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : _configuration.Value.OneDriveName;
+            LocationNameLabel.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? "SharePoint site:" : "OneDrive:";
+            LastSyncedLabel.Text = string.Format(LastSyncedLabel.Text, _configuration.Value.CloudStorageType);
+            LastVerifiedLabel.Text = string.Format(LastVerifiedLabel.Text, _configuration.Value.CloudStorageType);
+            OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteDatabasePath + (string.IsNullOrEmpty(_configuration.Value.OneDriveName) ? "" : " (" + _configuration.Value.OneDriveName + ")") : _configuration.Value.OneDriveName;
             CloudStorageTypeTextBox.Text = _configuration.Value.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer).ToString();
             LocalKeePassPathTextbox.Text = _configuration.Key;
-            RemoteKeePassPathTextbox.Text = _configuration.Value.RemoteDatabasePath;
+            RemoteKeePassPathTextbox.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteFolderId + "/" + _configuration.Value.RemoteFileName : _configuration.Value.RemoteDatabasePath;
             OneDriveRefreshTokenTextbox.Text = _configuration.Value.RefreshToken;
             RefreshTokenStorageTextBox.Text = _configuration.Value.RefreshTokenStorage.ToString();
             LastSyncedTextbox.Text = _configuration.Value.LastSyncedAt.HasValue ? _configuration.Value.LastSyncedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never synced yet";

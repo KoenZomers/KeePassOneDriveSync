@@ -1,20 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoenZomers.KeePass.OneDriveSync", "KoenZomers.KeePass.OneDriveSync\KoenZomers.KeePass.OneDriveSync.csproj", "{ED981431-32EA-4FC8-BF5B-D5A29B3AD52E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{078F6134-F1AF-4F2A-907F-C8AC4C976834}"
 	ProjectSection(SolutionItems) = preProject
 		KoenZomers.KeePass.OneDriveSync\CredentialManagement.dll = KoenZomers.KeePass.OneDriveSync\CredentialManagement.dll
-		KoenZomers.KeePass.OneDriveSync\KoenZomers.OneDrive.Api.dll = KoenZomers.KeePass.OneDriveSync\KoenZomers.OneDrive.Api.dll
-		KoenZomers.KeePass.OneDriveSync\Newtonsoft.Json.dll = KoenZomers.KeePass.OneDriveSync\Newtonsoft.Json.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C51FE94D-1D06-497B-97AA-5B80030F6E7A}"
 	ProjectSection(SolutionItems) = preProject
 		create-plgx.cmd = create-plgx.cmd
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{1985E673-364B-4E4F-9DF4-7F110239AEB0}"
@@ -33,7 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 		Screenshots\KeePassVerifyPluginPresent.png = Screenshots\KeePassVerifyPluginPresent.png
 		Screenshots\OneDriveConsentToPriviledges.png = Screenshots\OneDriveConsentToPriviledges.png
 		Screenshots\OneDriveDatabaseUploaded.png = Screenshots\OneDriveDatabaseUploaded.png
-		Screenshots\OneDriveSaveLocation.png = Screenshots\OneDriveSaveLocation.png
 		Screenshots\OneDriveSelectLocation.png = Screenshots\OneDriveSelectLocation.png
 		Screenshots\OneDriveTwoFactorAuthentication.png = Screenshots\OneDriveTwoFactorAuthentication.png
 		Screenshots\StartSyncing.png = Screenshots\StartSyncing.png
@@ -47,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Installaton Instructions.md = Installaton Instructions.md
 		OneDriveRefreshToken.md = OneDriveRefreshToken.md
 		README.md = README.md
+		SystemRequirements.md = SystemRequirements.md
 		Troubleshooting.md = Troubleshooting.md
 		UpdateCheck.md = UpdateCheck.md
 		VersionHistory.md = VersionHistory.md
@@ -65,5 +64,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {508E11B0-378C-44C7-B479-337C56E78BBB}
 	EndGlobalSection
 EndGlobal

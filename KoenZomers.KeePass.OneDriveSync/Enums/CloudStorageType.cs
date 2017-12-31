@@ -13,6 +13,16 @@
         /// <summary>
         /// OneDrive for Business
         /// </summary>
-        OneDriveForBusiness = 1
+        OneDriveForBusiness = 1,
+
+        /// <summary>
+        /// Microsoft Graph API
+        /// </summary>
+        MicrosoftGraph = 2,
+
+        /// <summary>
+        /// Microsoft SharePoint
+        /// </summary>
+        SharePoint
     }
 }

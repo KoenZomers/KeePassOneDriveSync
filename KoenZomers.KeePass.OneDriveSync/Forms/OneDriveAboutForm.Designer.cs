@@ -53,7 +53,7 @@
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.CloseButton.Location = new System.Drawing.Point(359, 187);
-            this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CloseButton.Margin = new System.Windows.Forms.Padding(4);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(132, 41);
             this.CloseButton.TabIndex = 5;
@@ -70,7 +70,7 @@
             this.NameLabel.Name = "NameLabel";
             this.NameLabel.Size = new System.Drawing.Size(473, 22);
             this.NameLabel.TabIndex = 6;
-            this.NameLabel.Text = "Koen Zomers <mail@koenzomers.nl>";
+            this.NameLabel.Text = "Koen Zomers (koen@zomers.eu)";
             this.NameLabel.UseMnemonic = false;
             // 
             // ExplanationLabel
@@ -83,7 +83,7 @@
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Size = new System.Drawing.Size(472, 105);
             this.ExplanationLabel.TabIndex = 7;
-            this.ExplanationLabel.Text = "This KeePass plugin allows synchronizing your KeePass databases with one or multiple OneDrive accounts. It is inspired by KeeSkyDrive by Oleksandr Senyuk. It is free to use and open source. Please leave these credits in place if you decide to use my source code. Feel free to contact me in case of questions or suggestions.";
+            this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
             // 
             // OneDriveAboutForm
             // 
@@ -94,7 +94,7 @@
             this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.HeaderLabel);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(410, 280);

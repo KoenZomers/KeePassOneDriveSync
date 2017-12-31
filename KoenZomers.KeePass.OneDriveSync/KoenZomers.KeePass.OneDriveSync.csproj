@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KoenZomersKeePassOneDriveSync</RootNamespace>
     <AssemblyName>KoenZomersKeePassOneDriveSync</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -41,19 +41,37 @@
     <Reference Include="KeePass">
       <HintPath>C:\Program Files (x86)\KeePass Password Safe 2\KeePass.exe</HintPath>
     </Reference>
-    <Reference Include="KoenZomers.OneDrive.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c94340d84666bdcb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\KoenZomers.OneDrive.Api.dll</HintPath>
+    <Reference Include="KoenZomers.OneDrive.Api, Version=2.0.3.1, Culture=neutral, PublicKeyToken=c94340d84666bdcb, processorArchitecture=MSIL">
+      <HintPath>Packages\KoenZomers.OneDrive.Api.2.0.3.1\lib\KoenZomers.OneDrive.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>Packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca, processorArchitecture=MSIL">
+      <HintPath>Packages\Microsoft.Identity.Model.Extensions.2.0.1459.0\lib\Microsoft.IdentityModel.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>Packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -61,6 +79,12 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums\OneDriveRefreshTokenStorage.cs" />
     <Compile Include="Enums\CloudStorageType.cs" />
+    <Compile Include="Forms\SharePointDocumentLibraryPickerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SharePointDocumentLibraryPickerDialog.Designer.cs">
+      <DependentUpon>SharePointDocumentLibraryPickerDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OneDriveFilePickerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +96,12 @@
     </Compile>
     <Compile Include="Forms\OneDriveRequestInputDialog.Designer.cs">
       <DependentUpon>OneDriveRequestInputDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SharePointCredentialsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SharePointCredentialsForm.Designer.cs">
+      <DependentUpon>SharePointCredentialsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="KeePassDatabase.cs" />
     <Compile Include="KoenZomersKeePassOneDriveSyncExt.cs" />
@@ -118,11 +148,14 @@
       <DependentUpon>OneDriveConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\OneDriveProvider.cs" />
+    <Compile Include="Providers\SharePointProvider.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TokenHelper.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveCloudTypeForm.resx">
       <DependentUpon>OneDriveCloudTypeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SharePointDocumentLibraryPickerDialog.resx">
+      <DependentUpon>SharePointDocumentLibraryPickerDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveFilePickerDialog.resx">
       <DependentUpon>OneDriveFilePickerDialog.cs</DependentUpon>
@@ -153,15 +189,20 @@
     <EmbeddedResource Include="Forms\OneDriveConfigForm.resx">
       <DependentUpon>OneDriveConfigForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SharePointCredentialsForm.resx">
+      <DependentUpon>SharePointCredentialsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="KeePass.exe.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\SharePoint.pdn" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -169,6 +210,15 @@
     <Content Include="Images\KeePassO365.png" />
     <Content Include="Images\OneDriveConsumer.png" />
     <Content Include="Images\OneDriveForBusiness.png" />
+    <Content Include="Resources\DocLib.png" />
+    <Content Include="Resources\File.png" />
+    <Content Include="Resources\Folder.png" />
+    <None Include="Resources\SharePoint.png" />
+    <None Include="Resources\MSGraph.pdn" />
+    <None Include="Resources\OneDriveForBusiness.png" />
+    <None Include="Resources\OneDrive.png" />
+    <None Include="Resources\MSGraph.png" />
+    <None Include="packages.config" />
     <None Include="Resources\OneDriveIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

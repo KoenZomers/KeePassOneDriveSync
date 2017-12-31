@@ -5,6 +5,7 @@ using KeePass.Plugins;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -36,6 +37,11 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         internal const string OneDriveForBusinessClientSecret = "SR8WNXfxxu0yLF8WK1fZU2gNBjz4owBjnfsSjU9We1U=";
 
+        /// <summary>
+        /// Application ID to use for communication with the Microsoft Graph API
+        /// </summary>
+        internal const string GraphApiApplicationId = "7bcec80a-2ffe-4713-b9ea-0150361c8209";
+
         #endregion
 
         #region Properties
@@ -63,6 +69,11 @@ namespace KoenZomersKeePassOneDriveSync
         /// Open from OneDrive option in File > Open menu
         /// </summary>
         private ToolStripMenuItem _fileOpenMenuItem;
+
+        /// <summary>
+        /// Offline OneDrive option in File menu
+        /// </summary>
+        private ToolStripMenuItem _fileOfflineMenuItem;
 
         /// <summary>
         /// Boolean to indicate if some process is still running that we need to wait for before we shut down KeePass
@@ -97,14 +108,12 @@ namespace KoenZomersKeePassOneDriveSync
             Host.MainWindow.FileClosingPost += OnKeePassDatabaseClosing;
 
             // Add the menu option for configuration under Tools
-            var optionsmenu = Host.MainWindow.ToolsMenu.DropDownItems;
+            var toolsmenu = Host.MainWindow.ToolsMenu.DropDownItems;
 
             _toolsMenuSeparator = new ToolStripSeparator();
-            optionsmenu.Add(_toolsMenuSeparator);
-
             _toolsMenuConfigMenuItem = new ToolStripMenuItem("OneDriveSync Options", Resources.OneDriveIcon);
             _toolsMenuConfigMenuItem.Click += MenuOptionsOnClick;
-            optionsmenu.Add(_toolsMenuConfigMenuItem);
+            toolsmenu.Add(_toolsMenuConfigMenuItem);
 
             // Add the menu option for configuration under File > Open
             var filemenu = Host.MainWindow.MainMenu.Items["m_menuFile"] as ToolStripMenuItem;
@@ -113,11 +122,23 @@ namespace KoenZomersKeePassOneDriveSync
                 var openmenu = filemenu.DropDownItems["m_menuFileOpen"] as ToolStripMenuItem;
                 if (openmenu != null)
                 {
-                    _fileOpenMenuItem = new ToolStripMenuItem("Open from OneDrive...", Resources.OneDriveIcon);
-                    _fileOpenMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.O;
+                    _fileOpenMenuItem = new ToolStripMenuItem("Open from OneDrive...", Resources.OneDriveIcon)
+                    {
+                        ShortcutKeys = Keys.Control | Keys.Alt | Keys.O
+                    };
                     _fileOpenMenuItem.Click += MenuFileOpenFromOneDriveOnClick;
                     openmenu.DropDownItems.Add(_fileOpenMenuItem);
                 }
+
+                // Add the menu option for Offline use under File
+                var fileLockIndex = filemenu.DropDownItems.IndexOfKey("m_menuFileLock");
+                _fileOfflineMenuItem = new ToolStripMenuItem("OneDriveSync is Online", Resources.OneDriveIcon)
+                {
+                    Checked = true
+                };
+                _fileOfflineMenuItem.Click += MenuFileOneDriveSyncOfflineOnClick;
+                filemenu.DropDownItems.Insert(fileLockIndex != -1 ? fileLockIndex : filemenu.DropDownItems.Count - 1, _toolsMenuSeparator);
+                filemenu.DropDownItems.Insert(fileLockIndex != -1 ? fileLockIndex : filemenu.DropDownItems.Count - 1, _fileOfflineMenuItem);
             }
 
             // Indicate that the plugin started successfully
@@ -142,6 +163,9 @@ namespace KoenZomersKeePassOneDriveSync
                 _fileOpenMenuItem.Click -= MenuFileOpenFromOneDriveOnClick;
                 openmenu.DropDownItems.Remove(_fileOpenMenuItem);
             }
+
+            _fileOfflineMenuItem.Click -= MenuFileOneDriveSyncOfflineOnClick;
+            openmenu.DropDownItems.Remove(_fileOfflineMenuItem);
         }
 
         /// <summary>
@@ -164,7 +188,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// Triggered when a KeePass database is being saved
         /// </summary>
-        private static async void MainWindowOnFileSaved(object sender, FileSavedEventArgs fileSavedEventArgs)
+        private async void MainWindowOnFileSaved(object sender, FileSavedEventArgs fileSavedEventArgs)
         {
             var databasePath = fileSavedEventArgs.Database.IOConnectionInfo.Path;
 
@@ -178,7 +202,7 @@ namespace KoenZomersKeePassOneDriveSync
             config.KeePassDatabase = fileSavedEventArgs.Database;
 
             // Check if we should sync this database
-            if (config.DoNotSync) return;
+            if (config.DoNotSync || !_fileOfflineMenuItem.Checked) return;
 
             // Make sure it's not a remote database on i.e. an FTP or website
             if (!fileSavedEventArgs.Database.IOConnectionInfo.IsLocalFile())
@@ -213,13 +237,22 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         private async static void MenuFileOpenFromOneDriveOnClick(object sender, EventArgs e)
         {
-            await KeePassDatabase.OpenDatabaseFromCloudService();
+            await KeePassDatabase.OpenDatabaseFromCloudService(KeePassDatabase.UpdateStatus);
+        }
+
+        /// <summary>
+        /// Triggered when clicking on the OneDriveSync Offline Mode menu item under File
+        /// </summary>
+        private void MenuFileOneDriveSyncOfflineOnClick(object sender, EventArgs e)
+        {
+            _fileOfflineMenuItem.Checked = !_fileOfflineMenuItem.Checked;
+            _fileOfflineMenuItem.Text = _fileOfflineMenuItem.Checked ? _fileOfflineMenuItem.Text = "OneDriveSync is Online" : _fileOfflineMenuItem.Text = "OneDriveSync is Offline";
         }
 
         /// <summary>
         /// Triggered when a KeePass database is being opened
         /// </summary>
-        private async static void OnKeePassDatabaseOpened(object sender, FileOpenedEventArgs fileOpenedEventArgs)
+        private async void OnKeePassDatabaseOpened(object sender, FileOpenedEventArgs fileOpenedEventArgs)
         {
             var databasePath = fileOpenedEventArgs.Database.IOConnectionInfo.Path;
 
@@ -234,7 +267,7 @@ namespace KoenZomersKeePassOneDriveSync
             config.KeePassDatabase = fileOpenedEventArgs.Database;
 
             // Check if we should sync this database
-            if (config.DoNotSync || !fileOpenedEventArgs.Database.IOConnectionInfo.IsLocalFile()) return;
+            if (config.DoNotSync || !fileOpenedEventArgs.Database.IOConnectionInfo.IsLocalFile() || !_fileOfflineMenuItem.Checked) return;
 
             // Check if the database configuration of the opened KeePass database is set to retrieve the OneDrive Refresh Token from the KeePass database itself
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)

@@ -58,6 +58,10 @@ namespace KoenZomersKeePassOneDriveSync
                     cloudStorage = new OneDriveForBusinessO365Api(KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientSecret);
                     break;
 
+                case CloudStorageType.MicrosoftGraph:
+                    cloudStorage = new OneDriveGraphApi(KoenZomersKeePassOneDriveSyncExt.GraphApiApplicationId);
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException(string.Format("Cloud storage type {0} is not supported", databaseConfig.CloudStorageType));
             }
@@ -115,31 +119,55 @@ namespace KoenZomersKeePassOneDriveSync
         #endregion
 
         #region Proxy Support
-        
+
+        /// <summary>
+        /// Gets correct web proxy settings based on KeePass proxy configuration
+        /// </summary>
+        /// <returns>IWebProxy conforming instance with the proper proxy configuraton</returns>
+        public static IWebProxy GetProxySettings()
+        {
+            IWebProxy webProxy = null;
+
+            // Create the WebProxy object based on KeePass configuration
+            switch (KeePass.Program.Config.Integration.ProxyType)
+            {
+                case ProxyServerType.None:
+                    webProxy = null;
+                    break;
+
+                case ProxyServerType.Manual:
+                    webProxy = new WebProxy(string.Concat(KeePass.Program.Config.Integration.ProxyAddress, ":", KeePass.Program.Config.Integration.ProxyPort));
+                    break;
+
+                case ProxyServerType.System:
+                    webProxy = WebRequest.DefaultWebProxy;
+                    break;
+            }
+
+            return webProxy;
+        }
+
+        /// <summary>
+        /// Gets correct web proxy credentials based on KeePass proxy configuration
+        /// </summary>
+        /// <returns>NetworkCredential instance with the proper proxy credentials</returns>
+        public static NetworkCredential GetProxyCredentials()
+        {
+            var networkCredential = KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Manual ? new NetworkCredential(KeePass.Program.Config.Integration.ProxyUserName, KeePass.Program.Config.Integration.ProxyPassword) : null;
+            return networkCredential;
+        }
+
         /// <summary>
         /// Applies the correct web proxy settings to the provided OneDriveApi instance based on KeePass proxy configuration
         /// </summary>
         /// <param name="oneDriveApi">OneDriveApi instance to apply the proper proxy settings to</param>
         public static void ApplyProxySettings(OneDriveApi oneDriveApi)
         {
-            // Configure thr proxy to use
-            switch (KeePass.Program.Config.Integration.ProxyType)
-            {
-                case ProxyServerType.None:
-                    oneDriveApi.ProxyConfiguration = null;
-                    return;
-
-                case ProxyServerType.Manual:
-                    oneDriveApi.ProxyConfiguration = new WebProxy(string.Concat(KeePass.Program.Config.Integration.ProxyAddress, ":", KeePass.Program.Config.Integration.ProxyPort));
-                    break;
-
-                case ProxyServerType.System:
-                    oneDriveApi.ProxyConfiguration = WebRequest.DefaultWebProxy;
-                    break;
-            }
+            // Set the WebProxy to use
+            oneDriveApi.ProxyConfiguration = GetProxySettings();
 
             // Configure the credentials to use for the proxy
-            oneDriveApi.ProxyCredential = KeePass.Program.Config.Integration.ProxyAuthType == ProxyAuthType.Manual ? new NetworkCredential(KeePass.Program.Config.Integration.ProxyUserName, KeePass.Program.Config.Integration.ProxyPassword) : null;
+            oneDriveApi.ProxyCredential = GetProxyCredentials();
         }
 
         #endregion
