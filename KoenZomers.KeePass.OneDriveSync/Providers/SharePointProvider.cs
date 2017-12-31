@@ -163,7 +163,8 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
 
                 // Validate if ETag node exists in the result
-                if (responseJson.TryGetValue("ETag", out JToken value))
+                JToken value;
+                if (responseJson.TryGetValue("ETag", out value))
                 {
                     // ETag node exists, return it
                     return value.Value<string>();
@@ -221,7 +222,8 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                         var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
 
                         // Validate if a ETag node exists in the result
-                        if (responseJson.TryGetValue("ETag", out JToken value))
+                        JToken value;
+                        if (responseJson.TryGetValue("ETag", out value))
                         {
                             // ETag node exists, return it
                             return value.Value<string>();
@@ -527,7 +529,8 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
 
                     // Validate if a ServerRelativeUrl node exists in the result
-                    if (responseJson.TryGetValue("ServerRelativeUrl", out JToken value))
+                    JToken value;
+                    if (responseJson.TryGetValue("ServerRelativeUrl", out value))
                     {
                         // ServerRelativeUrl node exists, return it
                         return value.Value<string>();
@@ -564,7 +567,8 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
 
                     // Validate if a FormDigestValue node exists in the result
-                    if (responseJson.TryGetValue("FormDigestValue", out JToken value))
+                    JToken value;
+                    if (responseJson.TryGetValue("FormDigestValue", out value))
                     {
                         // FormDigestValue node exists, return it
                         return value.Value<string>();
@@ -688,7 +692,8 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
 
                     // Validate if a Title node exists in the result
-                    if (responseJson.TryGetValue("Title", out JToken value))
+                    JToken value;
+                    if (responseJson.TryGetValue("Title", out value))
                     {
                         // Title node exists, update the database config with the site title
                         databaseConfig.OneDriveName = value.Value<string>();

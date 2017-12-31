@@ -45,7 +45,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         /// <summary>
         /// Gets or sets if hidden document libraries should be shown
         /// </summary>
-        public bool ShowHiddenLibraries { get; set; } = false;
+        public bool ShowHiddenLibraries { get; set; }
 
         #endregion
 

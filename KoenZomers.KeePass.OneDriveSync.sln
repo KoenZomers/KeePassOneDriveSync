@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoenZomers.KeePass.OneDriveSync", "KoenZomers.KeePass.OneDriveSync\KoenZomers.KeePass.OneDriveSync.csproj", "{ED981431-32EA-4FC8-BF5B-D5A29B3AD52E}"
 EndProject
@@ -32,7 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 		Screenshots\KeePassVerifyPluginPresent.png = Screenshots\KeePassVerifyPluginPresent.png
 		Screenshots\OneDriveConsentToPriviledges.png = Screenshots\OneDriveConsentToPriviledges.png
 		Screenshots\OneDriveDatabaseUploaded.png = Screenshots\OneDriveDatabaseUploaded.png
-		Screenshots\OneDriveSaveLocation.png = Screenshots\OneDriveSaveLocation.png
 		Screenshots\OneDriveSelectLocation.png = Screenshots\OneDriveSelectLocation.png
 		Screenshots\OneDriveTwoFactorAuthentication.png = Screenshots\OneDriveTwoFactorAuthentication.png
 		Screenshots\StartSyncing.png = Screenshots\StartSyncing.png

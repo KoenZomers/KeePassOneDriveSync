@@ -11,24 +11,24 @@ To add the plugin to KeePass, simply follow these steps:
 
 Once the plugin is installed, you can use one of the following scenarios to start using the plugin:
 
-### Opening an existing KeePass database from OneDrive / OneDrive for Business in Office 365
+### Opening an existing KeePass database from OneDrive Personal / OneDrive for Business in Office 365 / SharePoint Online / SharePoint on-premises
 
 1. In KeePass go to File > Open > Open from OneDrive 
-2. Choose the platform where you have stored your KeePass database. Choose Microsoft Graph API for both Consumer OneDrive as well ass OneDrive for Business.
+2. Choose the platform where you have stored your KeePass database. Choose Microsoft Graph API for both OneDrive Personal as well as OneDrive for Business. Choose SharePoint to sync with a KeePass database stored in a SharePoint on-premises or Online farm which is set up to use Low Trust oAuth.
 3. Go throught the steps to authenticate to the platform and choose your KeePass database
 4. Select a location locally where you want to store the KeePass database. This should *NOT* be a location that's also synced with the OneDrive.exe sync client as this *will* corrupt your KeePass database.
 
-### Creating a new KeePass database on OneDrive / OneDrive for Business in Office 365
+### Creating a new KeePass database on OneDrive Personal / OneDrive for Business in Office 365 / SharePoint Online / SharePoint on-premises
 1. In KeePass go to File > New
 2. Select a location on your machine to store the KeePass database. This should *NOT* be a location that's also synced with the OneDrive.exe sync client as this *will* corrupt your KeePass database.
 3. Change the configuration options for your KeePass database as you wish
 4. Hit CTRL+S to initiate saving the database. The OneDriveSync plugin should now appear asking you if you want to store the database on a cloud platform.
-5. Choose the platform where you want to store your KeePass database. Choose Microsoft Graph API for both Consumer OneDrive as well ass OneDrive for Business.
+5. Choose the platform where you want to store your KeePass database. Choose Microsoft Graph API for both OneDrive Personal as well as OneDrive for Business. Choose SharePoint to sync with a KeePass database stored in a SharePoint on-premises or Online farm which is set up to use Low Trust oAuth.
 6. Go throught the steps to authenticate to the platform and choose your KeePass database
 
-### Synchronising an existing local KeePass database with OneDrive / OneDrive for Business in Office 365
+### Synchronising an existing local KeePass database with OneDrive Personal / OneDrive for Business in Office 365 / SharePoint Online / SharePoint on-premises
 1. In KeePass go to File > Open
 2. Select the location of the KeePass database on our local machine. This should *NOT* be a location that's also synced with the OneDrive.exe sync client as this *will* corrupt your KeePass database.
 3. Hit CTRL+S to initiate saving the database. The OneDriveSync plugin should now appear asking you if you want to store the database on a cloud platform.
-4. Choose the platform where you want to store your KeePass database. Choose Microsoft Graph API for both Consumer OneDrive as well ass OneDrive for Business.
+4. Choose the platform where you want to store your KeePass database. Choose Microsoft Graph API for both OneDrive Personal as well as OneDrive for Business.  Choose SharePoint to sync with a KeePass database stored in a SharePoint on-premises or Online farm which is set up to use Low Trust oAuth.
 5. Go throught the steps to authenticate to the platform and choose where to store your KeePass database

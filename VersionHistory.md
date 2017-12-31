@@ -44,7 +44,7 @@ Version 1.6.1.0 - October 13, 2016
 
 Version 1.6.0.0 - August 15, 2016
 
-- Added the option to open a KeePass database directly from OneDrive Consumer or OneDrive for Business under File > Open > Open from OneDrive. It will automatically set up the sync connection between your cloud hosting and local mapping.
+- Added the option to open a KeePass database directly from OneDrive Personal or OneDrive for Business under File > Open > Open from OneDrive. It will automatically set up the sync connection between your cloud hosting and local mapping.
 
 Version 1.5.1.0 - August 13, 2016
 
