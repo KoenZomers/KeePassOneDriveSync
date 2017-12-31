@@ -168,7 +168,10 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             }
 
             // Use the ETag from the OneDrive item to compare it against the local database config etag to see if the content has changed
-            if (!forceSync && oneDriveItem.ETag == databaseConfig.ETag)
+            // Microsoft Graph API reports back a different ETag when uploading than the file actually gets assigned for some unknown reason. This would cause each sync attempt to sync again as the ETags differ. As a workaround we'll use the CTag which does seem reliable to detect a change to the file.
+            if (!forceSync && 
+                (databaseConfig.CloudStorageType == CloudStorageType.MicrosoftGraph && oneDriveItem.CTag == databaseConfig.ETag) ||
+                (databaseConfig.CloudStorageType != CloudStorageType.MicrosoftGraph && oneDriveItem.ETag == databaseConfig.ETag))
             {
                 updateStatus("Databases are in sync");
 
@@ -225,7 +228,15 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             // Delete the temporary database used for merging
             System.IO.File.Delete(temporaryKeePassDatabasePath);
 
-            databaseConfig.ETag = uploadResult.ETag;
+            if (databaseConfig.CloudStorageType.Value == CloudStorageType.MicrosoftGraph)
+            {
+                // Microsoft Graph API reports back a different ETag when uploading than the file actually gets assigned for some unknown reason. This would cause each sync attempt to sync again as the ETags differ. As a workaround we'll use the CTag which does seem reliable to detect a change to the file.
+                databaseConfig.ETag = uploadResult.CTag;
+            }
+            else
+            {
+                databaseConfig.ETag = uploadResult.ETag;
+            }
             return true;
         }
 
