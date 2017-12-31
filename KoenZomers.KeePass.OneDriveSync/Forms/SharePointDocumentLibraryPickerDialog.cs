@@ -316,7 +316,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             if (SharePointDocumentLibraryPicker.SelectedItems.Count == 0 || SharePointDocumentLibraryPicker.SelectedItems[0].ImageKey == "DocLib") return;
 
             var selectedItem = SharePointDocumentLibraryPicker.SelectedItems[0];
-            var confirm = MessageBox.Show("Are you sure you want to delete the selected " + selectedItem.ImageKey.ToLowerInvariant() + "? ", "Confirm deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            var confirm = MessageBox.Show("Are you sure you want to delete the selected " + selectedItem.ImageKey.ToLowerInvariant() + "? " + (selectedItem.ImageKey == "Folder" ? "Note that folders can only be removed if there's nothing inside anymore. " : ""), "Confirm deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (confirm != DialogResult.Yes) return;
 
             bool operationSuccessful = false;
