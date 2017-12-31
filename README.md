@@ -19,7 +19,7 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 Version 2.0.0.0 - December 31, 2017
 
-Note: this is a mayor release with many changes to the code. I've tested everything carefully, but if you nevertheless run into problems, please [revert to the previous version](/KoenZomers/KeePassOneDriveSync/releases/tag/1.8.3.0) and [share with me the](/KoenZomers/KeePassOneDriveSync/issues/new) the issue you are facing.
+Note: this is a mayor release with many changes to the code. I've tested everything carefully, but if you nevertheless run into problems, please [revert to the previous version](../../releases/tag/1.8.3.0) and [share with me the](../../issues/new) the issue you are facing.
 
 - Replaced DLLs in the solution with NuGet package references. This does increase the PLGX file size, but does ease keeping this plugin updated with the latest versions for developers
 - Upgraded KoenZomers.OneDrive.Api to v2.0.3.1 which has support for the Microsoft Graph API
