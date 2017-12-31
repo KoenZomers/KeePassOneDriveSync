@@ -24,7 +24,7 @@ If you're using a HTTP proxy to communicate with the internet, configure the HTT
 
 ## Offline mode
 
-Starting with version 2.0.0.0 an option has been added under the File menu to temporarily mark the KeeOneDriveSync plugin for offline mode. This means no attempts will be made to synchronize the database after opening or saving it. This setting is not retained after restarting KeePass. It could be useful if your connection isn't ideal for syncing and you have to make a lot of changes.
+Starting with version 2.0.0.0 an option has been added under the File menu to temporarily mark the KeeOneDriveSync plugin for offline mode. This means no attempts will be made to synchronize the database after opening or saving it. This setting is purposely not retained after restarting KeePass. It could be useful if your connection isn't ideal for syncing and you have to make a lot of changes. Note that offline mode goes for all KeePass databases you may have open. If you wish to manually sync one even though you're in offline mode, just open the KeePass database, go to Tools -> KeeOneDriveSync Options -> right click on database to sync -> Sync Now.
 
 ## SharePoint 2013, 2016 and SharePoint Online support
 
