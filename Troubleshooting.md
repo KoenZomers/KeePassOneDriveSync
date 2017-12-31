@@ -24,6 +24,8 @@ It should show you a dialog window with a path to a temporarily created file. Pl
 
 If you're receiving an error after KeePass has started and you're setting up a sync connection or it is syncing with your OneDrive, please first try it again as it may be caused by a network glitch. Just hit continue in the error dialog. If it keeps happening, send me the error details and explain what you were trying to do when the error occurs.
 
+Never mess with the tokens stored in the Windows Credential Manager for KeePass yourself. Just delete the entry in KeePass -> Tools -> OneDriveSync Options if you wish to change or update the credentials.
+
 ### Proxy Issues ###
 
 Every now and then I get e-mails from people that state that KeePass OneDrive Sync won't work through their proxy setup. This plugin takes over the proxy settings you define inside KeePass. You can find these in KeePass under Tools > Options > Advanced tab > Proxy at the bottom right. Make sure these settings are correct for your environment. If taking the default system proxy and credentials don't work, try if it does work if you explicitly configure them in KeePass.
