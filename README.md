@@ -19,6 +19,8 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 Version 2.0.0.0 - December 31, 2017
 
+To celebrate the start of 2018, I've spent countless hours on adding some highly requested features in this release. Happy New Year!
+
 Note: this is a mayor release with many changes to the code. I've tested everything carefully, but if you nevertheless run into problems, please [revert to the previous version](../../releases/tag/1.8.3.0) and [share with me the](../../issues/new) the issue you are facing.
 
 - Replaced DLLs in the solution with NuGet package references. This does increase the PLGX file size, but does ease keeping this plugin updated with the latest versions for developers
