@@ -10,4 +10,4 @@ Here it will perform a check for KeePass itself and all installed plugins if the
 
 ![](./Screenshots/KeePassPluginUpToDate.png)
 
-If a new version is available, close KeePass, come to this page again, download the latest plugin, overwrite the PLGX file in your KeePass installation folder and start KeePass again. It's that simple!
+If a new version is available, close KeePass, come to this page again, download the latest plugin, overwrite the PLGX file in your Plugin subfoldder inside the KeePass installation folder and start KeePass again. It's that simple!
