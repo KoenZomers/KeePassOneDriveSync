@@ -34,7 +34,6 @@
             this.OneDriveRefreshTokenLabel = new System.Windows.Forms.Label();
             this.RemoteKeePassPathTextbox = new System.Windows.Forms.TextBox();
             this.OneDriveRefreshTokenTextbox = new System.Windows.Forms.TextBox();
-            this.LocalKeePassPathTextbox = new System.Windows.Forms.TextBox();
             this.OneDriveNameTextbox = new System.Windows.Forms.TextBox();
             this.CloseButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
@@ -52,6 +51,7 @@
             this.CloudStorageTypeLabel = new System.Windows.Forms.Label();
             this.OneDriveEtagTextBox = new System.Windows.Forms.TextBox();
             this.OneDriveEtagLabel = new System.Windows.Forms.Label();
+            this.LocalDatabasePathLinkLabel = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // LocationNameLabel
@@ -101,7 +101,7 @@
             this.RemoteKeePassPathTextbox.BackColor = System.Drawing.SystemColors.Control;
             this.RemoteKeePassPathTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RemoteKeePassPathTextbox.Location = new System.Drawing.Point(260, 83);
-            this.RemoteKeePassPathTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RemoteKeePassPathTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.RemoteKeePassPathTextbox.Name = "RemoteKeePassPathTextbox";
             this.RemoteKeePassPathTextbox.ReadOnly = true;
             this.RemoteKeePassPathTextbox.Size = new System.Drawing.Size(444, 15);
@@ -115,26 +115,12 @@
             this.OneDriveRefreshTokenTextbox.BackColor = System.Drawing.SystemColors.Control;
             this.OneDriveRefreshTokenTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.OneDriveRefreshTokenTextbox.Location = new System.Drawing.Point(260, 109);
-            this.OneDriveRefreshTokenTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OneDriveRefreshTokenTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.OneDriveRefreshTokenTextbox.Name = "OneDriveRefreshTokenTextbox";
             this.OneDriveRefreshTokenTextbox.ReadOnly = true;
             this.OneDriveRefreshTokenTextbox.Size = new System.Drawing.Size(444, 15);
             this.OneDriveRefreshTokenTextbox.TabIndex = 5;
             this.OneDriveRefreshTokenTextbox.Text = "?";
-            // 
-            // LocalKeePassPathTextbox
-            // 
-            this.LocalKeePassPathTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.LocalKeePassPathTextbox.BackColor = System.Drawing.SystemColors.Control;
-            this.LocalKeePassPathTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LocalKeePassPathTextbox.Location = new System.Drawing.Point(260, 58);
-            this.LocalKeePassPathTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.LocalKeePassPathTextbox.Name = "LocalKeePassPathTextbox";
-            this.LocalKeePassPathTextbox.ReadOnly = true;
-            this.LocalKeePassPathTextbox.Size = new System.Drawing.Size(444, 15);
-            this.LocalKeePassPathTextbox.TabIndex = 3;
-            this.LocalKeePassPathTextbox.Text = "?";
             // 
             // OneDriveNameTextbox
             // 
@@ -143,7 +129,7 @@
             this.OneDriveNameTextbox.BackColor = System.Drawing.SystemColors.Control;
             this.OneDriveNameTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.OneDriveNameTextbox.Location = new System.Drawing.Point(260, 11);
-            this.OneDriveNameTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OneDriveNameTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.OneDriveNameTextbox.Name = "OneDriveNameTextbox";
             this.OneDriveNameTextbox.ReadOnly = true;
             this.OneDriveNameTextbox.Size = new System.Drawing.Size(444, 15);
@@ -155,7 +141,7 @@
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.CloseButton.Location = new System.Drawing.Point(572, 263);
-            this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CloseButton.Margin = new System.Windows.Forms.Padding(4);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(132, 41);
             this.CloseButton.TabIndex = 1;
@@ -167,7 +153,7 @@
             // 
             this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DeleteButton.Location = new System.Drawing.Point(20, 263);
-            this.DeleteButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.DeleteButton.Margin = new System.Windows.Forms.Padding(4);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(132, 41);
             this.DeleteButton.TabIndex = 13;
@@ -192,7 +178,7 @@
             this.LastSyncedTextbox.BackColor = System.Drawing.SystemColors.Control;
             this.LastSyncedTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LastSyncedTextbox.Location = new System.Drawing.Point(260, 161);
-            this.LastSyncedTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LastSyncedTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.LastSyncedTextbox.Name = "LastSyncedTextbox";
             this.LastSyncedTextbox.ReadOnly = true;
             this.LastSyncedTextbox.Size = new System.Drawing.Size(444, 15);
@@ -216,7 +202,7 @@
             this.LocalKeePassFileHashTextbox.BackColor = System.Drawing.SystemColors.Control;
             this.LocalKeePassFileHashTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LocalKeePassFileHashTextbox.Location = new System.Drawing.Point(260, 212);
-            this.LocalKeePassFileHashTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LocalKeePassFileHashTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.LocalKeePassFileHashTextbox.Name = "LocalKeePassFileHashTextbox";
             this.LocalKeePassFileHashTextbox.ReadOnly = true;
             this.LocalKeePassFileHashTextbox.Size = new System.Drawing.Size(444, 15);
@@ -227,7 +213,7 @@
             // 
             this.ForceSyncButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ForceSyncButton.Location = new System.Drawing.Point(432, 263);
-            this.ForceSyncButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ForceSyncButton.Margin = new System.Windows.Forms.Padding(4);
             this.ForceSyncButton.Name = "ForceSyncButton";
             this.ForceSyncButton.Size = new System.Drawing.Size(132, 41);
             this.ForceSyncButton.TabIndex = 18;
@@ -252,7 +238,7 @@
             this.LastVerifiedTextbox.BackColor = System.Drawing.SystemColors.Control;
             this.LastVerifiedTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LastVerifiedTextbox.Location = new System.Drawing.Point(260, 186);
-            this.LastVerifiedTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LastVerifiedTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.LastVerifiedTextbox.Name = "LastVerifiedTextbox";
             this.LastVerifiedTextbox.ReadOnly = true;
             this.LastVerifiedTextbox.Size = new System.Drawing.Size(444, 15);
@@ -279,7 +265,7 @@
             this.RefreshTokenStorageTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.RefreshTokenStorageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RefreshTokenStorageTextBox.Location = new System.Drawing.Point(260, 135);
-            this.RefreshTokenStorageTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RefreshTokenStorageTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.RefreshTokenStorageTextBox.Name = "RefreshTokenStorageTextBox";
             this.RefreshTokenStorageTextBox.ReadOnly = true;
             this.RefreshTokenStorageTextBox.Size = new System.Drawing.Size(444, 15);
@@ -303,7 +289,7 @@
             this.CloudStorageTypeTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.CloudStorageTypeTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.CloudStorageTypeTextBox.Location = new System.Drawing.Point(260, 34);
-            this.CloudStorageTypeTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CloudStorageTypeTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.CloudStorageTypeTextBox.Name = "CloudStorageTypeTextBox";
             this.CloudStorageTypeTextBox.ReadOnly = true;
             this.CloudStorageTypeTextBox.Size = new System.Drawing.Size(444, 15);
@@ -327,7 +313,7 @@
             this.OneDriveEtagTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.OneDriveEtagTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.OneDriveEtagTextBox.Location = new System.Drawing.Point(260, 238);
-            this.OneDriveEtagTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OneDriveEtagTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.OneDriveEtagTextBox.Name = "OneDriveEtagTextBox";
             this.OneDriveEtagTextBox.ReadOnly = true;
             this.OneDriveEtagTextBox.Size = new System.Drawing.Size(444, 15);
@@ -344,12 +330,25 @@
             this.OneDriveEtagLabel.Text = "ETag:";
             this.OneDriveEtagLabel.UseMnemonic = false;
             // 
+            // LocalDatabasePathLinkLabel
+            // 
+            this.LocalDatabasePathLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LocalDatabasePathLinkLabel.Location = new System.Drawing.Point(257, 58);
+            this.LocalDatabasePathLinkLabel.Name = "LocalDatabasePathLinkLabel";
+            this.LocalDatabasePathLinkLabel.Size = new System.Drawing.Size(447, 20);
+            this.LocalDatabasePathLinkLabel.TabIndex = 28;
+            this.LocalDatabasePathLinkLabel.TabStop = true;
+            this.LocalDatabasePathLinkLabel.Text = "?";
+            this.LocalDatabasePathLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LocalDatabasePathLinkLabel_LinkClicked);
+            // 
             // OneDriveConfigDetailsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CloseButton;
             this.ClientSize = new System.Drawing.Size(720, 318);
+            this.Controls.Add(this.LocalDatabasePathLinkLabel);
             this.Controls.Add(this.OneDriveEtagTextBox);
             this.Controls.Add(this.OneDriveEtagLabel);
             this.Controls.Add(this.CloudStorageTypeTextBox);
@@ -367,7 +366,6 @@
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.OneDriveNameTextbox);
-            this.Controls.Add(this.LocalKeePassPathTextbox);
             this.Controls.Add(this.OneDriveRefreshTokenTextbox);
             this.Controls.Add(this.RemoteKeePassPathTextbox);
             this.Controls.Add(this.OneDriveRefreshTokenLabel);
@@ -375,7 +373,7 @@
             this.Controls.Add(this.LocalKeePassPathLabel);
             this.Controls.Add(this.LocationNameLabel);
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(680, 278);
             this.Name = "OneDriveConfigDetailsForm";
@@ -398,7 +396,6 @@
         private System.Windows.Forms.Label OneDriveRefreshTokenLabel;
         private System.Windows.Forms.TextBox RemoteKeePassPathTextbox;
         private System.Windows.Forms.TextBox OneDriveRefreshTokenTextbox;
-        private System.Windows.Forms.TextBox LocalKeePassPathTextbox;
         private System.Windows.Forms.TextBox OneDriveNameTextbox;
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Button DeleteButton;
@@ -416,5 +413,6 @@
         private System.Windows.Forms.Label CloudStorageTypeLabel;
         private System.Windows.Forms.TextBox OneDriveEtagTextBox;
         private System.Windows.Forms.Label OneDriveEtagLabel;
+        private System.Windows.Forms.LinkLabel LocalDatabasePathLinkLabel;
     }
 }

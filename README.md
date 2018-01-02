@@ -17,6 +17,11 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 2.0.0.1 - January 2, 2018
+
+- Bugfix in the About dialog not working. Thanks to everyone that reported this!
+- Added clickable link in the configuration details screen to open Windows Explorer directly to where the database resides
+
 Version 2.0.0.0 - December 31, 2017
 
 To celebrate the start of 2018, I've spent countless hours on adding some highly requested features in this release. Happy New Year!
@@ -36,6 +41,7 @@ Note: this is a mayor release with many changes to the code. I've tested everyth
 ## TODO
 
 1. Add support for High Trust oAuth towards SharePoint 2013 and 2016 on premises
+2. Add an easier way for SharePoint Online TeamSites to authenticate instead of using ACS oAuth tokens
 
 ## Special Thanks
 

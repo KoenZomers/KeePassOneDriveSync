@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OneDriveAboutForm));
             this.HeaderLabel = new System.Windows.Forms.Label();
             this.CloseButton = new System.Windows.Forms.Button();
             this.NameLabel = new System.Windows.Forms.Label();
@@ -83,7 +82,7 @@
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Size = new System.Drawing.Size(472, 105);
             this.ExplanationLabel.TabIndex = 7;
-            this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
+            this.ExplanationLabel.Text = "This KeePass plugin allows synchronizing your KeePass databases with one or multiple OneDrive accounts. It is inspired by KeeSkyDrive by Oleksandr Senyuk. It is free to use and open source. Please leave these credits in place if you decide to use my source code. Feel free to contact me in case of questions or suggestions.";
             // 
             // OneDriveAboutForm
             // 

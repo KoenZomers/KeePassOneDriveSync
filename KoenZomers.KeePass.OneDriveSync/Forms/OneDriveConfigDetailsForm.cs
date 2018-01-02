@@ -36,7 +36,8 @@ namespace KoenZomersKeePassOneDriveSync
             LastVerifiedLabel.Text = string.Format(LastVerifiedLabel.Text, _configuration.Value.CloudStorageType);
             OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteDatabasePath + (string.IsNullOrEmpty(_configuration.Value.OneDriveName) ? "" : " (" + _configuration.Value.OneDriveName + ")") : _configuration.Value.OneDriveName;
             CloudStorageTypeTextBox.Text = _configuration.Value.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer).ToString();
-            LocalKeePassPathTextbox.Text = _configuration.Key;
+            LocalDatabasePathLinkLabel.Text = _configuration.Key;
+            LocalDatabasePathLinkLabel.LinkColor = System.IO.File.Exists(_configuration.Key) ? System.Drawing.Color.Blue : System.Drawing.Color.Red;
             RemoteKeePassPathTextbox.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteFolderId + "/" + _configuration.Value.RemoteFileName : _configuration.Value.RemoteDatabasePath;
             OneDriveRefreshTokenTextbox.Text = _configuration.Value.RefreshToken;
             RefreshTokenStorageTextBox.Text = _configuration.Value.RefreshTokenStorage.ToString();
@@ -80,6 +81,27 @@ namespace KoenZomersKeePassOneDriveSync
             {
                 ShowConfiguration();
             }
+        }
+
+        private void LocalDatabasePathLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if(System.IO.File.Exists(LocalDatabasePathLinkLabel.Text))
+            {
+                // File still exists locally, open explorer and have it highlight the file
+                System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + LocalDatabasePathLinkLabel.Text + "\"");
+                return;
+            }
+
+            // Check if the parent directory still exists 
+            var fileInfo = new System.IO.FileInfo(LocalDatabasePathLinkLabel.Text);
+            if (System.IO.Directory.Exists(fileInfo.Directory.FullName))
+            {
+                // Parent directory still exists, open explorer in that folder
+                System.Diagnostics.Process.Start("explorer.exe", "\"" + fileInfo.Directory.FullName + "\"");
+                return;
+            }
+
+            // Both the file and the parent folder no longer exist, nothing we can do
         }
     }
 }
