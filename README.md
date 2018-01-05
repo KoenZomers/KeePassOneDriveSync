@@ -17,6 +17,10 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 2.0.1.0 - January 5, 2018
+
+- Upgraded KoenZomers.OneDrive.Api to v2.0.4.0 which has support for using items shared from other OneDrive drives
+
 Version 2.0.0.1 - January 2, 2018
 
 - Bugfix in the About dialog not working. Thanks to everyone that reported this!
