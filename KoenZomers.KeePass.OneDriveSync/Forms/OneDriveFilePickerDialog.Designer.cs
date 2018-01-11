@@ -57,6 +57,7 @@
             this.RefreshSharedWithMeFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GoToSharedWithMeRootTtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GoUpSharedWithMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SharedWithMeNotAvailableLabel = new System.Windows.Forms.Label();
             this.MyFilesContextMenu.SuspendLayout();
             this.FilesTabControl.SuspendLayout();
             this.MyFilesTabPage.SuspendLayout();
@@ -243,7 +244,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CloudLocationPath.BackColor = System.Drawing.Color.White;
             this.CloudLocationPath.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.CloudLocationPath.Location = new System.Drawing.Point(6, 8);
+            this.CloudLocationPath.Location = new System.Drawing.Point(9, 12);
             this.CloudLocationPath.Name = "CloudLocationPath";
             this.CloudLocationPath.Size = new System.Drawing.Size(593, 15);
             this.CloudLocationPath.TabIndex = 7;
@@ -270,6 +271,7 @@
             // 
             // SharedWithMeTabPage
             // 
+            this.SharedWithMeTabPage.Controls.Add(this.SharedWithMeNotAvailableLabel);
             this.SharedWithMeTabPage.Controls.Add(this.SharedWithMeUpButton);
             this.SharedWithMeTabPage.Controls.Add(this.SharedWithMePath);
             this.SharedWithMeTabPage.Controls.Add(this.SharedWithMePicker);
@@ -285,7 +287,7 @@
             // 
             this.SharedWithMeUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SharedWithMeUpButton.Enabled = false;
-            this.SharedWithMeUpButton.Location = new System.Drawing.Point(603, 4);
+            this.SharedWithMeUpButton.Location = new System.Drawing.Point(605, 3);
             this.SharedWithMeUpButton.Name = "SharedWithMeUpButton";
             this.SharedWithMeUpButton.Size = new System.Drawing.Size(55, 34);
             this.SharedWithMeUpButton.TabIndex = 9;
@@ -299,7 +301,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SharedWithMePath.BackColor = System.Drawing.Color.White;
             this.SharedWithMePath.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.SharedWithMePath.Location = new System.Drawing.Point(6, 11);
+            this.SharedWithMePath.Location = new System.Drawing.Point(9, 12);
             this.SharedWithMePath.Name = "SharedWithMePath";
             this.SharedWithMePath.Size = new System.Drawing.Size(590, 15);
             this.SharedWithMePath.TabIndex = 8;
@@ -312,10 +314,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SharedWithMePicker.ContextMenuStrip = this.SharedWithMeContextMenu;
             this.SharedWithMePicker.LargeImageList = this.IconsList;
-            this.SharedWithMePicker.Location = new System.Drawing.Point(4, 44);
+            this.SharedWithMePicker.Location = new System.Drawing.Point(6, 43);
             this.SharedWithMePicker.MultiSelect = false;
             this.SharedWithMePicker.Name = "SharedWithMePicker";
-            this.SharedWithMePicker.Size = new System.Drawing.Size(654, 376);
+            this.SharedWithMePicker.Size = new System.Drawing.Size(654, 377);
             this.SharedWithMePicker.SmallImageList = this.IconsList;
             this.SharedWithMePicker.TabIndex = 2;
             this.SharedWithMePicker.TileSize = new System.Drawing.Size(244, 70);
@@ -359,6 +361,20 @@
             this.GoUpSharedWithMeToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
             this.GoUpSharedWithMeToolStripMenuItem.Text = "Go &up";
             this.GoUpSharedWithMeToolStripMenuItem.Click += new System.EventHandler(this.GoUpSharedWithMeToolStripMenuItem_Click);
+            // 
+            // SharedWithMeNotAvailableLabel
+            // 
+            this.SharedWithMeNotAvailableLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SharedWithMeNotAvailableLabel.Location = new System.Drawing.Point(6, 43);
+            this.SharedWithMeNotAvailableLabel.Name = "SharedWithMeNotAvailableLabel";
+            this.SharedWithMeNotAvailableLabel.Size = new System.Drawing.Size(651, 377);
+            this.SharedWithMeNotAvailableLabel.TabIndex = 10;
+            this.SharedWithMeNotAvailableLabel.Text = "Shared with me is not available when using the OneDrive for Business service. Use" +
+    " the Graph API service instead to connect to your OneDrive for Business site and" +
+    " it will be available.";
+            this.SharedWithMeNotAvailableLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // OneDriveFilePickerDialog
             // 
@@ -419,5 +435,6 @@
         private System.Windows.Forms.Button SharedWithMeUpButton;
         private System.Windows.Forms.ToolStripMenuItem GoToSharedWithMeRootTtoolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem GoUpSharedWithMeToolStripMenuItem;
+        private System.Windows.Forms.Label SharedWithMeNotAvailableLabel;
     }
 }

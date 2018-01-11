@@ -110,7 +110,8 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 var oneDriveFilePickerDialog = new Forms.OneDriveFilePickerDialog(oneDriveApi)
                 {
                     ExplanationText = "Select where you want to store the KeePass database. Right click for additional options.",
-                    AllowEnteringNewFileName = true
+                    AllowEnteringNewFileName = true,
+                    FileName = new System.IO.FileInfo(localKeePassDatabasePath).Name
                 };
                 await oneDriveFilePickerDialog.LoadFolderItems();
                 var result = oneDriveFilePickerDialog.ShowDialog();
@@ -118,15 +119,64 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     return false;
                 }
+
                 databaseConfig.RemoteDatabasePath = (oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.Path : "") + "/" + oneDriveFilePickerDialog.CurrentOneDriveItem.Name + "/" + oneDriveFilePickerDialog.FileName;
-                databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
+                databaseConfig.RemoteDriveId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.DriveId : oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId : null;
+                if (oneDriveFilePickerDialog.CurrentOneDriveItem.File != null || (oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null && oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.File != null))
+                {
+                    databaseConfig.RemoteItemId = oneDriveFilePickerDialog.CurrentOneDriveItem.File != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id;
+                }
+                else
+                {
+                    databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
+                }
                 databaseConfig.RemoteFileName = oneDriveFilePickerDialog.FileName;
                 Configuration.Save();
             }
 
-            // Retrieve the KeePass database from OneDrive
-            var oneDriveItem = string.IsNullOrEmpty(databaseConfig.RemoteFolderId) ? await oneDriveApi.GetItem(databaseConfig.RemoteDatabasePath) : await oneDriveApi.GetItemInFolder(databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName);
+            // Retrieve the metadata of the KeePass database on OneDrive
+            OneDriveItem oneDriveItem;
+            if (string.IsNullOrEmpty(databaseConfig.RemoteItemId))
+            {
+                // We don't have the ID of the KeePass file, check if the database is stored on the current user its drive or on a shared drive
+                OneDriveItem folder;
+                if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
+                {
+                    // KeePass database is on the current user its drive
+                    folder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
+                }
+                else
+                {
+                    // KeePass database is on a shared drive
+                    folder = await oneDriveApi.GetItemFromDriveById(databaseConfig.RemoteFolderId, databaseConfig.RemoteDriveId);
+                }
 
+                // Locate the KeePass file in the folder
+                oneDriveItem = await oneDriveApi.GetItemInFolder(folder, databaseConfig.RemoteFileName);
+
+                // Check if the KeePass file has been found
+                if (oneDriveItem != null)
+                {
+                    // Store the direct Id to the KeePass file so we can save several API calls on future syncs
+                    databaseConfig.RemoteItemId = oneDriveItem.Id;
+                    Configuration.Save();
+                }
+            }
+            else
+            {
+                // We have the ID of the KeePass file, check if it's on the current user its drive or on a shared drive
+                if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
+                {
+                    // KeePass database is on the current user its drive
+                    oneDriveItem = await oneDriveApi.GetItemById(databaseConfig.RemoteItemId);
+                }
+                else
+                {
+                    // KeePass database is on a shared drive
+                    oneDriveItem = await oneDriveApi.GetItemFromDriveById(databaseConfig.RemoteItemId, databaseConfig.RemoteDriveId);
+                }
+            }
+            
             if (oneDriveItem == null)
             {
                 // KeePass database not found on OneDrive
@@ -141,7 +191,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 }
                 else
                 {
-                    oneDriveFolder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
+                    oneDriveFolder = databaseConfig.RemoteDriveId == null ? await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId) : await oneDriveApi.GetItemFromDriveById(databaseConfig.RemoteFolderId, databaseConfig.RemoteDriveId);
                     fileName = databaseConfig.RemoteFileName;
                 }
 
@@ -159,6 +209,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
                 if (newUploadResult != null)
                 {
+                    databaseConfig.RemoteItemId = newUploadResult.Id;
                     databaseConfig.LastCheckedAt = DateTime.Now;
                     databaseConfig.LastSyncedAt = DateTime.Now;
                     databaseConfig.ETag = newUploadResult.ETag;
@@ -170,8 +221,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             // Use the ETag from the OneDrive item to compare it against the local database config etag to see if the content has changed
             // Microsoft Graph API reports back a different ETag when uploading than the file actually gets assigned for some unknown reason. This would cause each sync attempt to sync again as the ETags differ. As a workaround we'll use the CTag which does seem reliable to detect a change to the file.
             if (!forceSync && 
-                (databaseConfig.CloudStorageType == CloudStorageType.MicrosoftGraph && oneDriveItem.CTag == databaseConfig.ETag) ||
-                (databaseConfig.CloudStorageType != CloudStorageType.MicrosoftGraph && oneDriveItem.ETag == databaseConfig.ETag))
+                oneDriveItem.CTag == databaseConfig.ETag)
             {
                 updateStatus("Databases are in sync");
 
@@ -218,7 +268,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             // Upload the synced database
             updateStatus("Uploading the new KeePass database to OneDrive");
 
-            var uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase) ? await oneDriveApi.GetDriveRoot() : await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
+            var uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase) ? await oneDriveApi.GetDriveRoot() : string.IsNullOrEmpty(databaseConfig.RemoteDriveId) ? await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id) : await oneDriveApi.GetItemFromDriveById(oneDriveItem.ParentReference.Id, oneDriveItem.ParentReference.DriveId));
             if (uploadResult == null)
             {
                 updateStatus("Failed to upload the KeePass database");
@@ -228,15 +278,9 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             // Delete the temporary database used for merging
             System.IO.File.Delete(temporaryKeePassDatabasePath);
 
-            if (databaseConfig.CloudStorageType.Value == CloudStorageType.MicrosoftGraph)
-            {
-                // Microsoft Graph API reports back a different ETag when uploading than the file actually gets assigned for some unknown reason. This would cause each sync attempt to sync again as the ETags differ. As a workaround we'll use the CTag which does seem reliable to detect a change to the file.
-                databaseConfig.ETag = uploadResult.CTag;
-            }
-            else
-            {
-                databaseConfig.ETag = uploadResult.ETag;
-            }
+           // The ETag changes with every request of the item so we use the CTag instead which only changes when the file changes
+            databaseConfig.ETag = uploadResult.CTag;
+
             return true;
         }
 
@@ -285,11 +329,59 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             }
 
             databaseConfig.RemoteDatabasePath = (oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.Path : "") + "/" + oneDriveFilePickerDialog.CurrentOneDriveItem.Name + "/" + oneDriveFilePickerDialog.FileName;
-            databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
+            databaseConfig.RemoteDriveId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.DriveId : oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId : null;
+            if (oneDriveFilePickerDialog.CurrentOneDriveItem.File != null || (oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null && oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.File != null))
+            {
+                databaseConfig.RemoteItemId = oneDriveFilePickerDialog.CurrentOneDriveItem.File != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id;
+            }
+            else
+            {
+                databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
+            }
             databaseConfig.RemoteFileName = oneDriveFilePickerDialog.FileName;
 
-            // Retrieve the KeePass database from OneDrive
-            var oneDriveItem = await oneDriveApi.GetItemInFolder(databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName);
+            // Retrieve the metadata of the KeePass database on OneDrive
+            OneDriveItem oneDriveItem;
+            if (string.IsNullOrEmpty(databaseConfig.RemoteItemId))
+            {
+                // We don't have the ID of the KeePass file, check if the database is stored on the current user its drive or on a shared drive
+                OneDriveItem folder;
+                if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
+                {
+                    // KeePass database is on the current user its drive
+                    folder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
+                }
+                else
+                {
+                    // KeePass database is on a shared drive
+                    folder = await oneDriveApi.GetItemFromDriveById(databaseConfig.RemoteFolderId, databaseConfig.RemoteDriveId);
+                }
+
+                // Locate the KeePass file in the folder
+                oneDriveItem = await oneDriveApi.GetItemInFolder(folder, databaseConfig.RemoteFileName);
+
+                // Check if the KeePass file has been found
+                if (oneDriveItem != null)
+                {
+                    // Store the direct Id to the KeePass file so we can save several API calls on future syncs
+                    databaseConfig.RemoteItemId = oneDriveItem.Id;
+                    Configuration.Save();
+                }
+            }
+            else
+            {
+                // We have the ID of the KeePass file, check if it's on the current user its drive or on a shared drive
+                if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
+                {
+                    // KeePass database is on the current user its drive
+                    oneDriveItem = await oneDriveApi.GetItemById(databaseConfig.RemoteItemId);
+                }
+                else
+                {
+                    // KeePass database is on a shared drive
+                    oneDriveItem = await oneDriveApi.GetItemFromDriveById(databaseConfig.RemoteItemId, databaseConfig.RemoteDriveId);
+                }
+            }
 
             if (oneDriveItem == null)
             {
@@ -298,7 +390,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus("Unable to find the database on your OneDrive"); break;
                     case CloudStorageType.OneDriveForBusiness: updateStatus("Unable to find the database on your OneDrive for Business"); break;
-                    case CloudStorageType.MicrosoftGraph: updateStatus("Unable to find the database on through Microsoft Graph"); break;
+                    case CloudStorageType.MicrosoftGraph: updateStatus("Unable to find the database through Microsoft Graph"); break;
                     default: updateStatus("Failed to connect to cloud service"); break;
                 }
                 return null;
@@ -323,6 +415,9 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             // Download the KeePass database to the selected location
             updateStatus("Downloading KeePass database");
             await oneDriveApi.DownloadItemAndSaveAs(oneDriveItem, saveFiledialog.FileName);
+
+            // The ETag changes with every request of the item so we use the CTag instead which only changes when the file changes
+            databaseConfig.ETag = oneDriveItem.CTag;
 
             return saveFiledialog.FileName;
         }

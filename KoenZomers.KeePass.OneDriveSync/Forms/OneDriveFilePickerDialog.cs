@@ -64,6 +64,12 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             InitializeComponent();
 
             _oneDriveApi = oneDriveApi;
+
+            var sharedWithMeDisabled = (oneDriveApi is OneDriveForBusinessO365Api);
+
+            SharedWithMePicker.Visible = !sharedWithMeDisabled;
+            SharedWithMeUpButton.Visible = !sharedWithMeDisabled;
+            SharedWithMeNotAvailableLabel.Visible = sharedWithMeDisabled;
         }
 
         /// <summary>
@@ -105,7 +111,10 @@ namespace KoenZomersKeePassOneDriveSync.Forms
              {
                  CloudLocationPicker.Items.Add(listViewItem);
              }
-         }
+
+            // Define if the OK button should be enabled
+            FileNameTextBox_TextChanged(null, null);
+        }
 
         /// <summary>
         /// Loads the items shared with the user in the "Shared with me" overview
@@ -122,13 +131,13 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 SharedWithMeUpButton.Enabled = false;
                 CurrentSharedWithMeOneDriveItem = null;
                 GoToSharedWithMeRootTtoolStripMenuItem.Enabled = false;
-                OKButton.Enabled = false;
+                SharedWithMePath.Text = string.Empty;
 
-                foreach (var listViewItem in itemCollection.Collection.Select(oneDriveItem => new ListViewItem
+                foreach (var listViewItem in itemCollection.Collection.OrderBy(i => i.Name).OrderBy(i => i.Folder == null).OrderBy(i => i.RemoteItem.Folder == null).Select(oneDriveItem => new ListViewItem
                 {
                     Text = oneDriveItem.Name,
                     Tag = oneDriveItem,
-                    ImageKey = oneDriveItem.Folder != null ? "RemoteFolder" : "File"
+                    ImageKey = (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Folder != null) || oneDriveItem.Folder != null ? "RemoteFolder" : "File"
                 }))
                 {
                     SharedWithMePicker.Items.Add(listViewItem);
@@ -137,12 +146,22 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             else
             {
                 // Parent folder provided, get its children
-                var itemCollection = await _oneDriveApi.GetAllChildrenFromDriveByFolderId(parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference.DriveId : parentItem.ParentReference.DriveId, parentItem.Id);
+                var itemCollection = await _oneDriveApi.GetAllChildrenFromDriveByFolderId(parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference.DriveId : parentItem.ParentReference.DriveId, parentItem.RemoteItem != null ? parentItem.RemoteItem.Id : parentItem.Id);
+
                 SharedWithMeUpButton.Tag = parentItem.Name == "root" || parentItem.ParentReference.Id == null || (parentItem.ParentReference.Path != null && parentItem.ParentReference.Path.EndsWith("root:")) ? null : await _oneDriveApi.GetItemFromDriveById(parentItem.ParentReference.Id, parentItem.ParentReference.DriveId);
                 CurrentSharedWithMeOneDriveItem = parentItem;
                 GoToSharedWithMeRootTtoolStripMenuItem.Enabled = true;
-                SharedWithMeUpButton.Enabled = CurrentSharedWithMeOneDriveItem.ParentReference != null;                
-                SharedWithMePath.Text = (CurrentSharedWithMeOneDriveItem.ParentReference.Path != null ? CurrentSharedWithMeOneDriveItem.ParentReference.Path + "/" : "") + CurrentSharedWithMeOneDriveItem.Name;
+                SharedWithMeUpButton.Enabled = CurrentSharedWithMeOneDriveItem.ParentReference != null;
+
+                if (CurrentSharedWithMeOneDriveItem.ParentReference.Path != null)
+                {
+                    var rootLocation = CurrentSharedWithMeOneDriveItem.ParentReference.Path.IndexOf("root:");
+                    SharedWithMePath.Text = ((rootLocation == -1 ? CurrentSharedWithMeOneDriveItem.ParentReference.Path : CurrentSharedWithMeOneDriveItem.ParentReference.Path.Remove(0, rootLocation + 5).TrimStart(new[] {'/'})) + "/" + CurrentSharedWithMeOneDriveItem.Name).TrimStart(new[] { '/' });
+                }
+                else
+                {
+                    SharedWithMePath.Text = CurrentSharedWithMeOneDriveItem.Name;
+                }
 
                 foreach (var listViewItem in itemCollection.Select(oneDriveItem => new ListViewItem
                 {
@@ -154,6 +173,9 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                     SharedWithMePicker.Items.Add(listViewItem);
                 }
             }
+
+            // Define if the OK button should be enabled
+            FileNameTextBox_TextChanged(null, null);
         }
 
         private async void CloudLocationPicker_DoubleClick(object sender, EventArgs e)
@@ -264,7 +286,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
         private void FileNameTextBox_TextChanged(object sender, EventArgs e)
         {
-            OKButton.Enabled = !string.IsNullOrEmpty(FileNameTextBox.Text);
+            OKButton.Enabled = CurrentOneDriveItem != null && !string.IsNullOrEmpty(FileNameTextBox.Text);
         }
 
         private async void RenameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -329,9 +351,21 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         private async void FilesTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             // When switching to the "Shared with me" tab and the items have not been loaded yet, load them now
-            if(FilesTabControl.SelectedIndex == 1 && CurrentSharedWithMeOneDriveItem == null)
+            if(FilesTabControl.SelectedIndex == 1 && SharedWithMePicker.Items.Count == 0)
             {
                 await LoadSharedWithMeItems();
+            }
+
+            // Ensure the OK button is properly enabled/disabled when switching tabs
+            switch (FilesTabControl.SelectedIndex)
+            {
+                case 1:
+                    SharedWithMePicker_ItemSelectionChanged(sender, null);
+                    break;
+
+                case 0:
+                    CloudLocationPicker_ItemSelectionChanged(sender, null);
+                    break;
             }
         }
 
@@ -385,12 +419,22 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
         private void SharedWithMePicker_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if (SharedWithMePicker.SelectedItems.Count == 0) return;
+            if (SharedWithMePicker.SelectedItems.Count == 0)
+            {
+                // If we're not in a folder yet, disable the button as a new file can't be created in Shared With Me outside a folder
+                if(string.IsNullOrEmpty(SharedWithMePath.Text))
+                {
+                    OKButton.Enabled = false;
+                }
+                return;
+            }
 
             var selectedItem = SharedWithMePicker.SelectedItems[0];
             if (selectedItem.ImageKey == "File")
             {
                 FileNameTextBox.Text = selectedItem.Text;
+                OKButton.Enabled = true;
+                CurrentSharedWithMeOneDriveItem = selectedItem.Tag as OneDriveItem;
             }
         }
     }

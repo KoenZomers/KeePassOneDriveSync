@@ -177,11 +177,15 @@ namespace KoenZomersKeePassOneDriveSync
             if (IsSomethingStillRunning)
             {
                 Host.MainWindow.SetStatusEx("Waiting for OneDriveSync to complete...");
+
+                // Record the time until we want to wait at most before exiting
+                var waitUntil = DateTime.Now.AddSeconds(30);
+
                 do
                 {
                     System.Threading.Thread.Sleep(1);
                     Application.DoEvents();
-                } while (IsSomethingStillRunning);
+                } while (IsSomethingStillRunning && DateTime.Now < waitUntil);
             }
         }
 
