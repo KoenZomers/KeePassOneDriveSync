@@ -31,7 +31,7 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ShowConfiguration()
         {
-            LocationNameLabel.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? "SharePoint site:" : "OneDrive:";
+            LocationNameLabel.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? "SharePoint site:" : "OneDrive name:";
             LastSyncedLabel.Text = string.Format(LastSyncedLabel.Text, _configuration.Value.CloudStorageType);
             LastVerifiedLabel.Text = string.Format(LastVerifiedLabel.Text, _configuration.Value.CloudStorageType);
             OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteDatabasePath + (string.IsNullOrEmpty(_configuration.Value.OneDriveName) ? "" : " (" + _configuration.Value.OneDriveName + ")") : _configuration.Value.OneDriveName;
@@ -46,6 +46,9 @@ namespace KoenZomersKeePassOneDriveSync
             LocalKeePassFileHashTextbox.Text = _configuration.Value.LocalFileHash;
             OneDriveEtagTextBox.Text = _configuration.Value.ETag;
             ForceSyncButton.Enabled = !_configuration.Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(_configuration.Key, StringComparison.InvariantCultureIgnoreCase);
+            ItemIdTextBox.Text = _configuration.Value.RemoteItemId;
+            FolderIdTextBox.Text = _configuration.Value.RemoteFolderId;
+            DriveIdTextBox.Text = _configuration.Value.RemoteDriveId;
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -102,6 +105,16 @@ namespace KoenZomersKeePassOneDriveSync
             }
 
             // Both the file and the parent folder no longer exist, nothing we can do
+        }
+
+        private void ItemIdLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ItemIdTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

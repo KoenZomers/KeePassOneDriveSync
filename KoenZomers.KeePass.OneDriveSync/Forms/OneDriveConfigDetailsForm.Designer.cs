@@ -52,6 +52,12 @@
             this.OneDriveEtagTextBox = new System.Windows.Forms.TextBox();
             this.OneDriveEtagLabel = new System.Windows.Forms.Label();
             this.LocalDatabasePathLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.ItemIdTextBox = new System.Windows.Forms.TextBox();
+            this.ItemIdLabel = new System.Windows.Forms.Label();
+            this.FolderIdTextBox = new System.Windows.Forms.TextBox();
+            this.FolderIdLabel = new System.Windows.Forms.Label();
+            this.DriveIdTextBox = new System.Windows.Forms.TextBox();
+            this.DriveIdLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // LocationNameLabel
@@ -140,7 +146,7 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.CloseButton.Location = new System.Drawing.Point(572, 263);
+            this.CloseButton.Location = new System.Drawing.Point(572, 333);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(4);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(132, 41);
@@ -152,7 +158,7 @@
             // DeleteButton
             // 
             this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DeleteButton.Location = new System.Drawing.Point(20, 263);
+            this.DeleteButton.Location = new System.Drawing.Point(20, 333);
             this.DeleteButton.Margin = new System.Windows.Forms.Padding(4);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(132, 41);
@@ -212,7 +218,7 @@
             // ForceSyncButton
             // 
             this.ForceSyncButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ForceSyncButton.Location = new System.Drawing.Point(432, 263);
+            this.ForceSyncButton.Location = new System.Drawing.Point(432, 333);
             this.ForceSyncButton.Margin = new System.Windows.Forms.Padding(4);
             this.ForceSyncButton.Name = "ForceSyncButton";
             this.ForceSyncButton.Size = new System.Drawing.Size(132, 41);
@@ -249,7 +255,7 @@
             // 
             this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.StatusLabel.Location = new System.Drawing.Point(160, 263);
+            this.StatusLabel.Location = new System.Drawing.Point(160, 333);
             this.StatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(264, 44);
@@ -342,12 +348,96 @@
             this.LocalDatabasePathLinkLabel.Text = "?";
             this.LocalDatabasePathLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LocalDatabasePathLinkLabel_LinkClicked);
             // 
+            // ItemIdTextBox
+            // 
+            this.ItemIdTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ItemIdTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.ItemIdTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ItemIdTextBox.Location = new System.Drawing.Point(260, 261);
+            this.ItemIdTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.ItemIdTextBox.Name = "ItemIdTextBox";
+            this.ItemIdTextBox.ReadOnly = true;
+            this.ItemIdTextBox.Size = new System.Drawing.Size(444, 15);
+            this.ItemIdTextBox.TabIndex = 30;
+            this.ItemIdTextBox.Text = "?";
+            this.ItemIdTextBox.TextChanged += new System.EventHandler(this.ItemIdTextBox_TextChanged);
+            // 
+            // ItemIdLabel
+            // 
+            this.ItemIdLabel.Location = new System.Drawing.Point(17, 261);
+            this.ItemIdLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ItemIdLabel.Name = "ItemIdLabel";
+            this.ItemIdLabel.Size = new System.Drawing.Size(236, 20);
+            this.ItemIdLabel.TabIndex = 29;
+            this.ItemIdLabel.Text = "Item Id:";
+            this.ItemIdLabel.UseMnemonic = false;
+            this.ItemIdLabel.Click += new System.EventHandler(this.ItemIdLabel_Click);
+            // 
+            // FolderIdTextBox
+            // 
+            this.FolderIdTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FolderIdTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.FolderIdTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.FolderIdTextBox.Location = new System.Drawing.Point(259, 284);
+            this.FolderIdTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.FolderIdTextBox.Name = "FolderIdTextBox";
+            this.FolderIdTextBox.ReadOnly = true;
+            this.FolderIdTextBox.Size = new System.Drawing.Size(444, 15);
+            this.FolderIdTextBox.TabIndex = 32;
+            this.FolderIdTextBox.Text = "?";
+            // 
+            // FolderIdLabel
+            // 
+            this.FolderIdLabel.Location = new System.Drawing.Point(16, 284);
+            this.FolderIdLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.FolderIdLabel.Name = "FolderIdLabel";
+            this.FolderIdLabel.Size = new System.Drawing.Size(236, 20);
+            this.FolderIdLabel.TabIndex = 31;
+            this.FolderIdLabel.Text = "Folder Id:";
+            this.FolderIdLabel.UseMnemonic = false;
+            // 
+            // DriveIdTextBox
+            // 
+            this.DriveIdTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DriveIdTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.DriveIdTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.DriveIdTextBox.Location = new System.Drawing.Point(259, 307);
+            this.DriveIdTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.DriveIdTextBox.Name = "DriveIdTextBox";
+            this.DriveIdTextBox.ReadOnly = true;
+            this.DriveIdTextBox.Size = new System.Drawing.Size(444, 15);
+            this.DriveIdTextBox.TabIndex = 34;
+            this.DriveIdTextBox.Text = "?";
+            // 
+            // DriveIdLabel
+            // 
+            this.DriveIdLabel.Location = new System.Drawing.Point(16, 307);
+            this.DriveIdLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.DriveIdLabel.Name = "DriveIdLabel";
+            this.DriveIdLabel.Size = new System.Drawing.Size(236, 20);
+            this.DriveIdLabel.TabIndex = 33;
+            this.DriveIdLabel.Text = "Drive Id:";
+            this.DriveIdLabel.UseMnemonic = false;
+            // 
             // OneDriveConfigDetailsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(720, 318);
+            this.ClientSize = new System.Drawing.Size(720, 388);
+            this.Controls.Add(this.StatusLabel);
+            this.Controls.Add(this.ForceSyncButton);
+            this.Controls.Add(this.DeleteButton);
+            this.Controls.Add(this.CloseButton);
+            this.Controls.Add(this.DriveIdTextBox);
+            this.Controls.Add(this.DriveIdLabel);
+            this.Controls.Add(this.FolderIdTextBox);
+            this.Controls.Add(this.FolderIdLabel);
+            this.Controls.Add(this.ItemIdTextBox);
+            this.Controls.Add(this.ItemIdLabel);
             this.Controls.Add(this.LocalDatabasePathLinkLabel);
             this.Controls.Add(this.OneDriveEtagTextBox);
             this.Controls.Add(this.OneDriveEtagLabel);
@@ -355,16 +445,12 @@
             this.Controls.Add(this.CloudStorageTypeLabel);
             this.Controls.Add(this.RefreshTokenStorageTextBox);
             this.Controls.Add(this.RefreshTokenStorageLabel);
-            this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.LastVerifiedTextbox);
             this.Controls.Add(this.LastVerifiedLabel);
-            this.Controls.Add(this.ForceSyncButton);
             this.Controls.Add(this.LocalKeePassFileHashTextbox);
             this.Controls.Add(this.LocalKeePassFileHashLabel);
             this.Controls.Add(this.LastSyncedTextbox);
             this.Controls.Add(this.LastSyncedLabel);
-            this.Controls.Add(this.DeleteButton);
-            this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.OneDriveNameTextbox);
             this.Controls.Add(this.OneDriveRefreshTokenTextbox);
             this.Controls.Add(this.RemoteKeePassPathTextbox);
@@ -414,5 +500,11 @@
         private System.Windows.Forms.TextBox OneDriveEtagTextBox;
         private System.Windows.Forms.Label OneDriveEtagLabel;
         private System.Windows.Forms.LinkLabel LocalDatabasePathLinkLabel;
+        private System.Windows.Forms.TextBox ItemIdTextBox;
+        private System.Windows.Forms.Label ItemIdLabel;
+        private System.Windows.Forms.TextBox FolderIdTextBox;
+        private System.Windows.Forms.Label FolderIdLabel;
+        private System.Windows.Forms.TextBox DriveIdTextBox;
+        private System.Windows.Forms.Label DriveIdLabel;
     }
 }

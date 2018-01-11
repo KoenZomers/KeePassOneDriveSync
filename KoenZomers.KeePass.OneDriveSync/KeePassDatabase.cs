@@ -60,7 +60,6 @@ namespace KoenZomersKeePassOneDriveSync
             // Register the KeePass database sync information
             UpdateStatus("Configuring KeePass database");
             databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
-            //databaseConfig.ETag = oneDriveItem.ETag;
             databaseConfig.LastSyncedAt = DateTime.Now;
             databaseConfig.LastCheckedAt = DateTime.Now;
 

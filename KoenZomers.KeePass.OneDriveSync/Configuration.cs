@@ -75,6 +75,18 @@ namespace KoenZomers.KeePass.OneDriveSync
         public string RemoteFolderId { get; set; }
 
         /// <summary>
+        /// Gets or sets the unique identifier of the drive on OneDrive in which the file is stored. If NULL then the drive of the current user will be used.
+        /// </summary>
+        [DataMember]
+        public string RemoteDriveId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unique identifier of the file on OneDrive
+        /// </summary>
+        [DataMember]
+        public string RemoteItemId { get; set; }
+
+        /// <summary>
         /// Gets or sets the filename under which the database is stored on OneDrive
         /// </summary>
         [DataMember]

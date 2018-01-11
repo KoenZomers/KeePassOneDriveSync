@@ -17,6 +17,11 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 2.0.1.0 - January 11, 2018
+
+- Upgraded KoenZomers.OneDrive.Api to v2.1.0.0 which has support for using items shared from other OneDrive drives
+- Added a tab "Shared with me" to the OneDrive location picker dialog which allows you to open a KeePass database from or save it to a location on another OneDrive Personal or OneDrive for Business site which has been shared with you. Please note that due to a bug in the OneDrive for Business v2 File API it only works with OneDrive for Business sites if you use the Microsoft Graph API which is recommended anyway. This feature is not available if you use the OneDrive for Business option in the storage type selection box. [Request #43](../../issues/43)
+
 Version 2.0.0.1 - January 2, 2018
 
 - Bugfix in the About dialog not working. Thanks to everyone that reported this!
