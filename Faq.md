@@ -38,6 +38,10 @@ Just go into the KeePass -> Tools -> OneDriveSync Options and delete the line(s)
 
 It is by design that when you reset your OneDrive (Microsoft Account) password, all active refresh tokens will be invalidated. This is a security measure as the reason for changing the password could be that somebody gained access to it. In this scenario your KeePass sync will stop working. You can easily resolve this by going Tools -> OneDriveSync Options -> delete the entry with the database you're having problems with. This will not delete the KeePass file, just the configuration for the plugin for it. Now if you save your KeePass database again (ctrl+s) you will receive the wizard again to set up your sync. After going through this again all should work well again.
 
+### KeePass doesn't detect the plugin ###
+
+If you have downloaded the PLGX and placed it inside the KeePass/Plugins folder (typically C:\Program Files (x86)\KeePass Password Safe 2\Plugins) and it doesn't show its functionality, ensure that the PLGX file is not blocked. By default it will be. go to the Plugins folder, right click the KeeOneDriveSync.plgx file and go to its properties. If it shows an option to Unblock it at the bottom right of the General tab, check the box and hit OK. Restart KeePass. It should now properly load the plugin.
+
 ### Other questions ###
 
 Feel free to e-mail me at koen@zomers.eu
