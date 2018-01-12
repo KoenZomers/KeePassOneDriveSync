@@ -4,7 +4,11 @@
 
 ### Can I share one KeePass database with friends/co-workers/family without having to share my credentials to my OneDrive? ###
 
-Yes! Create a folder in your OneDrive Personal where you are going to store the KeePass database. Store your KeePass database in that folder. Share that folder with the people you want to be able to access the same KeePass database. Share it by entering their e-mail addresses (sharing through a link will NOT work) and give them edit rights. The people you invited can now go into their OneDrive, go to Shared in the left bar, click on the folder you've shared with them and at the top click on 'Add to my OneDrive'. They can now manually download the KeePass database to their local machine. Have them open the KeePass database in KeePass and hit ctrl+s. Assuming they have this plugin added to their KeePass already, it will now prompt to sync the KeePass database. Have them go through the wizard and have them log in with their own OneDrive credentials. In the OneDrive location picker, they should see the folder shared by you marked with a blue arrow to indicate it's a linked folder from another OneDrive. Doubleclick on the KeePass file inside that linked folder and their version of the KeePass database from there on will sync with the shared location.
+Yes! You can simply share the KeePass database or its entire folder on your OneDrive Personal or OneDrive for Business site. Be sure to share it with the people you want to share the KeePass database with by entering their e-mail addresses. Sharing the database through a shareable link will not work for this plugin.
+
+Now simply have the other person do a File -> Open -> Open from OneDrive (ctrl+alt+o), have them log in to their own OneDrive Personal / OneDrive for Business site preferably using the Graph API, click on the "Shared with me" tab in the OneDrive file picker dialog and select the database that was shared. Note that it can take a few minutes between creating a new shared item and it actually showing up in the dialog. You can hit F5 to refresh the list to see when it shows up if it doesn't right-away.
+
+Another option to share a KeePass database is to upload it to a SharePoint site on a SharePoint farm that supports ACS / Low Trust. You can then just share the Client ID / Client Secret which gives access to the database location to give others access to it as well.
 
 ### KeePass OneDrive Sync doesn't work through my proxy! ###
 
