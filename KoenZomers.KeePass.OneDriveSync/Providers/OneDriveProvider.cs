@@ -128,7 +128,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 }
                 else
                 {
-                    databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
+                    databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference != null ? string.IsNullOrEmpty(oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.Id) ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
                 }
                 databaseConfig.RemoteFileName = oneDriveFilePickerDialog.FileName;
                 Configuration.Save();

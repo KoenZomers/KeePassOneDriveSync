@@ -17,6 +17,11 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+Version 2.0.1.1 - January 12, 2018
+
+- Upgraded KoenZomers.OneDrive.Api to v2.1.0.1 in which several issues with uploading to shared drives have been fixed
+- Bugfixes in uploading to shared drives
+
 Version 2.0.1.0 - January 11, 2018
 
 - Upgraded KoenZomers.OneDrive.Api to v2.1.0.0 which has support for using items shared from other OneDrive drives

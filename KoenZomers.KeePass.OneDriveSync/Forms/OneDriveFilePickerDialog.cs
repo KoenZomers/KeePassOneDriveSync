@@ -146,7 +146,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             else
             {
                 // Parent folder provided, get its children
-                var itemCollection = await _oneDriveApi.GetAllChildrenFromDriveByFolderId(parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference.DriveId : parentItem.ParentReference.DriveId, parentItem.RemoteItem != null ? parentItem.RemoteItem.Id : parentItem.Id);
+                var itemCollection = await _oneDriveApi.GetAllChildrenFromDriveByFolderId(parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference.DriveId : parentItem.ParentReference.DriveId, parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference != null ? string.IsNullOrEmpty(parentItem.RemoteItem.ParentReference.Id) ? parentItem.RemoteItem.Id : parentItem.RemoteItem.ParentReference.Id : parentItem.RemoteItem.Id : parentItem.Id);
 
                 SharedWithMeUpButton.Tag = parentItem.Name == "root" || parentItem.ParentReference.Id == null || (parentItem.ParentReference.Path != null && parentItem.ParentReference.Path.EndsWith("root:")) ? null : await _oneDriveApi.GetItemFromDriveById(parentItem.ParentReference.Id, parentItem.ParentReference.DriveId);
                 CurrentSharedWithMeOneDriveItem = parentItem;
