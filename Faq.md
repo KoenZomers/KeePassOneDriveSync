@@ -14,10 +14,6 @@ Another option to share a KeePass database is to upload it to a SharePoint site 
 
  See the Proxy Issues section in [Troubleshooting](./Troubleshooting.md)
 
-### I don't understand the OneDrive location dialog. What should I enter in the textbox? ###
-
-I have to admit it was a rather vague dialog screen. As from version 1.5.0.0 this dialog has been replaced with an easy to use OneDrive picker which should resolve all your issues. Be sure to check out the extra options under the right click of your mouse when being in the picker.
-
 ### Can you make a version that works on non Windows machines? ###
 
 No I cannot.
@@ -25,10 +21,6 @@ No I cannot.
 ### Can you make a version that works with an older .NET Framework version than 4.5.2? ###
 
 No I will not. Lots of functionality inside the plugin depends on the async development patterns introduced in the .NET 4.5 framework. I will not take the extreme efforts to use alternative approaches for this. Just install .NET 4.5 or later. If you can't because you're still on Windows XP: dude, upgrade your operating system!
-
-### Why do I manually have to download the KeePass database first from OneDrive? ###
-
-You don't have to anymore. With version 1.6.0.0 I've introduced the option under File -> Open -> Open from OneDrive to directly open the KeePass from OneDrive and set it up for synchronization locally with just a few steps.
 
 ### What happens to my KeePass database if multiple changes on multiple devices have been made? ###
 
