@@ -17,6 +17,9 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ## Latest Version
 
+** NOTICE **
+I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. I'm trying to fix this in the code. In the meantime you can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneRiveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
+
 Version 2.0.1.1 - January 12, 2018
 
 - Upgraded KoenZomers.OneDrive.Api to v2.1.0.1 in which several issues with uploading to shared drives have been fixed
