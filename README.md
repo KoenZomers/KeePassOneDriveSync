@@ -24,6 +24,8 @@ Version 2.0.1.1 - January 12, 2018
 
 - Upgraded KoenZomers.OneDrive.Api to v2.1.0.1 in which several issues with uploading to shared drives have been fixed
 - Bugfixes in uploading to shared drives
+- Syncing with OneDrive, especially if the KeePass database resides in a folder on OneDrive with many files, should be noticeably faster now
+- Fixed an issue where it would always resync instead of properly detecting that there were no changes since last sync
 
 Version 2.0.1.0 - January 11, 2018
 
