@@ -22,7 +22,7 @@ I've received several messages of people upgrading to 2.0.1.1 reporting that One
 
 Version 2.0.1.2 - February 5, 2018
 
-- Generated a new client secret for the OneDrive for Business API as it expired at February 2, 2018 and caused all syncs using this provider to stop working. The new client secret has and endless lifetime so it should not occur again. Reported through issue https://github.com/KoenZomers/KeePassOneDriveSync/issues/51
+- Generated a new client secret for the OneDrive for Business API as it expired at February 2, 2018 and caused all syncs using this provider to stop working. The new client secret has and endless lifetime so it should not occur again. [Issue #51](../../issues/51)
 
 Version 2.0.1.1 - January 12, 2018
 
