@@ -35,7 +35,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// Client Secret to use for communication with the OneDrive for Business API
         /// </summary>
-        internal const string OneDriveForBusinessClientSecret = "SR8WNXfxxu0yLF8WK1fZU2gNBjz4owBjnfsSjU9We1U=";
+        internal const string OneDriveForBusinessClientSecret = "ezb/qt5Iat0aE8S+ZWBtxhDtQLISEaPCkZ5agQv9MgM=";
 
         /// <summary>
         /// Application ID to use for communication with the Microsoft Graph API
