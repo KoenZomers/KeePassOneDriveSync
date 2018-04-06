@@ -39,7 +39,7 @@ Starting with version 2.0.0.0 it is now also possible to sync your KeePass datab
 7. Make a copy of the Client Id and Client Secret values somewhere, i.e. in notepad
 8. Go to -sharepoint site collection URL-/_layouts/appinv.aspx
 9. Paste the Client Id from the previous steps in the App Id field and click on Lookup
-10. In the Permission Request XML field paste:
+10. In the Permission Request XML field paste (leave the text exactly as is, do not customize the XML to match your specific site collection):
 
 ```XML
   <AppPermissionRequests AllowAppOnlyPolicy="true">
