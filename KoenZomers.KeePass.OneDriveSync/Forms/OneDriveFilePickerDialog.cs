@@ -148,12 +148,12 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 // Parent folder provided, get its children
                 var itemCollection = await _oneDriveApi.GetAllChildrenFromDriveByFolderId(parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference.DriveId : parentItem.ParentReference.DriveId, parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference != null ? string.IsNullOrEmpty(parentItem.RemoteItem.ParentReference.Id) ? parentItem.RemoteItem.Id : parentItem.RemoteItem.ParentReference.Id : parentItem.RemoteItem.Id : parentItem.Id);
 
-                SharedWithMeUpButton.Tag = parentItem.Name == "root" || parentItem.ParentReference.Id == null || (parentItem.ParentReference.Path != null && parentItem.ParentReference.Path.EndsWith("root:")) ? null : await _oneDriveApi.GetItemFromDriveById(parentItem.ParentReference.Id, parentItem.ParentReference.DriveId);
+                SharedWithMeUpButton.Tag = parentItem.Name == "root" || parentItem.ParentReference == null || parentItem.ParentReference.Id == null || (parentItem.ParentReference.Path != null && parentItem.ParentReference.Path.EndsWith("root:")) ? null : await _oneDriveApi.GetItemFromDriveById(parentItem.ParentReference.Id, parentItem.ParentReference.DriveId);
                 CurrentSharedWithMeOneDriveItem = parentItem;
                 GoToSharedWithMeRootTtoolStripMenuItem.Enabled = true;
                 SharedWithMeUpButton.Enabled = CurrentSharedWithMeOneDriveItem.ParentReference != null;
 
-                if (CurrentSharedWithMeOneDriveItem.ParentReference.Path != null)
+                if (CurrentSharedWithMeOneDriveItem.ParentReference != null && CurrentSharedWithMeOneDriveItem.ParentReference.Path != null)
                 {
                     var rootLocation = CurrentSharedWithMeOneDriveItem.ParentReference.Path.IndexOf("root:");
                     SharedWithMePath.Text = ((rootLocation == -1 ? CurrentSharedWithMeOneDriveItem.ParentReference.Path : CurrentSharedWithMeOneDriveItem.ParentReference.Path.Remove(0, rootLocation + 5).TrimStart(new[] {'/'})) + "/" + CurrentSharedWithMeOneDriveItem.Name).TrimStart(new[] { '/' });
