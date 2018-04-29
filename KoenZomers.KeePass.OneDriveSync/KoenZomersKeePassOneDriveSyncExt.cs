@@ -197,9 +197,9 @@ namespace KoenZomersKeePassOneDriveSync
             var databasePath = fileSavedEventArgs.Database.IOConnectionInfo.Path;
 
             // If the database is located under the folder from where KeePass runs, use a relative path instead of the absolute path
-            if (fileSavedEventArgs.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory))
+            if (fileSavedEventArgs.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory))
             {
-                databasePath = databasePath.Remove(0, Environment.CurrentDirectory.Length + 1);
+                databasePath = databasePath.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length);
             }
 
             var config = Configuration.GetPasswordDatabaseConfiguration(databasePath);
@@ -258,12 +258,12 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         private async void OnKeePassDatabaseOpened(object sender, FileOpenedEventArgs fileOpenedEventArgs)
         {
-            var databasePath = fileOpenedEventArgs.Database.IOConnectionInfo.Path;
+            var databasePath = fileOpenedEventArgs.Database.IOConnectionInfo.Path;            
 
             // If the database is located under the folder from where KeePass runs, use a relative path instead of the absolute path
-            if (fileOpenedEventArgs.Database.IOConnectionInfo.Path.StartsWith(Environment.CurrentDirectory))
+            if (fileOpenedEventArgs.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory))
             {
-                databasePath = databasePath.Remove(0, Environment.CurrentDirectory.Length + 1);
+                databasePath = databasePath.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length);
             }
 
             // Add the KeePass database instance to the already available configuration
@@ -280,7 +280,7 @@ namespace KoenZomersKeePassOneDriveSync
                 config.RefreshToken = Utilities.GetRefreshTokenFromKeePassDatabase(fileOpenedEventArgs.Database);
             }
 
-            await KeePassDatabase.SyncDatabase(fileOpenedEventArgs.Database.IOConnectionInfo.Path, KeePassDatabase.UpdateStatus, false, config);
+            await KeePassDatabase.SyncDatabase(databasePath, KeePassDatabase.UpdateStatus, false, config);
 
             // If the OneDrive Refresh Token is stored in the KeePass database, we must trigger a save of the database here so to ensure that the actual value gets saved into the KDBX
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)

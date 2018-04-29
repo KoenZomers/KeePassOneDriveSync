@@ -2,7 +2,7 @@
 
 I've created a free plugin for KeePass that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your Windows devices.
 
-The plugin at present only works with the installable KeePass version, not with the portable version.
+The plugin should now also work with the portable KeePass version along with the installable version.
 
 ## Download ##
 You need to download either the DLLs *OR* the PLGX and place it inside your KeePass\Plugins folder (typically C:\Program Files (x86)\KeePass Password Safe 2\Plugins), so not both. I've switched to using the GitHub releases functionality.
@@ -21,6 +21,12 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ** NOTICE **
 I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. I'm trying to fix this in the code. In the meantime you can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneRiveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
+
+Version 2.0.2.0 - April 30, 2018
+
+- Fixed [issue 50](https://github.com/KoenZomers/KeePassOneDriveSync/issues/50): Opening the same kbdx file in different ways results in two Local Paths
+- Issue with Shared With Me folders hosted on a SharePoint site has been resolved. Thanks to [Andy Martin](https://github.com/Esvandiary) for fixing this through a PR.
+- Fixed [issue 52](https://github.com/KoenZomers/KeePassOneDriveSync/issues/52): When opening the database in KeePass portable it says "Failes to sync"
 
 Version 2.0.1.2 - February 5, 2018
 
