@@ -20,7 +20,11 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 ## Latest Version
 
 ** NOTICE **
-I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. I'm trying to fix this in the code. In the meantime you can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneRiveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
+I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. You can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneRiveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
+
+Version 2.0.2.1 - October 16, 2018
+
+- Fixed incorrect spelling of equivalent in the where to store the token dialog. Thanks to [awesomecogs](https://github.com/awesomecogs) for [reporting it](https://github.com/KoenZomers/KeePassOneDriveSync/issues/64)!
 
 Version 2.0.2.0 - April 30, 2018
 

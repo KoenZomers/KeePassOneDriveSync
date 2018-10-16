@@ -48,7 +48,7 @@
             this.ExplanationLabel.TabIndex = 0;
             this.ExplanationLabel.Text = "You\'ve successfully authenticated to OneDrive. Where should KeeOneDriveSync store" +
     " the OneDrive Refresh Token so it can keep your local database in sync with its " +
-    "equivallent on OneDrive?";
+    "equivalent on OneDrive?";
             // 
             // WindowsCredentialManagerRadio
             // 
