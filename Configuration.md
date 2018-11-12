@@ -26,7 +26,7 @@ If you're using a HTTP proxy to communicate with the internet, configure the HTT
 
 Starting with version 2.0.0.0 an option has been added under the File menu to temporarily mark the KeeOneDriveSync plugin for offline mode. This means no attempts will be made to synchronize the database after opening or saving it. This setting is purposely not retained after restarting KeePass. It could be useful if your connection isn't ideal for syncing and you have to make a lot of changes. Note that offline mode goes for all KeePass databases you may have open. If you wish to manually sync one even though you're in offline mode, just open the KeePass database, go to Tools -> KeeOneDriveSync Options -> right click on database to sync -> Sync Now.
 
-## SharePoint 2013, 2016 and SharePoint Online support
+## SharePoint 2013, 2016, 2019 and SharePoint Online support
 
 Starting with version 2.0.0.0 it is now also possible to sync your KeePass database with SharePoint. As the Microsoft Graph API support for SharePoint is still very limited and I wanted to support on premises farms as well, I've chosen to implement SharePoint REST API calls with Low Trust oAuth to access SharePoint. This makes it fully asynchronous, support the KeePass proxy configuration and very little data traffic will be used. This also means you will manually have to set up the oAuth token and your SharePoint farm needs to support the Low Trust (ACS) oAuth scenario for SharePoint. You can set up an oAuth token only if you're a site collection administrator of the SharePoint site where you want to store the KeePass database. If you are, then follow these steps to set up the token:
 
@@ -43,18 +43,18 @@ Starting with version 2.0.0.0 it is now also possible to sync your KeePass datab
 
 ```XML
   <AppPermissionRequests AllowAppOnlyPolicy="true">
-    <AppPermissionRequest Scope="http://sharepoint/content/sitecollection/web" Right="FullControl" />
+    <AppPermissionRequest Scope="http://sharepoint/content/sitecollection/web/list" Right="Write" />
   </AppPermissionRequests>
 ```
 
 11. Click on the Create button
-12. Consent to the trust dialog
-13. You can now set up a sync with SharePoint in KeePass using the Client Id, Client Secret and the SharePoint Site URL
+12. In the trust dialog, select the document library in which you want to store your KeePass database and consent to the trust dialog
+13. You can now set up a sync with SharePoint in KeePass using the Client Id, Client Secret and the SharePoint Site URL and sync your KeePass database with the document library you have selected in step 12.
 
 Few notes:
 - You only need to perform these steps once
 - Unlimited users can use this Client Id  / Client Secret token to sync the KeePass database
-- The Client Id / Client Secret gives full access to the entire site (not site collection), so beware that by giving them to others, you give access to them to access, modify or delete any file in the same site
+- The Client Id / Client Secret gives write access to the entire document library you have chosen at step 12, so treat the client id and client secret as credentials and keep them safe.
 - Low Trust OAuth tokens expire automatically after 1 year. Instructions on how to [renew the token can be found here](https://docs.microsoft.com/en-us/sharepoint/dev/sp-add-ins/replace-an-expiring-client-secret-in-a-sharepoint-add-in). These steps allow you to extend the validity of the token with at most 3 years. If you find these steps too complex, you can also just repeat the step above to generate a new Client Id / Client Secret which will be valid for a year again.
 - If you believe the Client Id / Client Secret have been compromised by someone that shouldn't have access, you can simply revoke the oAuth trust by going to -sharepoint site collection URL-/_layouts/appprincipals.aspx and click on the black X in front of the token you wish to revoke. It will show up using the name you've provided at step 3.
 
