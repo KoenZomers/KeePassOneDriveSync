@@ -20,7 +20,7 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 ## Latest Version
 
 ** NOTICE **
-I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. You can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneRiveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
+I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. You can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneDriveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
 
 Version 2.0.2.1 - October 16, 2018
 
