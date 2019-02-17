@@ -98,6 +98,9 @@ namespace KoenZomersKeePassOneDriveSync
         {
             Host = pluginHost;
 
+            // Enable TLS 1.2
+            System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
+
             // Load the configuration
             Configuration.Load();                       
 
