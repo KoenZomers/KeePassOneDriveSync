@@ -9,13 +9,19 @@ The following issues are known issues:
 - Removing custom icons and then syncing the database again will return the removed icons. This is a defect in KeePass itself and not something I can fix.
 - Removing history items of an entry in KeePass and then syncing the database again will return the removed history entries. This is also a defect in KeePass itself and not something I can fix.
 
-If the issue you're facing is not in the list above, perform the following steps:
+### Try this first ###
 
-If you're receiving an error when starting KeePass after placing the PLGX or DLL files inside your KeePass folder, follow these steps:
+If running into issues syncing after it has worked, try deleting the database specific configuration in KeePass via Tools -> OneDriveSync Options -> right click on the line with the database having sync problems and delete it. Close the dialogs so you're back in the main KeePass window and hit CTRL+S. This should pop up the KeePass OneDriveSync sync wizard again. Go through it, use the recommended Graph API provider and see if the issue is gone. In 99% of the cases doing this resolves any issues.
+
+### Generate debugging information ###
+
+If the issue you're facing is not in the list above and setting up your sync again did not resolve it, perform the following steps:
+
+If you're receiving an error when starting KeePass after placing the PLGX inside your KeePass\Plugins folder, follow these steps:
 
 1. Ensure you have the very latest version of the plugin as available here on GitHub
 2. Ensure you are using the latest version of KeePass
-3. Ensure you have placed EITHER the PLGX OR the DLL files inside your KeePass its Plugins subfolder, not both the PLGX and the DLL files
+3. Ensure you have placed the PLGX inside your KeePass its Plugins subfolder
 4. If the problem still occurs, please run the following command:
 
 C:\Program Files (x86)\KeePass Password Safe 2\KeePass.exe --debug

@@ -1,11 +1,9 @@
 # KeePass OneDrive Sync
 
-I've created a free plugin for KeePass that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your Windows devices.
-
-The plugin should now also work with the portable KeePass version along with the installable version.
+I've created a free plugin for KeePass (installable and portable) that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your Windows devices.
 
 ## Download ##
-You need to download either the DLLs *OR* the PLGX and place it inside your KeePass\Plugins folder (typically C:\Program Files (x86)\KeePass Password Safe 2\Plugins), so not both. I've switched to using the GitHub releases functionality.
+Download the PLGX and place it inside your KeePass\Plugins folder. Typically this will be C:\Program Files (x86)\KeePass Password Safe 2\Plugins or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. When upgrading from a previous version of this plugin, simply ensure KeePass is closed, overwrite the existing PLGX and start KeePass again.
 
 [You can find the latest stable version here](../../releases/latest)
 
@@ -21,6 +19,11 @@ You need to download either the DLLs *OR* the PLGX and place it inside your KeeP
 
 ** NOTICE **
 I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. You can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneDriveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
+
+Version 2.0.2.2 - February 17, 2019
+
+- Fixed the instance not set to a reference of an object error reported by several people typically when still using the OneDriveConsumer Storage Provider
+- I've stopped publishing the DLL files from now on to avoid confusion. I believe everyone is using the PLGX already anyway. If not and you have a good reason to use the DLLs over the PLGX, let me know.
 
 Version 2.0.2.1 - October 16, 2018
 
@@ -63,7 +66,7 @@ Note: this is a mayor release with many changes to the code. I've tested everyth
 - Upgraded KoenZomers.OneDrive.Api to v2.0.3.1 which has support for the Microsoft Graph API
 - Plugin is now compiled against the Microsoft .NET Framework v4.5.2 as v4.5 is out of support
 - Added the option to use the Microsoft Graph API to store the KeePass database on OneDrive or OneDrive for Business. The API will automatically define if it's the Consumer OneDrive or OneDrive for Business based on the login you use. Using the Microsoft Graph API option is now the recommended option.
-- Added support for synchronizing with a SharePoint 2013, 2016 or SharePoint Online site when using Low Trust oAuth (ACS). More information [here](./Configuration.md#sharepoint-2013-2016-and-sharepoint-online-support).
+- Added support for synchronizing with a SharePoint 2013, 2016, 2019 or SharePoint Online site when using Low Trust oAuth (ACS). More information [here](./Configuration.md#sharepoint-2013-2016-and-sharepoint-online-support).
 - Fixed issue with not being able to close the database anymore if something would go wrong during a sync attempt (i.e. network not available)
 - Added a OneDriveSync Offline option under the File menu. If for whatever reason you temporarily don't want OneDriveSync to communicate with where you stored your database online during opening or saving, you can enable this option. If it's in offline mode, you can still force a sync through Tools -> KeeOneDriveSync Options -> right click on database -> Sync Now. [More info](./Configuration.md#offline-mode). Thanks to Albert Krawczyk for suggesting this option.
 
@@ -71,7 +74,7 @@ Note: this is a mayor release with many changes to the code. I've tested everyth
 
 ## TODO
 
-1. Add support for High Trust oAuth towards SharePoint 2013 and 2016 on premises
+1. Add support for High Trust oAuth towards SharePoint 2013/2016/2019 on premises
 2. Add an easier way for SharePoint Online TeamSites to authenticate instead of using ACS oAuth tokens
 3. Validate if I can get the plugin to work with the portable KeePass version
 

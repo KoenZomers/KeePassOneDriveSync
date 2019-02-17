@@ -143,16 +143,28 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
                 {
                     // KeePass database is on the current user its drive
-                    folder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
+                    if (string.IsNullOrEmpty(databaseConfig.RemoteFolderId))
+                    {
+                        // No direct reference to the folder on the drive available, try locating it by its remote path
+                        oneDriveItem = await oneDriveApi.GetItem(databaseConfig.RemoteDatabasePath);
+                    }
+                    else
+                    {
+                        // Get the folder in which the KeePass file resides
+                        folder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
+
+                        // Locate the KeePass file in the folder
+                        oneDriveItem = await oneDriveApi.GetItemInFolder(folder, databaseConfig.RemoteFileName);
+                    }
                 }
                 else
                 {
                     // KeePass database is on a shared drive
                     folder = await oneDriveApi.GetItemFromDriveById(databaseConfig.RemoteFolderId, databaseConfig.RemoteDriveId);
-                }
 
-                // Locate the KeePass file in the folder
-                oneDriveItem = await oneDriveApi.GetItemInFolder(folder, databaseConfig.RemoteFileName);
+                    // Locate the KeePass file in the folder
+                    oneDriveItem = await oneDriveApi.GetItemInFolder(folder, databaseConfig.RemoteFileName);
+                }
 
                 // Check if the KeePass file has been found
                 if (oneDriveItem != null)
