@@ -159,10 +159,10 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 }
                 else
                 {
-                    // KeePass database is on a shared drive
+                    // KeePass database is on a shared drive or has not been uploaded yet
                     folder = await oneDriveApi.GetItemFromDriveById(databaseConfig.RemoteFolderId, databaseConfig.RemoteDriveId);
 
-                    // Locate the KeePass file in the folder
+                    // Locate the KeePass file in the folder. Will return NULL if the file has not been uploaded yet.
                     oneDriveItem = await oneDriveApi.GetItemInFolder(folder, databaseConfig.RemoteFileName);
                 }
 

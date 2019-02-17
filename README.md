@@ -20,6 +20,10 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 ** NOTICE **
 I've received several messages of people upgrading to 2.0.1.1 reporting that OneDrive stopped syncing for them after upgrading. You can easily fix this yourself by deleting your existing KeePass sync config through Tools > OneDriveSync Options and hitting CTRL+S again to set up your sync again. After this it should work again. If not, let me know.
 
+Version 2.0.2.3 - February 18, 2019
+
+- Updated the OneDrive API package to version 2.1.2.1 in which the issue with OneDrive for Business as addressed here has been fixed [issue 78](https://github.com/KoenZomers/KeePassOneDriveSync/issues/78)
+
 Version 2.0.2.2 - February 17, 2019
 
 - Fixed the instance not set to a reference of an object error reported by several people typically when still using the OneDriveConsumer Storage Provider
