@@ -215,7 +215,7 @@ namespace KoenZomersKeePassOneDriveSync
                 credential.Load();
 
                 // Concatenate the contents of the password and comments fields to retrieve the refresh token
-                return credential.Exists() ? credential.Password + (!string.IsNullOrEmpty(credential.Description) ? credential.Description : string.Empty) : null;
+                return credential.Exists() ? credential.Password + (!string.IsNullOrEmpty(credential.Description) ? credential.Description : string.Empty) + (!string.IsNullOrEmpty(credential.Target) ? credential.Target : string.Empty) : null;
             }
         }
 

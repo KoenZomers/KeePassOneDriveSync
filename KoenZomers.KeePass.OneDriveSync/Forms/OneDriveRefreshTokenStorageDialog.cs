@@ -35,10 +35,6 @@ namespace KoenZomersKeePassOneDriveSync
             {
                 _configuration.RefreshTokenStorage = OneDriveRefreshTokenStorage.KeePassDatabase;
             }
-            if (WindowsCredentialManagerRadio.Checked)
-            {
-                _configuration.RefreshTokenStorage = OneDriveRefreshTokenStorage.WindowsCredentialManager;
-            }
             if (OnDiskRadio.Checked)
             {
                 _configuration.RefreshTokenStorage = OneDriveRefreshTokenStorage.Disk;
