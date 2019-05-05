@@ -150,6 +150,8 @@ csx/
 # Windows Store app package directory
 AppPackages/
 
+KoenZomers.KeePass.OneDriveSync/Packages/
+
 # Others
 sql/
 *.Cache

@@ -102,14 +102,33 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 CloudLocationPath.Text = CurrentMyOneDriveItem.ParentReference != null ? CurrentMyOneDriveItem.ParentReference.Path + "/" + CurrentMyOneDriveItem.Name : "";
              }
 
-             foreach (var listViewItem in itemCollection.Collection.Select(oneDriveItem => new ListViewItem
+             foreach (var oneDriveItem in itemCollection.Collection)
              {
-                 Text = oneDriveItem.Name,
-                 Tag = oneDriveItem.RemoteItem != null ? oneDriveItem.RemoteItem.Id : oneDriveItem.Id,
-                 ImageKey = oneDriveItem.Folder != null ? "Folder" : oneDriveItem.RemoteItem != null ? "RemoteFolder" : "File"
-             }))
-             {
-                 CloudLocationPicker.Items.Add(listViewItem);
+                var oneDriveListViewItem = new ListViewItem
+                {
+                    Text = oneDriveItem.Name,
+                    Tag = oneDriveItem.RemoteItem != null ? oneDriveItem.RemoteItem.Id : oneDriveItem.Id,
+                    ImageKey = oneDriveItem.Folder != null ? "Folder" : oneDriveItem.RemoteItem != null ? "RemoteFolder" : "File"
+                };
+
+                if (oneDriveItem.Size > 0)
+                {
+                    oneDriveListViewItem.ToolTipText += string.Format("Size: {0} bytes", oneDriveItem.Size) + Environment.NewLine;
+                }
+                else if (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Size > 0)
+                {
+                    oneDriveListViewItem.ToolTipText += string.Format("Size: {0} bytes", oneDriveItem.RemoteItem.Size) + Environment.NewLine;
+                }
+                if (oneDriveItem.CreatedDateTime != null)
+                {
+                    oneDriveListViewItem.ToolTipText += string.Format("Created: {0:d MMMM yyyy HH:mm:ss}", oneDriveItem.CreatedDateTime) + Environment.NewLine;
+                }
+                if (oneDriveItem.LastModifiedDateTime != null)
+                {
+                    oneDriveListViewItem.ToolTipText += string.Format("Last modified: {0:d MMMM yyyy HH:mm:ss}", oneDriveItem.LastModifiedDateTime) + Environment.NewLine;
+                }
+
+                CloudLocationPicker.Items.Add(oneDriveListViewItem);
              }
 
             // Define if the OK button should be enabled
@@ -128,19 +147,56 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             {
                 // Get the root of the shared with me items
                 var itemCollection = await _oneDriveApi.GetSharedWithMe();
+                var sortedItemCollection = itemCollection.Collection.OrderBy(i => i.Name).OrderBy(i => i.Folder == null).OrderBy(i => i.RemoteItem.Folder == null);
                 SharedWithMeUpButton.Enabled = false;
                 CurrentSharedWithMeOneDriveItem = null;
                 GoToSharedWithMeRootTtoolStripMenuItem.Enabled = false;
                 SharedWithMePath.Text = string.Empty;
 
-                foreach (var listViewItem in itemCollection.Collection.OrderBy(i => i.Name).OrderBy(i => i.Folder == null).OrderBy(i => i.RemoteItem.Folder == null).Select(oneDriveItem => new ListViewItem
+                foreach (var oneDriveItem in sortedItemCollection)
                 {
-                    Text = oneDriveItem.Name,
-                    Tag = oneDriveItem,
-                    ImageKey = (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Folder != null) || oneDriveItem.Folder != null ? "RemoteFolder" : "File"
-                }))
-                {
-                    SharedWithMePicker.Items.Add(listViewItem);
+                    var oneDriveListViewItem = new ListViewItem
+                    {
+                        Text = oneDriveItem.Name,
+                        Tag = oneDriveItem,
+                        ImageKey = (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Folder != null) || oneDriveItem.Folder != null ? "RemoteFolder" : "File",
+                    };
+
+                    OneDriveIdentity sharedInfo = null;
+                    if (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Shared != null && oneDriveItem.RemoteItem.Shared.Owner != null && oneDriveItem.RemoteItem.Shared.Owner.User != null)
+                    {
+                        sharedInfo = oneDriveItem.RemoteItem.Shared.Owner.User;
+                    }
+                    else if (oneDriveItem.Shared != null && oneDriveItem.Shared.Owner != null && oneDriveItem.Shared.Owner.User != null)
+                    {
+                        sharedInfo = oneDriveItem.Shared.Owner.User;
+                    }
+                    if (sharedInfo != null)
+                    {
+                        oneDriveListViewItem.ToolTipText = string.Format("Shared by {0} ({1})", sharedInfo.DisplayName, sharedInfo.Id);
+                    }
+                    else
+                    {
+                        oneDriveListViewItem.ToolTipText = "Shared by information not available";
+                    }
+                    if (oneDriveItem.Size > 0)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0} bytes", oneDriveItem.Size);
+                    }
+                    else if(oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Size > 0)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0} bytes", oneDriveItem.RemoteItem.Size);
+                    }
+                    if (oneDriveItem.CreatedDateTime != null)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Created: {0:d MMMM yyyy HH:mm:ss}", oneDriveItem.CreatedDateTime);
+                    }
+                    if (oneDriveItem.LastModifiedDateTime != null)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Last modified: {0:d MMMM yyyy HH:mm:ss}", oneDriveItem.LastModifiedDateTime);
+                    }
+
+                    SharedWithMePicker.Items.Add(oneDriveListViewItem);
                 }
             }
             else
@@ -156,21 +212,57 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 if (CurrentSharedWithMeOneDriveItem.ParentReference != null && CurrentSharedWithMeOneDriveItem.ParentReference.Path != null)
                 {
                     var rootLocation = CurrentSharedWithMeOneDriveItem.ParentReference.Path.IndexOf("root:");
-                    SharedWithMePath.Text = ((rootLocation == -1 ? CurrentSharedWithMeOneDriveItem.ParentReference.Path : CurrentSharedWithMeOneDriveItem.ParentReference.Path.Remove(0, rootLocation + 5).TrimStart(new[] {'/'})) + "/" + CurrentSharedWithMeOneDriveItem.Name).TrimStart(new[] { '/' });
+                    SharedWithMePath.Text = ((rootLocation == -1 ? CurrentSharedWithMeOneDriveItem.ParentReference.Path : CurrentSharedWithMeOneDriveItem.ParentReference.Path.Remove(0, rootLocation + 5).TrimStart(new[] { '/' })) + "/" + CurrentSharedWithMeOneDriveItem.Name).TrimStart(new[] { '/' });
                 }
                 else
                 {
                     SharedWithMePath.Text = CurrentSharedWithMeOneDriveItem.Name;
                 }
 
-                foreach (var listViewItem in itemCollection.Select(oneDriveItem => new ListViewItem
+                foreach (var oneDriveItem in itemCollection)
                 {
-                    Text = oneDriveItem.Name,
-                    Tag = oneDriveItem,
-                    ImageKey = oneDriveItem.Folder != null ? "RemoteFolder" : "File"
-                }))
-                {
-                    SharedWithMePicker.Items.Add(listViewItem);
+                    var oneDriveListViewItem = new ListViewItem
+                    {
+                        Text = oneDriveItem.Name,
+                        Tag = oneDriveItem,
+                        ImageKey = oneDriveItem.Folder != null ? "RemoteFolder" : "File",
+                    };
+
+                    OneDriveIdentity sharedInfo = null;
+                    if (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Shared != null && oneDriveItem.RemoteItem.Shared.Owner != null && oneDriveItem.RemoteItem.Shared.Owner.User != null)
+                    {
+                        sharedInfo = oneDriveItem.RemoteItem.Shared.Owner.User;
+                    }
+                    else if (oneDriveItem.Shared != null && oneDriveItem.Shared.Owner != null && oneDriveItem.Shared.Owner.User != null)
+                    {
+                        sharedInfo = oneDriveItem.Shared.Owner.User;
+                    }
+                    if (sharedInfo != null)
+                    {
+                        oneDriveListViewItem.ToolTipText = string.Format("Shared by {0} ({1})", sharedInfo.DisplayName, sharedInfo.Id);
+                    }
+                    else
+                    {
+                        oneDriveListViewItem.ToolTipText = "Shared by information not available";
+                    }
+                    if (oneDriveItem.Size > 0)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0} bytes", oneDriveItem.Size);
+                    }
+                    else if (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Size > 0)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0} bytes", oneDriveItem.RemoteItem.Size);
+                    }
+                    if (oneDriveItem.CreatedDateTime != null)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Created: {0:d MMMM yyyy HH:mm:ss}", oneDriveItem.CreatedDateTime);
+                    }
+                    if (oneDriveItem.LastModifiedDateTime != null)
+                    {
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Last modified: {0:d MMMM yyyy HH:mm:ss}", oneDriveItem.LastModifiedDateTime);
+                    }
+
+                    SharedWithMePicker.Items.Add(oneDriveListViewItem);
                 }
             }
 

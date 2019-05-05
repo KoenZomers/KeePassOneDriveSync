@@ -277,7 +277,7 @@ namespace KoenZomersKeePassOneDriveSync
             if (config.DoNotSync || !fileOpenedEventArgs.Database.IOConnectionInfo.IsLocalFile() || !_fileOfflineMenuItem.Checked) return;
 
             // Check if the database configuration of the opened KeePass database is set to retrieve the OneDrive Refresh Token from the KeePass database itself
-            if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase)
+            if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase && string.IsNullOrEmpty(config.RefreshToken))
             {
                 // Retrieve the OneDrive Refresh Token from the KeePass database that is being opened
                 config.RefreshToken = Utilities.GetRefreshTokenFromKeePassDatabase(fileOpenedEventArgs.Database);

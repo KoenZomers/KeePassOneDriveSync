@@ -280,7 +280,34 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             // Upload the synced database
             updateStatus("Uploading the new KeePass database to OneDrive");
 
-            var uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase) ? await oneDriveApi.GetDriveRoot() : string.IsNullOrEmpty(databaseConfig.RemoteDriveId) ? await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id) : await oneDriveApi.GetItemFromDriveById(oneDriveItem.ParentReference.Id, oneDriveItem.ParentReference.DriveId));
+            OneDriveItem uploadResult = null;
+            if(!string.IsNullOrEmpty(databaseConfig.RemoteItemId))
+            {
+                // Database is already present on OneDrive, update it
+                uploadResult = await oneDriveApi.UpdateFile(temporaryKeePassDatabasePath, oneDriveItem);
+            }
+            else
+            {
+                // Database resides on the user its own OneDrive in the root folder
+                if (oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetDriveRoot());
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
+                    {
+                        // Database resides on the user its own OneDrive in a folder
+                        uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
+                    }
+                    else
+                    {
+                        // Database resides on another OneDrive
+                        uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemFromDriveById(oneDriveItem.ParentReference.Id, oneDriveItem.ParentReference.DriveId));
+                    }
+                }
+            }
+
             if (uploadResult == null)
             {
                 updateStatus("Failed to upload the KeePass database");

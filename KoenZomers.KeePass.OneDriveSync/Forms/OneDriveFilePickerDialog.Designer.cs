@@ -50,6 +50,7 @@
             this.CloudLocationPath = new System.Windows.Forms.TextBox();
             this.CloudLocationPicker = new System.Windows.Forms.ListView();
             this.SharedWithMeTabPage = new System.Windows.Forms.TabPage();
+            this.SharedWithMeNotAvailableLabel = new System.Windows.Forms.Label();
             this.SharedWithMeUpButton = new System.Windows.Forms.Button();
             this.SharedWithMePath = new System.Windows.Forms.TextBox();
             this.SharedWithMePicker = new System.Windows.Forms.ListView();
@@ -57,7 +58,6 @@
             this.RefreshSharedWithMeFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GoToSharedWithMeRootTtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GoUpSharedWithMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SharedWithMeNotAvailableLabel = new System.Windows.Forms.Label();
             this.MyFilesContextMenu.SuspendLayout();
             this.FilesTabControl.SuspendLayout();
             this.MyFilesTabPage.SuspendLayout();
@@ -77,14 +77,14 @@
             this.renameToolStripMenuItem,
             this.deleteToolStripMenuItem});
             this.MyFilesContextMenu.Name = "ListViewContextMenu";
-            this.MyFilesContextMenu.Size = new System.Drawing.Size(208, 154);
+            this.MyFilesContextMenu.Size = new System.Drawing.Size(178, 142);
             this.MyFilesContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ListViewContextMenu_Opening);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(207, 24);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.refreshToolStripMenuItem.Text = "&Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItem_Click);
             // 
@@ -92,7 +92,7 @@
             // 
             this.GoToRootToolStripMenuItem.Name = "GoToRootToolStripMenuItem";
             this.GoToRootToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.GoToRootToolStripMenuItem.Size = new System.Drawing.Size(207, 24);
+            this.GoToRootToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.GoToRootToolStripMenuItem.Text = "&Go to root";
             this.GoToRootToolStripMenuItem.Click += new System.EventHandler(this.GoToRootToolStripMenuItem_Click);
             // 
@@ -101,20 +101,20 @@
             this.goupToolStripMenuItem.Enabled = false;
             this.goupToolStripMenuItem.Name = "goupToolStripMenuItem";
             this.goupToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.goupToolStripMenuItem.Size = new System.Drawing.Size(207, 24);
+            this.goupToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.goupToolStripMenuItem.Text = "Go &up";
             this.goupToolStripMenuItem.Click += new System.EventHandler(this.GroupToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(174, 6);
             // 
             // newFolderToolStripMenuItem
             // 
             this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
             this.newFolderToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(207, 24);
+            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.newFolderToolStripMenuItem.Text = "&New Folder";
             this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.NewFolderToolStripMenuItem_Click);
             // 
@@ -122,7 +122,7 @@
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             this.renameToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(207, 24);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.renameToolStripMenuItem.Text = "R&ename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameToolStripMenuItem_Click);
             // 
@@ -130,7 +130,7 @@
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(207, 24);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.deleteToolStripMenuItem.Text = "&Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
             // 
@@ -146,10 +146,10 @@
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(590, 491);
-            this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.CancelButton.Location = new System.Drawing.Point(442, 399);
+            this.CancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(96, 39);
+            this.CancelButton.Size = new System.Drawing.Size(72, 32);
             this.CancelButton.TabIndex = 3;
             this.CancelButton.Text = "&Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
@@ -158,10 +158,10 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.Enabled = false;
-            this.OKButton.Location = new System.Drawing.Point(487, 491);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.OKButton.Location = new System.Drawing.Point(365, 399);
+            this.OKButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(96, 39);
+            this.OKButton.Size = new System.Drawing.Size(72, 32);
             this.OKButton.TabIndex = 2;
             this.OKButton.Text = "&OK";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -171,9 +171,10 @@
             // 
             this.UpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.UpButton.Enabled = false;
-            this.UpButton.Location = new System.Drawing.Point(605, 3);
+            this.UpButton.Location = new System.Drawing.Point(454, 2);
+            this.UpButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.UpButton.Name = "UpButton";
-            this.UpButton.Size = new System.Drawing.Size(55, 34);
+            this.UpButton.Size = new System.Drawing.Size(41, 28);
             this.UpButton.TabIndex = 4;
             this.UpButton.Text = "Up";
             this.UpButton.UseVisualStyleBackColor = true;
@@ -184,9 +185,10 @@
             // 
             this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(12, 9);
+            this.ExplanationLabel.Location = new System.Drawing.Point(9, 7);
+            this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(609, 19);
+            this.ExplanationLabel.Size = new System.Drawing.Size(457, 15);
             this.ExplanationLabel.TabIndex = 8;
             this.ExplanationLabel.Text = "Select where you want to store the KeePass database. Right click for additional o" +
     "ptions.";
@@ -195,9 +197,10 @@
             // 
             this.FileNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.FileNameTextBox.Location = new System.Drawing.Point(95, 499);
+            this.FileNameTextBox.Location = new System.Drawing.Point(71, 405);
+            this.FileNameTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.FileNameTextBox.Name = "FileNameTextBox";
-            this.FileNameTextBox.Size = new System.Drawing.Size(386, 22);
+            this.FileNameTextBox.Size = new System.Drawing.Size(290, 20);
             this.FileNameTextBox.TabIndex = 1;
             this.FileNameTextBox.TextChanged += new System.EventHandler(this.FileNameTextBox_TextChanged);
             this.FileNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FileNameTextBox_KeyUp);
@@ -205,9 +208,10 @@
             // FileNameLabel
             // 
             this.FileNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.FileNameLabel.Location = new System.Drawing.Point(12, 499);
+            this.FileNameLabel.Location = new System.Drawing.Point(9, 405);
+            this.FileNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.FileNameLabel.Name = "FileNameLabel";
-            this.FileNameLabel.Size = new System.Drawing.Size(77, 22);
+            this.FileNameLabel.Size = new System.Drawing.Size(58, 18);
             this.FileNameLabel.TabIndex = 9;
             this.FileNameLabel.Text = "Filename:";
             // 
@@ -218,10 +222,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.FilesTabControl.Controls.Add(this.MyFilesTabPage);
             this.FilesTabControl.Controls.Add(this.SharedWithMeTabPage);
-            this.FilesTabControl.Location = new System.Drawing.Point(15, 31);
+            this.FilesTabControl.Location = new System.Drawing.Point(11, 25);
+            this.FilesTabControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.FilesTabControl.Name = "FilesTabControl";
             this.FilesTabControl.SelectedIndex = 0;
-            this.FilesTabControl.Size = new System.Drawing.Size(671, 455);
+            this.FilesTabControl.Size = new System.Drawing.Size(503, 370);
             this.FilesTabControl.TabIndex = 10;
             this.FilesTabControl.SelectedIndexChanged += new System.EventHandler(this.FilesTabControl_SelectedIndexChanged);
             // 
@@ -230,10 +235,11 @@
             this.MyFilesTabPage.Controls.Add(this.CloudLocationPath);
             this.MyFilesTabPage.Controls.Add(this.CloudLocationPicker);
             this.MyFilesTabPage.Controls.Add(this.UpButton);
-            this.MyFilesTabPage.Location = new System.Drawing.Point(4, 25);
+            this.MyFilesTabPage.Location = new System.Drawing.Point(4, 22);
+            this.MyFilesTabPage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MyFilesTabPage.Name = "MyFilesTabPage";
-            this.MyFilesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.MyFilesTabPage.Size = new System.Drawing.Size(663, 426);
+            this.MyFilesTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MyFilesTabPage.Size = new System.Drawing.Size(495, 344);
             this.MyFilesTabPage.TabIndex = 0;
             this.MyFilesTabPage.Text = "My files";
             this.MyFilesTabPage.UseVisualStyleBackColor = true;
@@ -244,9 +250,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CloudLocationPath.BackColor = System.Drawing.Color.White;
             this.CloudLocationPath.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.CloudLocationPath.Location = new System.Drawing.Point(9, 12);
+            this.CloudLocationPath.Location = new System.Drawing.Point(7, 10);
+            this.CloudLocationPath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CloudLocationPath.Name = "CloudLocationPath";
-            this.CloudLocationPath.Size = new System.Drawing.Size(593, 15);
+            this.CloudLocationPath.Size = new System.Drawing.Size(445, 13);
             this.CloudLocationPath.TabIndex = 7;
             this.CloudLocationPath.TabStop = false;
             // 
@@ -256,11 +263,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CloudLocationPicker.ContextMenuStrip = this.MyFilesContextMenu;
+            this.CloudLocationPicker.HideSelection = false;
             this.CloudLocationPicker.LargeImageList = this.IconsList;
-            this.CloudLocationPicker.Location = new System.Drawing.Point(6, 43);
+            this.CloudLocationPicker.Location = new System.Drawing.Point(4, 35);
+            this.CloudLocationPicker.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CloudLocationPicker.MultiSelect = false;
             this.CloudLocationPicker.Name = "CloudLocationPicker";
-            this.CloudLocationPicker.Size = new System.Drawing.Size(654, 377);
+            this.CloudLocationPicker.ShowItemToolTips = true;
+            this.CloudLocationPicker.Size = new System.Drawing.Size(492, 307);
             this.CloudLocationPicker.SmallImageList = this.IconsList;
             this.CloudLocationPicker.TabIndex = 1;
             this.CloudLocationPicker.TileSize = new System.Drawing.Size(244, 70);
@@ -275,21 +285,38 @@
             this.SharedWithMeTabPage.Controls.Add(this.SharedWithMeUpButton);
             this.SharedWithMeTabPage.Controls.Add(this.SharedWithMePath);
             this.SharedWithMeTabPage.Controls.Add(this.SharedWithMePicker);
-            this.SharedWithMeTabPage.Location = new System.Drawing.Point(4, 25);
+            this.SharedWithMeTabPage.Location = new System.Drawing.Point(4, 22);
+            this.SharedWithMeTabPage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SharedWithMeTabPage.Name = "SharedWithMeTabPage";
-            this.SharedWithMeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.SharedWithMeTabPage.Size = new System.Drawing.Size(663, 426);
+            this.SharedWithMeTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SharedWithMeTabPage.Size = new System.Drawing.Size(495, 344);
             this.SharedWithMeTabPage.TabIndex = 1;
             this.SharedWithMeTabPage.Text = "Shared with me";
             this.SharedWithMeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // SharedWithMeNotAvailableLabel
+            // 
+            this.SharedWithMeNotAvailableLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SharedWithMeNotAvailableLabel.Location = new System.Drawing.Point(4, 35);
+            this.SharedWithMeNotAvailableLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.SharedWithMeNotAvailableLabel.Name = "SharedWithMeNotAvailableLabel";
+            this.SharedWithMeNotAvailableLabel.Size = new System.Drawing.Size(488, 306);
+            this.SharedWithMeNotAvailableLabel.TabIndex = 10;
+            this.SharedWithMeNotAvailableLabel.Text = "Shared with me is not available when using the OneDrive for Business service. Use" +
+    " the Graph API service instead to connect to your OneDrive for Business site and" +
+    " it will be available.";
+            this.SharedWithMeNotAvailableLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SharedWithMeUpButton
             // 
             this.SharedWithMeUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SharedWithMeUpButton.Enabled = false;
-            this.SharedWithMeUpButton.Location = new System.Drawing.Point(605, 3);
+            this.SharedWithMeUpButton.Location = new System.Drawing.Point(454, 2);
+            this.SharedWithMeUpButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SharedWithMeUpButton.Name = "SharedWithMeUpButton";
-            this.SharedWithMeUpButton.Size = new System.Drawing.Size(55, 34);
+            this.SharedWithMeUpButton.Size = new System.Drawing.Size(41, 28);
             this.SharedWithMeUpButton.TabIndex = 9;
             this.SharedWithMeUpButton.Text = "Up";
             this.SharedWithMeUpButton.UseVisualStyleBackColor = true;
@@ -301,9 +328,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SharedWithMePath.BackColor = System.Drawing.Color.White;
             this.SharedWithMePath.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.SharedWithMePath.Location = new System.Drawing.Point(9, 12);
+            this.SharedWithMePath.Location = new System.Drawing.Point(7, 10);
+            this.SharedWithMePath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SharedWithMePath.Name = "SharedWithMePath";
-            this.SharedWithMePath.Size = new System.Drawing.Size(590, 15);
+            this.SharedWithMePath.Size = new System.Drawing.Size(442, 13);
             this.SharedWithMePath.TabIndex = 8;
             this.SharedWithMePath.TabStop = false;
             // 
@@ -313,11 +341,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SharedWithMePicker.ContextMenuStrip = this.SharedWithMeContextMenu;
+            this.SharedWithMePicker.HideSelection = false;
             this.SharedWithMePicker.LargeImageList = this.IconsList;
-            this.SharedWithMePicker.Location = new System.Drawing.Point(6, 43);
+            this.SharedWithMePicker.Location = new System.Drawing.Point(4, 35);
+            this.SharedWithMePicker.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SharedWithMePicker.MultiSelect = false;
             this.SharedWithMePicker.Name = "SharedWithMePicker";
-            this.SharedWithMePicker.Size = new System.Drawing.Size(654, 377);
+            this.SharedWithMePicker.ShowItemToolTips = true;
+            this.SharedWithMePicker.Size = new System.Drawing.Size(492, 307);
             this.SharedWithMePicker.SmallImageList = this.IconsList;
             this.SharedWithMePicker.TabIndex = 2;
             this.SharedWithMePicker.TileSize = new System.Drawing.Size(244, 70);
@@ -334,14 +365,14 @@
             this.GoToSharedWithMeRootTtoolStripMenuItem,
             this.GoUpSharedWithMeToolStripMenuItem});
             this.SharedWithMeContextMenu.Name = "ListViewContextMenu";
-            this.SharedWithMeContextMenu.Size = new System.Drawing.Size(201, 76);
+            this.SharedWithMeContextMenu.Size = new System.Drawing.Size(172, 70);
             this.SharedWithMeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.SharedWithMeContextMenu_Opening);
             // 
             // RefreshSharedWithMeFilesToolStripMenuItem
             // 
             this.RefreshSharedWithMeFilesToolStripMenuItem.Name = "RefreshSharedWithMeFilesToolStripMenuItem";
             this.RefreshSharedWithMeFilesToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.RefreshSharedWithMeFilesToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
+            this.RefreshSharedWithMeFilesToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.RefreshSharedWithMeFilesToolStripMenuItem.Text = "&Refresh";
             this.RefreshSharedWithMeFilesToolStripMenuItem.Click += new System.EventHandler(this.RefreshSharedWithMeFilesToolStripMenuItem_Click);
             // 
@@ -349,7 +380,7 @@
             // 
             this.GoToSharedWithMeRootTtoolStripMenuItem.Name = "GoToSharedWithMeRootTtoolStripMenuItem";
             this.GoToSharedWithMeRootTtoolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.GoToSharedWithMeRootTtoolStripMenuItem.Size = new System.Drawing.Size(200, 24);
+            this.GoToSharedWithMeRootTtoolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.GoToSharedWithMeRootTtoolStripMenuItem.Text = "&Go to root";
             this.GoToSharedWithMeRootTtoolStripMenuItem.Click += new System.EventHandler(this.GoToSharedWithMeRootTtoolStripMenuItem_Click);
             // 
@@ -358,29 +389,15 @@
             this.GoUpSharedWithMeToolStripMenuItem.Enabled = false;
             this.GoUpSharedWithMeToolStripMenuItem.Name = "GoUpSharedWithMeToolStripMenuItem";
             this.GoUpSharedWithMeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.GoUpSharedWithMeToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
+            this.GoUpSharedWithMeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.GoUpSharedWithMeToolStripMenuItem.Text = "Go &up";
             this.GoUpSharedWithMeToolStripMenuItem.Click += new System.EventHandler(this.GoUpSharedWithMeToolStripMenuItem_Click);
             // 
-            // SharedWithMeNotAvailableLabel
-            // 
-            this.SharedWithMeNotAvailableLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SharedWithMeNotAvailableLabel.Location = new System.Drawing.Point(6, 43);
-            this.SharedWithMeNotAvailableLabel.Name = "SharedWithMeNotAvailableLabel";
-            this.SharedWithMeNotAvailableLabel.Size = new System.Drawing.Size(651, 377);
-            this.SharedWithMeNotAvailableLabel.TabIndex = 10;
-            this.SharedWithMeNotAvailableLabel.Text = "Shared with me is not available when using the OneDrive for Business service. Use" +
-    " the Graph API service instead to connect to your OneDrive for Business site and" +
-    " it will be available.";
-            this.SharedWithMeNotAvailableLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // OneDriveFilePickerDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(698, 539);
+            this.ClientSize = new System.Drawing.Size(524, 438);
             this.Controls.Add(this.FilesTabControl);
             this.Controls.Add(this.FileNameLabel);
             this.Controls.Add(this.FileNameTextBox);
@@ -388,6 +405,7 @@
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
             this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MinimizeBox = false;
             this.Name = "OneDriveFilePickerDialog";
             this.ShowIcon = false;

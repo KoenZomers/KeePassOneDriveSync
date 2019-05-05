@@ -80,11 +80,10 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ConfigurationListViewContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var configurationSelected = ConfigurationListView.SelectedItems.Count > 0;
-            ConfigurationListViewContextItemDelete.Enabled = configurationSelected;
-            ConfigurationListViewContextItemViewDetails.Enabled = configurationSelected;
-            ConfigurationListViewContextItemOpenFileLocation.Enabled = configurationSelected;
-            ConfigurationListViewContextItemSyncNow.Enabled = configurationSelected && !((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag).Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(ConfigurationListView.SelectedItems[0].Text, StringComparison.InvariantCultureIgnoreCase);
+            ConfigurationListViewContextItemDelete.Enabled = ConfigurationListView.SelectedItems.Count > 0;
+            ConfigurationListViewContextItemViewDetails.Enabled = ConfigurationListView.SelectedItems.Count == 1;
+            ConfigurationListViewContextItemOpenFileLocation.Enabled = ConfigurationListView.SelectedItems.Count > 0;
+            ConfigurationListViewContextItemSyncNow.Enabled = ConfigurationListView.SelectedItems.Count == 1 && !((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag).Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(ConfigurationListView.SelectedItems[0].Text, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void ConfigurationListView_DoubleClick(object sender, EventArgs e)
@@ -114,7 +113,7 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ViewDetails()
         {
-            if (ConfigurationListView.SelectedItems.Count == 0) return;
+            if (ConfigurationListView.SelectedItems.Count != 1) return;
 
             var oneDriveConfigDetailsForm = new OneDriveConfigDetailsForm((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag);
             oneDriveConfigDetailsForm.ShowDialog();

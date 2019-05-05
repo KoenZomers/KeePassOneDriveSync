@@ -50,10 +50,9 @@
             // 
             this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(17, 44);
-            this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ExplanationLabel.Location = new System.Drawing.Point(13, 36);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(569, 38);
+            this.ExplanationLabel.Size = new System.Drawing.Size(427, 31);
             this.ExplanationLabel.TabIndex = 0;
             this.ExplanationLabel.Text = "Here you\'ll see all KeePass databases that are configured for use with OneDriveSy" +
     "nc.";
@@ -64,10 +63,9 @@
             this.HeaderLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.HeaderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HeaderLabel.Location = new System.Drawing.Point(16, 11);
-            this.HeaderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.HeaderLabel.Location = new System.Drawing.Point(12, 9);
             this.HeaderLabel.Name = "HeaderLabel";
-            this.HeaderLabel.Size = new System.Drawing.Size(571, 28);
+            this.HeaderLabel.Size = new System.Drawing.Size(428, 23);
             this.HeaderLabel.TabIndex = 1;
             this.HeaderLabel.Text = "KeePass OneDriveSync";
             this.HeaderLabel.UseMnemonic = false;
@@ -84,11 +82,10 @@
             this.ConfigurationListView.ContextMenuStrip = this.ConfigurationListViewContextMenu;
             this.ConfigurationListView.FullRowSelect = true;
             this.ConfigurationListView.GridLines = true;
-            this.ConfigurationListView.Location = new System.Drawing.Point(20, 68);
-            this.ConfigurationListView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.ConfigurationListView.MultiSelect = false;
+            this.ConfigurationListView.HideSelection = false;
+            this.ConfigurationListView.Location = new System.Drawing.Point(15, 55);
             this.ConfigurationListView.Name = "ConfigurationListView";
-            this.ConfigurationListView.Size = new System.Drawing.Size(564, 269);
+            this.ConfigurationListView.Size = new System.Drawing.Size(424, 219);
             this.ConfigurationListView.TabIndex = 3;
             this.ConfigurationListView.UseCompatibleStateImageBehavior = false;
             this.ConfigurationListView.View = System.Windows.Forms.View.Details;
@@ -119,34 +116,34 @@
             this.ConfigurationListViewContextItemOpenFileLocation,
             this.ConfigurationListViewContextItemDelete});
             this.ConfigurationListViewContextMenu.Name = "ConfigurationListViewContextMenu";
-            this.ConfigurationListViewContextMenu.Size = new System.Drawing.Size(198, 100);
+            this.ConfigurationListViewContextMenu.Size = new System.Drawing.Size(169, 92);
             this.ConfigurationListViewContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConfigurationListViewContextMenu_Opening);
             // 
             // ConfigurationListViewContextItemViewDetails
             // 
             this.ConfigurationListViewContextItemViewDetails.Name = "ConfigurationListViewContextItemViewDetails";
-            this.ConfigurationListViewContextItemViewDetails.Size = new System.Drawing.Size(197, 24);
+            this.ConfigurationListViewContextItemViewDetails.Size = new System.Drawing.Size(168, 22);
             this.ConfigurationListViewContextItemViewDetails.Text = "&View Details";
             this.ConfigurationListViewContextItemViewDetails.Click += new System.EventHandler(this.ConfigurationListViewContextItemViewDetails_Click);
             // 
             // ConfigurationListViewContextItemSyncNow
             // 
             this.ConfigurationListViewContextItemSyncNow.Name = "ConfigurationListViewContextItemSyncNow";
-            this.ConfigurationListViewContextItemSyncNow.Size = new System.Drawing.Size(197, 24);
+            this.ConfigurationListViewContextItemSyncNow.Size = new System.Drawing.Size(168, 22);
             this.ConfigurationListViewContextItemSyncNow.Text = "&Sync Now";
             this.ConfigurationListViewContextItemSyncNow.Click += new System.EventHandler(this.ConfigurationListViewContextItemSyncNow_Click);
             // 
             // ConfigurationListViewContextItemOpenFileLocation
             // 
             this.ConfigurationListViewContextItemOpenFileLocation.Name = "ConfigurationListViewContextItemOpenFileLocation";
-            this.ConfigurationListViewContextItemOpenFileLocation.Size = new System.Drawing.Size(197, 24);
+            this.ConfigurationListViewContextItemOpenFileLocation.Size = new System.Drawing.Size(168, 22);
             this.ConfigurationListViewContextItemOpenFileLocation.Text = "Open file &location";
             this.ConfigurationListViewContextItemOpenFileLocation.Click += new System.EventHandler(this.ConfigurationListViewContextItemOpenFileLocation_Click);
             // 
             // ConfigurationListViewContextItemDelete
             // 
             this.ConfigurationListViewContextItemDelete.Name = "ConfigurationListViewContextItemDelete";
-            this.ConfigurationListViewContextItemDelete.Size = new System.Drawing.Size(197, 24);
+            this.ConfigurationListViewContextItemDelete.Size = new System.Drawing.Size(168, 22);
             this.ConfigurationListViewContextItemDelete.Text = "&Delete";
             this.ConfigurationListViewContextItemDelete.Click += new System.EventHandler(this.ConfigurationListViewContextItemDelete_Click);
             // 
@@ -154,10 +151,9 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.CloseButton.Location = new System.Drawing.Point(455, 345);
-            this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CloseButton.Location = new System.Drawing.Point(341, 280);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(132, 41);
+            this.CloseButton.Size = new System.Drawing.Size(99, 33);
             this.CloseButton.TabIndex = 4;
             this.CloseButton.Text = "&Close";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -167,10 +163,9 @@
             // 
             this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.StatusLabel.Location = new System.Drawing.Point(17, 345);
-            this.StatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.StatusLabel.Location = new System.Drawing.Point(13, 280);
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(289, 41);
+            this.StatusLabel.Size = new System.Drawing.Size(217, 33);
             this.StatusLabel.TabIndex = 5;
             this.StatusLabel.Text = "-";
             this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -179,10 +174,9 @@
             // AboutButton
             // 
             this.AboutButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AboutButton.Location = new System.Drawing.Point(315, 345);
-            this.AboutButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.AboutButton.Location = new System.Drawing.Point(236, 280);
             this.AboutButton.Name = "AboutButton";
-            this.AboutButton.Size = new System.Drawing.Size(132, 41);
+            this.AboutButton.Size = new System.Drawing.Size(99, 33);
             this.AboutButton.TabIndex = 6;
             this.AboutButton.Text = "&About";
             this.AboutButton.UseVisualStyleBackColor = true;
@@ -190,19 +184,18 @@
             // 
             // OneDriveConfigForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(603, 400);
+            this.ClientSize = new System.Drawing.Size(452, 325);
             this.Controls.Add(this.AboutButton);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.ConfigurationListView);
             this.Controls.Add(this.HeaderLabel);
             this.Controls.Add(this.ExplanationLabel);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(509, 258);
+            this.MinimumSize = new System.Drawing.Size(386, 217);
             this.Name = "OneDriveConfigForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
