@@ -179,6 +179,13 @@ namespace KoenZomers.KeePass.OneDriveSync
             {
                 windowsCredentialManagerDatabaseConfig.Value.RefreshToken = Utilities.GetRefreshTokenFromWindowsCredentialManager(windowsCredentialManagerDatabaseConfig.Key);
             }
+
+            // Decrypt all database configurations which have their OneDrive Refresh Token stored encrypted in the config file
+            var encryptedDatabaseConfigs = PasswordDatabases.Where(pwdDb => pwdDb.Value.RefreshTokenStorage == Enums.OneDriveRefreshTokenStorage.DiskEncrypted);
+            foreach (var encryptedDatabaseConfig in encryptedDatabaseConfigs)
+            {
+                encryptedDatabaseConfig.Value.RefreshToken = Utilities.Unprotect(encryptedDatabaseConfig.Value.RefreshToken);
+            }
         }
 
         /// <summary>
@@ -195,8 +202,14 @@ namespace KoenZomers.KeePass.OneDriveSync
                 switch (passwordDatabase.Value.RefreshTokenStorage)
                 {
                     case Enums.OneDriveRefreshTokenStorage.Disk:
-                        // Refresh token will be stored on disk, we can store the complete configuration instance on disk in this case
-                        passwordDatabasesForStoring.Add(passwordDatabase.Key, passwordDatabase.Value);
+                    case Enums.OneDriveRefreshTokenStorage.DiskEncrypted:
+                        // Enforce encryption of tokens previously stored in plain text
+                        passwordDatabase.Value.RefreshTokenStorage = Enums.OneDriveRefreshTokenStorage.DiskEncrypted;
+
+                        // Refresh token will be stored encrypted on disk, we create a copy of the configuration and encrypt the refresh token
+                        var diskConfiguration = (Configuration)passwordDatabase.Value.Clone();
+                        diskConfiguration.RefreshToken = Utilities.Protect(diskConfiguration.RefreshToken);
+                        passwordDatabasesForStoring.Add(passwordDatabase.Key, diskConfiguration);
                         break;
 
                     case Enums.OneDriveRefreshTokenStorage.KeePassDatabase:
@@ -253,6 +266,7 @@ namespace KoenZomers.KeePass.OneDriveSync
             switch (config.RefreshTokenStorage)
             {
                 case Enums.OneDriveRefreshTokenStorage.Disk:
+                case Enums.OneDriveRefreshTokenStorage.DiskEncrypted:
                     // No action required as it will be removed as part of removing the complete configuration
                     break;
 

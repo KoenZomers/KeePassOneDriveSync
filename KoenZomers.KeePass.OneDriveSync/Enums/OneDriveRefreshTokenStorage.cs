@@ -18,6 +18,11 @@
         /// <summary>
         /// Saves the RefreshToken in the encrypted KeePass database
         /// </summary>
-        KeePassDatabase = 2
+        KeePassDatabase = 2,
+
+        /// <summary>
+        /// Saves the RefreshToken encrypted with DPAPI in KeePass.config.xml located in %APPDATA%\KeePass 
+        /// </summary>
+        DiskEncrypted = 3,
     }
 }
