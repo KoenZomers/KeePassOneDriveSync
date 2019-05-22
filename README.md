@@ -17,7 +17,7 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
-Version 2.0.4.2 - Mey 22, 2019
+Version 2.0.4.2 - May 22, 2019
 
 - Still was receiving reports on issues uploading larger than 5 MB databases. Did an additional fix hoping for it to have caught all scenarios this time. Discussed in https://github.com/KoenZomers/KeePassOneDriveSync/issues/88.
 - Added option to rename the storage entry on the KeePassOneDriveSync entry using F2 or right click and then choosing Rename. Requested through https://github.com/KoenZomers/KeePassOneDriveSync/issues/91.
