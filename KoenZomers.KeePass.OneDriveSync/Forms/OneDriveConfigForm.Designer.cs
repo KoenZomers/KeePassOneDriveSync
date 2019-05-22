@@ -43,6 +43,7 @@
             this.CloseButton = new System.Windows.Forms.Button();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.AboutButton = new System.Windows.Forms.Button();
+            this.ConfigurationListViewContextItemRenameStorage = new System.Windows.Forms.ToolStripMenuItem();
             this.ConfigurationListViewContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -112,38 +113,39 @@
             this.ConfigurationListViewContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.ConfigurationListViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ConfigurationListViewContextItemViewDetails,
+            this.ConfigurationListViewContextItemRenameStorage,
             this.ConfigurationListViewContextItemSyncNow,
             this.ConfigurationListViewContextItemOpenFileLocation,
             this.ConfigurationListViewContextItemDelete});
             this.ConfigurationListViewContextMenu.Name = "ConfigurationListViewContextMenu";
-            this.ConfigurationListViewContextMenu.Size = new System.Drawing.Size(169, 92);
+            this.ConfigurationListViewContextMenu.Size = new System.Drawing.Size(181, 136);
             this.ConfigurationListViewContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ConfigurationListViewContextMenu_Opening);
             // 
             // ConfigurationListViewContextItemViewDetails
             // 
             this.ConfigurationListViewContextItemViewDetails.Name = "ConfigurationListViewContextItemViewDetails";
-            this.ConfigurationListViewContextItemViewDetails.Size = new System.Drawing.Size(168, 22);
+            this.ConfigurationListViewContextItemViewDetails.Size = new System.Drawing.Size(180, 22);
             this.ConfigurationListViewContextItemViewDetails.Text = "&View Details";
             this.ConfigurationListViewContextItemViewDetails.Click += new System.EventHandler(this.ConfigurationListViewContextItemViewDetails_Click);
             // 
             // ConfigurationListViewContextItemSyncNow
             // 
             this.ConfigurationListViewContextItemSyncNow.Name = "ConfigurationListViewContextItemSyncNow";
-            this.ConfigurationListViewContextItemSyncNow.Size = new System.Drawing.Size(168, 22);
+            this.ConfigurationListViewContextItemSyncNow.Size = new System.Drawing.Size(180, 22);
             this.ConfigurationListViewContextItemSyncNow.Text = "&Sync Now";
             this.ConfigurationListViewContextItemSyncNow.Click += new System.EventHandler(this.ConfigurationListViewContextItemSyncNow_Click);
             // 
             // ConfigurationListViewContextItemOpenFileLocation
             // 
             this.ConfigurationListViewContextItemOpenFileLocation.Name = "ConfigurationListViewContextItemOpenFileLocation";
-            this.ConfigurationListViewContextItemOpenFileLocation.Size = new System.Drawing.Size(168, 22);
+            this.ConfigurationListViewContextItemOpenFileLocation.Size = new System.Drawing.Size(180, 22);
             this.ConfigurationListViewContextItemOpenFileLocation.Text = "Open file &location";
             this.ConfigurationListViewContextItemOpenFileLocation.Click += new System.EventHandler(this.ConfigurationListViewContextItemOpenFileLocation_Click);
             // 
             // ConfigurationListViewContextItemDelete
             // 
             this.ConfigurationListViewContextItemDelete.Name = "ConfigurationListViewContextItemDelete";
-            this.ConfigurationListViewContextItemDelete.Size = new System.Drawing.Size(168, 22);
+            this.ConfigurationListViewContextItemDelete.Size = new System.Drawing.Size(180, 22);
             this.ConfigurationListViewContextItemDelete.Text = "&Delete";
             this.ConfigurationListViewContextItemDelete.Click += new System.EventHandler(this.ConfigurationListViewContextItemDelete_Click);
             // 
@@ -181,6 +183,13 @@
             this.AboutButton.Text = "&About";
             this.AboutButton.UseVisualStyleBackColor = true;
             this.AboutButton.Click += new System.EventHandler(this.AboutButton_Click);
+            // 
+            // ConfigurationListViewContextItemRenameStorage
+            // 
+            this.ConfigurationListViewContextItemRenameStorage.Name = "ConfigurationListViewContextItemRenameStorage";
+            this.ConfigurationListViewContextItemRenameStorage.Size = new System.Drawing.Size(180, 22);
+            this.ConfigurationListViewContextItemRenameStorage.Text = "&Rename";
+            this.ConfigurationListViewContextItemRenameStorage.Click += new System.EventHandler(this.ConfigurationListViewContextItemRenameStorage_Click);
             // 
             // OneDriveConfigForm
             // 
@@ -224,5 +233,6 @@
         private System.Windows.Forms.ToolStripMenuItem ConfigurationListViewContextItemOpenFileLocation;
         private System.Windows.Forms.CheckBox UseSystemProxyCheckBox;
         private System.Windows.Forms.ColumnHeader StorageProviderColumn;
+        private System.Windows.Forms.ToolStripMenuItem ConfigurationListViewContextItemRenameStorage;
     }
 }

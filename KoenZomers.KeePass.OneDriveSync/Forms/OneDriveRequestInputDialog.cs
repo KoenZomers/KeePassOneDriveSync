@@ -10,8 +10,8 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         /// </summary>
         public string InputValue
         {
-            get { return FolderNameTextBox.Text; }
-            set { FolderNameTextBox.Text = value; }
+            get { return InputTextBox.Text; }
+            set { InputTextBox.Text = value; }
         }
 
         /// <summary>
@@ -28,11 +28,6 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             InitializeComponent();
         }
 
-        private void FolderNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            OKButton.Enabled = FolderNameTextBox.Text.Length > 0;
-        }
-
         private void OKButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -42,6 +37,22 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         private void CancelButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void InputTextBoxTextBox_TextChanged(object sender, EventArgs e)
+        {
+            OKButton.Enabled = InputTextBox.Text.Length > 0;
+        }
+
+        private void InputTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+        }
+
+        private void InputTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) OKButton_Click(sender, e);
+            if (e.KeyCode == Keys.Escape) Close();
         }
     }
 }

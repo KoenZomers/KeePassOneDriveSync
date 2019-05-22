@@ -45,19 +45,21 @@
             this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(12, 9);
+            this.ExplanationLabel.Location = new System.Drawing.Point(9, 7);
+            this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(564, 36);
+            this.ExplanationLabel.Size = new System.Drawing.Size(423, 29);
             this.ExplanationLabel.TabIndex = 1;
-            this.ExplanationLabel.Text = "Enter the details of the SharePoint 2013, 2016 or Online environment you wish to " +
-    "store the KeePass database on.";
+            this.ExplanationLabel.Text = "Enter the details of the SharePoint 2013, 2016, 2019 or Online environment you wi" +
+    "sh to store the KeePass database on.";
             // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.Location = new System.Drawing.Point(12, 67);
+            this.label1.Location = new System.Drawing.Point(9, 54);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(151, 23);
+            this.label1.Size = new System.Drawing.Size(113, 19);
             this.label1.TabIndex = 2;
             this.label1.Text = "SharePoint site URL:";
             // 
@@ -65,9 +67,10 @@
             // 
             this.SharePointUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SharePointUrlTextBox.Location = new System.Drawing.Point(161, 67);
+            this.SharePointUrlTextBox.Location = new System.Drawing.Point(121, 54);
+            this.SharePointUrlTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SharePointUrlTextBox.Name = "SharePointUrlTextBox";
-            this.SharePointUrlTextBox.Size = new System.Drawing.Size(415, 22);
+            this.SharePointUrlTextBox.Size = new System.Drawing.Size(312, 20);
             this.SharePointUrlTextBox.TabIndex = 0;
             this.SharePointUrlTextBox.TextChanged += new System.EventHandler(this.SharePointUrlTextBox_TextChanged);
             this.SharePointUrlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SharePointUrlTextBox_KeyUp);
@@ -75,9 +78,10 @@
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.Location = new System.Drawing.Point(12, 99);
+            this.label2.Location = new System.Drawing.Point(9, 80);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(151, 23);
+            this.label2.Size = new System.Drawing.Size(113, 19);
             this.label2.TabIndex = 4;
             this.label2.Text = "Client Id:";
             // 
@@ -85,9 +89,10 @@
             // 
             this.ClientIdTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ClientIdTextBox.Location = new System.Drawing.Point(161, 96);
+            this.ClientIdTextBox.Location = new System.Drawing.Point(121, 78);
+            this.ClientIdTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ClientIdTextBox.Name = "ClientIdTextBox";
-            this.ClientIdTextBox.Size = new System.Drawing.Size(415, 22);
+            this.ClientIdTextBox.Size = new System.Drawing.Size(312, 20);
             this.ClientIdTextBox.TabIndex = 1;
             this.ClientIdTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ClientIdTextBox_KeyUp);
             // 
@@ -95,18 +100,20 @@
             // 
             this.ClientSecretTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ClientSecretTextBox.Location = new System.Drawing.Point(161, 124);
+            this.ClientSecretTextBox.Location = new System.Drawing.Point(121, 101);
+            this.ClientSecretTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ClientSecretTextBox.Name = "ClientSecretTextBox";
-            this.ClientSecretTextBox.Size = new System.Drawing.Size(415, 22);
+            this.ClientSecretTextBox.Size = new System.Drawing.Size(312, 20);
             this.ClientSecretTextBox.TabIndex = 2;
             this.ClientSecretTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ClientSecretTextBox_KeyUp);
             // 
             // label3
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.Location = new System.Drawing.Point(12, 127);
+            this.label3.Location = new System.Drawing.Point(9, 103);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(151, 23);
+            this.label3.Size = new System.Drawing.Size(113, 19);
             this.label3.TabIndex = 6;
             this.label3.Text = "Client Secret:";
             // 
@@ -114,10 +121,10 @@
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(427, 161);
-            this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.CancelButton.Location = new System.Drawing.Point(320, 131);
+            this.CancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(149, 35);
+            this.CancelButton.Size = new System.Drawing.Size(112, 28);
             this.CancelButton.TabIndex = 5;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
@@ -127,10 +134,10 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.OKButton.Location = new System.Drawing.Point(272, 161);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.OKButton.Location = new System.Drawing.Point(204, 131);
+            this.OKButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(149, 35);
+            this.OKButton.Size = new System.Drawing.Size(112, 28);
             this.OKButton.TabIndex = 4;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -139,10 +146,10 @@
             // TestButton
             // 
             this.TestButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.TestButton.Location = new System.Drawing.Point(117, 161);
-            this.TestButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TestButton.Location = new System.Drawing.Point(88, 131);
+            this.TestButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TestButton.Name = "TestButton";
-            this.TestButton.Size = new System.Drawing.Size(149, 35);
+            this.TestButton.Size = new System.Drawing.Size(112, 28);
             this.TestButton.TabIndex = 3;
             this.TestButton.Text = "Test Connection";
             this.TestButton.UseVisualStyleBackColor = true;
@@ -151,9 +158,9 @@
             // SharePointCredentialsForm
             // 
             this.AcceptButton = this.OKButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(588, 207);
+            this.ClientSize = new System.Drawing.Size(441, 168);
             this.Controls.Add(this.TestButton);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.CancelButton);
@@ -164,6 +171,7 @@
             this.Controls.Add(this.SharePointUrlTextBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ExplanationLabel);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SharePointCredentialsForm";

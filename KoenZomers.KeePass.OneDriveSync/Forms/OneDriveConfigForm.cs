@@ -84,6 +84,7 @@ namespace KoenZomersKeePassOneDriveSync
             ConfigurationListViewContextItemViewDetails.Enabled = ConfigurationListView.SelectedItems.Count == 1;
             ConfigurationListViewContextItemOpenFileLocation.Enabled = ConfigurationListView.SelectedItems.Count > 0;
             ConfigurationListViewContextItemSyncNow.Enabled = ConfigurationListView.SelectedItems.Count == 1 && !((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag).Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(ConfigurationListView.SelectedItems[0].Text, StringComparison.InvariantCultureIgnoreCase);
+            ConfigurationListViewContextItemRenameStorage.Enabled = ConfigurationListView.SelectedItems.Count == 1;
         }
 
         private void ConfigurationListView_DoubleClick(object sender, EventArgs e)
@@ -119,6 +120,27 @@ namespace KoenZomersKeePassOneDriveSync
             oneDriveConfigDetailsForm.ShowDialog();
 
             LoadConfigurations();
+        }
+
+        private void RenameEntry()
+        {
+            if (ConfigurationListView.SelectedItems.Count != 1) return;
+            var configuration = ((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag);
+
+            var renameItemDialog = new Forms.OneDriveRequestInputDialog
+            {
+                FormTitle = string.Format("Enter new storage name name for {0}", configuration.Value.OneDriveName),
+                InputValue = configuration.Value.OneDriveName
+            };
+            renameItemDialog.ShowDialog(this);
+            if (renameItemDialog.DialogResult != DialogResult.OK) return;
+            if (renameItemDialog.InputValue == configuration.Value.OneDriveName) return;
+
+            configuration.Value.OneDriveName = renameItemDialog.InputValue;
+            Configuration.Save();
+
+            ConfigurationListView.SelectedItems[0].SubItems[1].Text = configuration.Value.OneDriveName;
+            UpdateStatus("Storage Name has been changed");
         }
 
         private async Task SyncNow()
@@ -177,6 +199,10 @@ namespace KoenZomersKeePassOneDriveSync
                 case Keys.F5:
                     LoadConfigurations();
                     break;
+
+                case Keys.F2:
+                    RenameEntry();
+                    break;
             }
         }
 
@@ -190,6 +216,11 @@ namespace KoenZomersKeePassOneDriveSync
                 // Open File Explorer and make it directly jump to the KeePass database if it exists, if not, just open the explorer to the folder
                 Process.Start("explorer.exe", File.Exists(databaseFileLocation) ? string.Concat("/select, ", databaseFileLocation) : Directory.GetParent(databaseFileLocation).FullName);
             }
+        }
+
+        private void ConfigurationListViewContextItemRenameStorage_Click(object sender, EventArgs e)
+        {
+            RenameEntry();
         }
     }
 }

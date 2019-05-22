@@ -41,8 +41,8 @@
     <Reference Include="KeePass">
       <HintPath>C:\Program Files (x86)\KeePass Password Safe 2\KeePass.exe</HintPath>
     </Reference>
-    <Reference Include="KoenZomers.OneDrive.Api, Version=2.3.0.2, Culture=neutral, PublicKeyToken=c94340d84666bdcb, processorArchitecture=MSIL">
-      <HintPath>Packages\KoenZomers.OneDrive.Api.2.3.0.2\lib\net452\KoenZomers.OneDrive.Api.dll</HintPath>
+    <Reference Include="KoenZomers.OneDrive.Api, Version=2.3.0.3, Culture=neutral, PublicKeyToken=c94340d84666bdcb, processorArchitecture=MSIL">
+      <HintPath>Packages\KoenZomers.OneDrive.Api.2.3.0.3\lib\net452\KoenZomers.OneDrive.Api.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>Packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>

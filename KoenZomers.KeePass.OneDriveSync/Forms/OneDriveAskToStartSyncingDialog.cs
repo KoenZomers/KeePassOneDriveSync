@@ -16,6 +16,8 @@ namespace KoenZomersKeePassOneDriveSync
             InitializeComponent();
 
             _configuration = configuration;
+
+            OneDriveDatabasePath.Text = configuration.KeePassDatabase.IOConnectionInfo.Path;
         }
 
         private void OKButton_Click(object sender, EventArgs e)
