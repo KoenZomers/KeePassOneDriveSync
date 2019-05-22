@@ -19,9 +19,9 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 Version 2.0.4.2 - May 22, 2019
 
-- Still was receiving reports on issues uploading larger than 5 MB databases. Did an additional fix hoping for it to have caught all scenarios this time. Discussed in https://github.com/KoenZomers/KeePassOneDriveSync/issues/88.
-- Added option to rename the storage entry on the KeePassOneDriveSync entry using F2 or right click and then choosing Rename. Requested through https://github.com/KoenZomers/KeePassOneDriveSync/issues/91.
-- In the dialog where it asks if you want to sync the database, it will now also show for which database it asks the question. Just in case you would use triggers to open multiple databases at once. Requested through https://github.com/KoenZomers/KeePassOneDriveSync/issues/93.
+- Still was receiving reports on issues uploading larger than 5 MB databases. Did an additional fix hoping for it to have caught all scenarios this time. Discussed in [issue 88](https://github.com/KoenZomers/KeePassOneDriveSync/issues/88).
+- Added option to rename the storage entry on the KeePassOneDriveSync entry using F2 or right click and then choosing Rename. Requested through [issue 91](https://github.com/KoenZomers/KeePassOneDriveSync/issues/91).
+- In the dialog where it asks if you want to sync the database, it will now also show for which database it asks the question. Just in case you would use triggers to open multiple databases at once. Requested through [issue 93](https://github.com/KoenZomers/KeePassOneDriveSync/issues/93).
 
 Version 2.0.4.1 - May 17, 2019
 
