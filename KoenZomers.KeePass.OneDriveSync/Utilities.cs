@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using CredentialManagement;
 using KeePassLib;
@@ -259,6 +260,64 @@ namespace KoenZomersKeePassOneDriveSync
         {
             var refreshToken = keePassDatabase.CustomData.Get("KoenZomers.KeePass.OneDriveSync.RefreshToken");
             return refreshToken;
+        }
+
+        #endregion
+
+        #region DPAPI
+
+        /// <summary>
+        /// Encrypts a Refresh Token using the DPAPI Protect method with current user scope
+        /// </summary>
+        /// <param name="refreshToken">The Refresh Token to encrypt</param>
+        /// <returns>The Base64-encoded encrypted refresh token or NULL if encryption fails</returns>
+        public static string Protect(string refreshToken)
+        {
+            // Token should be plain ASCII text, get raw byte data for encoding
+            var rawToken = Encoding.ASCII.GetBytes(refreshToken);
+
+            try
+            {
+                // Encrypt using DPAPI with user scope, can only be decrypted by currently logged-in user
+                var rawEncryptedToken = ProtectedData.Protect(rawToken, null, DataProtectionScope.CurrentUser);
+
+                // Base64-encode encrypted token for JSON string compatibility
+                var encryptedToken = Convert.ToBase64String(rawEncryptedToken);
+
+                return encryptedToken;
+            }
+            catch (Exception)
+            {
+                // If encryption fails, lose the token
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Decrypt a Refresh Token using the DPAPI Protect method with current user scope
+        /// </summary>
+        /// <param name="encryptedRefreshToken">The encrypted Refresh Token to decrypt, Base64-encoded</param>
+        /// <returns>The decrypted refresh token or NULL if decryption fails</returns>
+        public static string Unprotect(string encryptedRefreshToken)
+        {
+            // Decode Base64-encoded encrypted data
+            var rawEncryptedToken = Convert.FromBase64String(encryptedRefreshToken);
+
+            try
+            {
+                // Decrypt using DPAPI with user scope, only possible if the currently logged-in user is the same as the one who encrypted it
+                var rawToken = ProtectedData.Unprotect(rawEncryptedToken, null, DataProtectionScope.CurrentUser);
+
+                // Get string data from byte array
+                var token = Encoding.ASCII.GetString(rawToken);
+
+                return token;
+            }
+            catch (Exception)
+            {
+                // If decryption fails, lose the token
+                return null;
+            }
         }
 
         #endregion

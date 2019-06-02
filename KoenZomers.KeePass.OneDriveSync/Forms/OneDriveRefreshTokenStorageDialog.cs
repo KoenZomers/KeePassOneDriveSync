@@ -37,7 +37,7 @@ namespace KoenZomersKeePassOneDriveSync
             }
             if (OnDiskRadio.Checked)
             {
-                _configuration.RefreshTokenStorage = OneDriveRefreshTokenStorage.Disk;
+                _configuration.RefreshTokenStorage = OneDriveRefreshTokenStorage.DiskEncrypted;
             }
         }
     }
