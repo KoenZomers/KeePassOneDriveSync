@@ -40,10 +40,9 @@
             this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(9, 7);
-            this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.ExplanationLabel.Location = new System.Drawing.Point(14, 11);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(496, 28);
+            this.ExplanationLabel.Size = new System.Drawing.Size(744, 43);
             this.ExplanationLabel.TabIndex = 0;
             this.ExplanationLabel.Text = "You\'ve successfully authenticated to OneDrive. Where should KeeOneDriveSync store" +
     " the OneDrive Refresh Token so it can keep your local database in sync with its " +
@@ -54,13 +53,10 @@
             this.InKeePassDatabaseRadio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InKeePassDatabaseRadio.AutoSize = true;
-            this.InKeePassDatabaseRadio.Checked = true;
-            this.InKeePassDatabaseRadio.Location = new System.Drawing.Point(12, 48);
-            this.InKeePassDatabaseRadio.Margin = new System.Windows.Forms.Padding(2);
+            this.InKeePassDatabaseRadio.Location = new System.Drawing.Point(18, 76);
             this.InKeePassDatabaseRadio.Name = "InKeePassDatabaseRadio";
-            this.InKeePassDatabaseRadio.Size = new System.Drawing.Size(168, 17);
+            this.InKeePassDatabaseRadio.Size = new System.Drawing.Size(250, 24);
             this.InKeePassDatabaseRadio.TabIndex = 2;
-            this.InKeePassDatabaseRadio.TabStop = true;
             this.InKeePassDatabaseRadio.Text = "In the KeePass database itself";
             this.InKeePassDatabaseRadio.UseVisualStyleBackColor = true;
             // 
@@ -69,11 +65,12 @@
             this.OnDiskRadio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OnDiskRadio.AutoSize = true;
-            this.OnDiskRadio.Location = new System.Drawing.Point(12, 69);
-            this.OnDiskRadio.Margin = new System.Windows.Forms.Padding(2);
+            this.OnDiskRadio.Checked = true;
+            this.OnDiskRadio.Location = new System.Drawing.Point(18, 108);
             this.OnDiskRadio.Name = "OnDiskRadio";
-            this.OnDiskRadio.Size = new System.Drawing.Size(127, 17);
+            this.OnDiskRadio.Size = new System.Drawing.Size(186, 24);
             this.OnDiskRadio.TabIndex = 3;
+            this.OnDiskRadio.TabStop = true;
             this.OnDiskRadio.Text = "On my local computer";
             this.OnDiskRadio.UseVisualStyleBackColor = true;
             // 
@@ -81,10 +78,9 @@
             // 
             this.FinishButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.FinishButton.Location = new System.Drawing.Point(185, 126);
-            this.FinishButton.Margin = new System.Windows.Forms.Padding(2);
+            this.FinishButton.Location = new System.Drawing.Point(278, 194);
             this.FinishButton.Name = "FinishButton";
-            this.FinishButton.Size = new System.Drawing.Size(130, 41);
+            this.FinishButton.Size = new System.Drawing.Size(195, 63);
             this.FinishButton.TabIndex = 5;
             this.FinishButton.Text = "&Finish";
             this.FinishButton.UseVisualStyleBackColor = true;
@@ -95,9 +91,10 @@
             this.HelpMeChooseLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.HelpMeChooseLinkLabel.AutoSize = true;
-            this.HelpMeChooseLinkLabel.Location = new System.Drawing.Point(13, 102);
+            this.HelpMeChooseLinkLabel.Location = new System.Drawing.Point(20, 157);
+            this.HelpMeChooseLinkLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.HelpMeChooseLinkLabel.Name = "HelpMeChooseLinkLabel";
-            this.HelpMeChooseLinkLabel.Size = new System.Drawing.Size(156, 13);
+            this.HelpMeChooseLinkLabel.Size = new System.Drawing.Size(228, 20);
             this.HelpMeChooseLinkLabel.TabIndex = 7;
             this.HelpMeChooseLinkLabel.TabStop = true;
             this.HelpMeChooseLinkLabel.Text = "I have no idea, help me choose";
@@ -107,18 +104,17 @@
             // OneDriveRefreshTokenStorageDialog
             // 
             this.AcceptButton = this.FinishButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(514, 184);
+            this.ClientSize = new System.Drawing.Size(771, 283);
             this.Controls.Add(this.HelpMeChooseLinkLabel);
             this.Controls.Add(this.FinishButton);
             this.Controls.Add(this.OnDiskRadio);
             this.Controls.Add(this.InKeePassDatabaseRadio);
             this.Controls.Add(this.ExplanationLabel);
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(409, 223);
+            this.MinimumSize = new System.Drawing.Size(602, 313);
             this.Name = "OneDriveRefreshTokenStorageDialog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
