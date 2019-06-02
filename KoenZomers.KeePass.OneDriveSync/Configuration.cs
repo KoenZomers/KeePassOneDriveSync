@@ -40,6 +40,11 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// </summary>
         public KeePassLib.PwDatabase KeePassDatabase { get; set; }
 
+        /// <summary>
+        /// Boolean indicating if this database is currently synchronizing
+        /// </summary>
+        public bool IsCurrentlySyncing { get; set; }
+
         #endregion
 
         #region Serializable Properties

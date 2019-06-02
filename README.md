@@ -17,6 +17,11 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.5.0 - June 2, 2019
+
+- Added the ability to synchronize multiple KeePass databases at the same time. So you no longer get an error message if you're trying to sync a database which is not the currently active one. This is particularly useful when you use scripts or plugins to open multiple databases at once. They all should automatically sync now when they open.
+- Added a status message in the status bar or KeePass indicating that the sync is not happening when KeePassOneDriveSync has been set to offline mode so to visualize why a sync is not happening at that time
+
 Version 2.0.4.2 - May 22, 2019
 
 - Still was receiving reports on issues uploading larger than 5 MB databases. Did an additional fix hoping for it to have caught all scenarios this time. Discussed in [issue 88](https://github.com/KoenZomers/KeePassOneDriveSync/issues/88).

@@ -23,6 +23,11 @@
         /// <summary>
         /// Microsoft SharePoint
         /// </summary>
-        SharePoint
+        SharePoint = 3,
+
+        /// <summary>
+        /// Do not sync
+        /// </summary>
+        None = 99
     }
 }

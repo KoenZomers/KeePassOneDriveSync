@@ -78,7 +78,13 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// Boolean to indicate if some process is still running that we need to wait for before we shut down KeePass
         /// </summary>
-        internal static bool IsSomethingStillRunning { get; set; }
+        internal static bool IsSomethingStillRunning
+        {
+            get
+            {
+                return Configuration.PasswordDatabases.Any(db => db.Value.IsCurrentlySyncing);
+            }
+        }
 
         #endregion
 
@@ -209,7 +215,12 @@ namespace KoenZomersKeePassOneDriveSync
             config.KeePassDatabase = fileSavedEventArgs.Database;
 
             // Check if we should sync this database
-            if (config.DoNotSync || !_fileOfflineMenuItem.Checked) return;
+            if (config.DoNotSync) return;
+            if(!_fileOfflineMenuItem.Checked)
+            {
+                Host.MainWindow.SetStatusEx(string.Format("OneDriveSync has been set to offline, skipping sync for database {0}", fileSavedEventArgs.Database.Name));
+                return;
+            }
 
             // Make sure it's not a remote database on i.e. an FTP or website
             if (!fileSavedEventArgs.Database.IOConnectionInfo.IsLocalFile())
@@ -274,7 +285,12 @@ namespace KoenZomersKeePassOneDriveSync
             config.KeePassDatabase = fileOpenedEventArgs.Database;
 
             // Check if we should sync this database
-            if (config.DoNotSync || !fileOpenedEventArgs.Database.IOConnectionInfo.IsLocalFile() || !_fileOfflineMenuItem.Checked) return;
+            if (config.DoNotSync || !fileOpenedEventArgs.Database.IOConnectionInfo.IsLocalFile()) return;
+            if(!_fileOfflineMenuItem.Checked)
+            {
+                Host.MainWindow.SetStatusEx(string.Format("OneDriveSync has been set to offline, skipping sync for database {0}", fileOpenedEventArgs.Database.Name));
+                return;
+            }
 
             // Check if the database configuration of the opened KeePass database is set to retrieve the OneDrive Refresh Token from the KeePass database itself
             if (config.RefreshTokenStorage == OneDriveRefreshTokenStorage.KeePassDatabase && string.IsNullOrEmpty(config.RefreshToken))

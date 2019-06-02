@@ -56,6 +56,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                             errorMessage.Append("cloud storage provider");
                             break;
                     }
+                    errorMessage.AppendLine(string.Format(" for database {0}", databaseConfig.KeePassDatabase.Name));
                     errorMessage.AppendLine(":");
                     errorMessage.AppendLine();
                     errorMessage.AppendLine(e.Message);
@@ -82,10 +83,10 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             {
                 switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
                 {
-                    case CloudStorageType.OneDriveConsumer: updateStatus("Failed to connect to OneDrive"); break;
-                    case CloudStorageType.OneDriveForBusiness: updateStatus("Failed to connect to OneDrive for Business"); break;
-                    case CloudStorageType.MicrosoftGraph: updateStatus("Failed to connect to Microsoft Graph"); break;
-                    default: updateStatus("Failed to connect to cloud service"); break;
+                    case CloudStorageType.OneDriveConsumer: updateStatus(string.Format("Failed to connect to OneDrive for database {0}", databaseConfig.KeePassDatabase.Name)); break;
+                    case CloudStorageType.OneDriveForBusiness: updateStatus(string.Format("Failed to connect to OneDrive for Business for database {0}", databaseConfig.KeePassDatabase.Name)); break;
+                    case CloudStorageType.MicrosoftGraph: updateStatus(string.Format("Failed to connect to Microsoft Graph for database {0}", databaseConfig.KeePassDatabase.Name)); break;
+                    default: updateStatus(string.Format("Failed to connect to cloud service for database {0}", databaseConfig.KeePassDatabase.Name)); break;
                 }
 
                 return false;
@@ -155,7 +156,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
 
                         if (folder == null)
                         {
-                            updateStatus("Unable to download database from OneDrive. Remote path cannot be found.");
+                            updateStatus(string.Format("Unable to download database {0} from OneDrive. Remote path cannot be found.", databaseConfig.KeePassDatabase.Name));
                             return false;
                         }
 
@@ -198,7 +199,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             if (oneDriveItem == null)
             {
                 // KeePass database not found on OneDrive
-                updateStatus("Database does not exist yet on OneDrive, uploading it now");
+                updateStatus(string.Format("Database {0} does not exist yet on OneDrive, uploading it now", databaseConfig.KeePassDatabase.Name));
 
                 OneDriveItem oneDriveFolder;
                 string fileName;
@@ -215,14 +216,14 @@ namespace KoenZomersKeePassOneDriveSync.Providers
 
                 if (oneDriveFolder == null)
                 {
-                    updateStatus("Unable to upload database to OneDrive. Remote path is invalid.");
+                    updateStatus(string.Format("Unable to upload database {0} to OneDrive. Remote path is invalid.", databaseConfig.KeePassDatabase.Name));
                     return false;
                 }
 
                 // Upload the database to OneDrive                
                 var newUploadResult = await oneDriveApi.UploadFileAs(localKeePassDatabasePath, fileName, oneDriveFolder);
 
-                updateStatus(newUploadResult == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to OneDrive");
+                updateStatus(string.Format(newUploadResult == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to OneDrive", databaseConfig.KeePassDatabase.Name));
 
                 databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
                 if (newUploadResult != null)
@@ -241,7 +242,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             if (!forceSync && 
                 oneDriveItem.CTag == databaseConfig.ETag)
             {
-                updateStatus("Databases are in sync");
+                updateStatus(string.Format("Database {0} is in sync", databaseConfig.KeePassDatabase.Name));
 
                 databaseConfig.LastCheckedAt = DateTime.Now;
                 Configuration.Save();
@@ -250,41 +251,41 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             }
 
             // Download the database from OneDrive
-            updateStatus("Downloading KeePass database from OneDrive");
+            updateStatus(string.Format("Downloading KeePass database {0} from OneDrive", databaseConfig.KeePassDatabase.Name));
 
             var temporaryKeePassDatabasePath = System.IO.Path.GetTempFileName();
             var downloadSuccessful = await oneDriveApi.DownloadItemAndSaveAs(oneDriveItem, temporaryKeePassDatabasePath);
 
             if (!downloadSuccessful)
             {
-                updateStatus("Failed to download the KeePass database from OneDrive");
+                updateStatus(string.Format("Failed to download the KeePass database {0} from OneDrive", databaseConfig.KeePassDatabase.Name));
 
                 return false;
             }
 
             // Sync database
-            updateStatus("KeePass database downloaded, going to sync");
+            updateStatus(string.Format("KeePass database {0} downloaded, going to sync", databaseConfig.KeePassDatabase.Name));
 
             // Ensure the database that needs to be synced is still the database currently selected in KeePass to avoid merging the downloaded database with the wrong database in KeePass
-            if ((!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath) ||
-                (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length) != localKeePassDatabasePath))
-            {                
-                updateStatus("Failed to sync. Please don't switch to another database before done.");
+            //if ((!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath) ||
+            //    (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length) != localKeePassDatabasePath))
+            //{                
+            //    updateStatus("Failed to sync. Please don't switch to another database before done.");
 
-                return false;
-            }
+            //    return false;
+            //}
 
             // Merge the downloaded database with the currently open KeePass database
             var syncSuccessful = KeePassDatabase.MergeDatabases(databaseConfig, temporaryKeePassDatabasePath);
 
             if (!syncSuccessful)
             {
-                updateStatus("Failed to synchronize the KeePass databases");
+                updateStatus(string.Format("Failed to synchronize the KeePass database {0}", databaseConfig.KeePassDatabase.Name));
                 return false;
             }
 
             // Upload the synced database
-            updateStatus("Uploading the new KeePass database to OneDrive");
+            updateStatus(string.Format("Uploading the new KeePass database {0} to OneDrive", databaseConfig.KeePassDatabase.Name));
 
             OneDriveItem uploadResult = null;
 
@@ -331,13 +332,13 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                         throw;
                     }
 
-                    updateStatus(string.Format("Uploading the new KeePass database to OneDrive (attempt {0})", uploadAttempts + 1));
+                    updateStatus(string.Format("Uploading the new KeePass database {1} to OneDrive (attempt {0})", uploadAttempts + 1, databaseConfig.KeePassDatabase.Name));
                 }
             }
 
             if (uploadResult == null)
             {
-                updateStatus("Failed to upload the KeePass database");
+                updateStatus(string.Format("Failed to upload the KeePass database {0}", databaseConfig.KeePassDatabase.Name));
                 return false;
             }
 
@@ -454,9 +455,9 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 // KeePass database not found on OneDrive
                 switch (databaseConfig.CloudStorageType.Value)
                 {
-                    case CloudStorageType.OneDriveConsumer: updateStatus("Unable to find the database on your OneDrive"); break;
-                    case CloudStorageType.OneDriveForBusiness: updateStatus("Unable to find the database on your OneDrive for Business"); break;
-                    case CloudStorageType.MicrosoftGraph: updateStatus("Unable to find the database through Microsoft Graph"); break;
+                    case CloudStorageType.OneDriveConsumer: updateStatus(string.Format("Unable to find the database {0} on your OneDrive", databaseConfig.KeePassDatabase.Name)); break;
+                    case CloudStorageType.OneDriveForBusiness: updateStatus(string.Format("Unable to find the database {0} on your OneDrive for Business", databaseConfig.KeePassDatabase.Name)); break;
+                    case CloudStorageType.MicrosoftGraph: updateStatus(string.Format("Unable to find the database {0} through Microsoft Graph", databaseConfig.KeePassDatabase.Name)); break;
                     default: updateStatus("Failed to connect to cloud service"); break;
                 }
                 return null;
@@ -474,12 +475,12 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             var saveFileDialogResult = saveFiledialog.ShowDialog();
             if (saveFileDialogResult != DialogResult.OK || string.IsNullOrEmpty(saveFiledialog.FileName))
             {
-                updateStatus("Open KeePass database from OneDrive aborted");
+                updateStatus(string.Format("Open KeePass database {0} from OneDrive aborted", databaseConfig.KeePassDatabase.Name));
                 return null;
             }
 
             // Download the KeePass database to the selected location
-            updateStatus("Downloading KeePass database");
+            updateStatus(string.Format("Downloading KeePass database {0}", databaseConfig.KeePassDatabase.Name));
             await oneDriveApi.DownloadItemAndSaveAs(oneDriveItem, saveFiledialog.FileName);
 
             // The ETag changes with every request of the item so we use the CTag instead which only changes when the file changes

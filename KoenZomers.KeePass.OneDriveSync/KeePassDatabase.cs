@@ -85,42 +85,51 @@ namespace KoenZomersKeePassOneDriveSync
         {
             try
             {
-                // If something is already syncing, abort this attempt. This happens when the Import saves the resulting KeePass database. That by itself triggers another sync which doesn't have to go through the sync process as it just regards the temp database.
-                if (KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning)
-                {
-                    UpdateStatus("A synchronization is already in progress");
-                    return;
-                }
-
-                // Set flag to block exiting KeePass until this is done
-                KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = true;
-
-                UpdateStatus("Starting database synchronization");
-
                 // Retrieve the KeePassOneDriveSync settings
                 if (databaseConfig == null)
                 {
                     databaseConfig = Configuration.GetPasswordDatabaseConfiguration(localKeePassDatabasePath);
                 }
 
+                // If this database is already syncing, abort this attempt. This happens when the Import saves the resulting KeePass database. That by itself triggers another sync which doesn't have to go through the sync process as it just regards the temp database.
+                if (databaseConfig.IsCurrentlySyncing)
+                {
+                    UpdateStatus(string.Format("A synchronization is already in progress for database {0}", databaseConfig.KeePassDatabase.Name));
+                    return;
+                }                
+
                 // Check if this database explicitly does not allow to be synced with OneDrive and if syncing is enabled on this database
                 if (databaseConfig.DoNotSync || !databaseConfig.SyncingEnabled)
                 {
-                    // Set flag to allow exiting KeePass
-                    KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = false;
-
                     return;
                 }
+
+                UpdateStatus(string.Format("Starting database synchronization for database {0}", databaseConfig.KeePassDatabase.Name));
+                databaseConfig.IsCurrentlySyncing = true;
 
                 // Check if the current database is synced with OneDrive
                 if (string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath) && string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && string.IsNullOrEmpty(databaseConfig.RemoteFileName))
                 {
                     var cloudStorageType = AskIfShouldBeSynced(databaseConfig);
-
+                    
                     if(!cloudStorageType.HasValue)
                     {
-                        // Set flag to allow exiting KeePass
-                        KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = false;
+                        // No decission has been taken whether to sync the database or not
+                        // Set flag to indicate that the database is currently not syncing
+                        databaseConfig.IsCurrentlySyncing = false;
+
+                        UpdateStatus(string.Format("Canceled database synchronization for database {0}", databaseConfig.KeePassDatabase.Name));
+
+                        return;
+                    }
+                    if (cloudStorageType.Value == CloudStorageType.None)
+                    {
+                        // Database should not be synchronized
+                        // Set flag to indicate that the database is currently not syncing
+                        databaseConfig.IsCurrentlySyncing = false;
+
+                        UpdateStatus(string.Format("Database {0} will not be synchronized", databaseConfig.KeePassDatabase.Name));
+
                         return;
                     }
 
@@ -147,14 +156,14 @@ namespace KoenZomersKeePassOneDriveSync
                 if(!syncSuccessful)
                 {
                     // Set flag to allow exiting KeePass
-                    KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = false;
+                    databaseConfig.IsCurrentlySyncing = false;
                     return;
                 }
 
                 // Update the KeePass UI so it shows the new entries
                 KoenZomersKeePassOneDriveSyncExt.Host.MainWindow.UpdateUI(false, null, true, null, true, null, false);
 
-                updateStatus("KeePass database has successfully been synchronized and uploaded");
+                updateStatus(string.Format("KeePass database {0} has successfully been synchronized and uploaded", databaseConfig.KeePassDatabase.Name));
 
                 databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
                 //databaseConfig.ETag = uploadResult.ETag;
@@ -164,11 +173,11 @@ namespace KoenZomersKeePassOneDriveSync
             }
             catch(Exception e)
             {
-                updateStatus(string.Concat("Failed to sync database: ", e.Message));
+                updateStatus(string.Format("Failed to sync database {0}: {1}", databaseConfig.KeePassDatabase.Name, e.Message));
             }
 
             // Set flag to allow exiting KeePass
-            KoenZomersKeePassOneDriveSyncExt.IsSomethingStillRunning = false;
+            databaseConfig.IsCurrentlySyncing = false;
         }
 
         /// <summary>
@@ -186,8 +195,14 @@ namespace KoenZomersKeePassOneDriveSync
                 return null;
             }
 
+            if(databaseConfig.DoNotSync)
+            {
+                // Don't sync and don't ask again has been chosen
+                return CloudStorageType.None;
+            }
+
             // Ask which cloud service to connect to
-            var oneDriveCloudTypeForm = new OneDriveCloudTypeForm { ExplanationText = "Choose the cloud service you wish to store the KeePass database on:" };
+            var oneDriveCloudTypeForm = new OneDriveCloudTypeForm { ExplanationText = string.Format("Choose the cloud service you wish to store the KeePass database {0} on:", databaseConfig.KeePassDatabase.Name) };
             if (oneDriveCloudTypeForm.ShowDialog() != DialogResult.OK)
             {
                 // Dialog has been canceled. Return NULL to indicate no choice has been made.
@@ -212,7 +227,7 @@ namespace KoenZomersKeePassOneDriveSync
             databaseConfig.SyncingEnabled = false;
 
             // Import the current database with the downloaded database. Import causes a one way sync, syncing would try to update both ends which won't work for OneDrive.
-            var importSuccessful = ImportUtil.Import(KoenZomersKeePassOneDriveSyncExt.Host.Database, formatter, new[] { connectionInfo }, true, KoenZomersKeePassOneDriveSyncExt.Host.MainWindow, false, KoenZomersKeePassOneDriveSyncExt.Host.MainWindow);
+            var importSuccessful = ImportUtil.Import(databaseConfig.KeePassDatabase, formatter, new[] { connectionInfo }, true, KoenZomersKeePassOneDriveSyncExt.Host.MainWindow, false, KoenZomersKeePassOneDriveSyncExt.Host.MainWindow);
 
             // Enable syncing of this database again
             databaseConfig.SyncingEnabled = true;

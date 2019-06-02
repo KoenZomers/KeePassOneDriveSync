@@ -34,7 +34,7 @@ namespace KoenZomersKeePassOneDriveSync
             {
                 _configuration.DoNotSync = NoNeverAskAgainRadio.Checked;
                 Configuration.Save();
-                DialogResult = DialogResult.Cancel;
+                DialogResult = DialogResult.OK;
             }
 
             Close();
