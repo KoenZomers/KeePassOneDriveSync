@@ -28,29 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.FolderNameTextBox = new System.Windows.Forms.TextBox();
+            this.InputTextBox = new System.Windows.Forms.TextBox();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // FolderNameTextBox
+            // InputTextBox
             // 
-            this.FolderNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.InputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.FolderNameTextBox.Location = new System.Drawing.Point(12, 12);
-            this.FolderNameTextBox.Name = "FolderNameTextBox";
-            this.FolderNameTextBox.Size = new System.Drawing.Size(400, 22);
-            this.FolderNameTextBox.TabIndex = 0;
-            this.FolderNameTextBox.TextChanged += new System.EventHandler(this.FolderNameTextBox_TextChanged);
+            this.InputTextBox.Location = new System.Drawing.Point(9, 10);
+            this.InputTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.InputTextBox.Name = "InputTextBox";
+            this.InputTextBox.Size = new System.Drawing.Size(301, 20);
+            this.InputTextBox.TabIndex = 0;
+            this.InputTextBox.TextChanged += new System.EventHandler(this.InputTextBoxTextBox_TextChanged);
+            this.InputTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.InputTextBox_KeyPress);
+            this.InputTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.InputTextBox_KeyUp);
             // 
             // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(316, 51);
-            this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.CancelButton.Location = new System.Drawing.Point(237, 41);
+            this.CancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(96, 39);
+            this.CancelButton.Size = new System.Drawing.Size(72, 32);
             this.CancelButton.TabIndex = 7;
             this.CancelButton.Text = "&Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
@@ -59,30 +62,30 @@
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OKButton.Enabled = false;
-            this.OKButton.Location = new System.Drawing.Point(213, 51);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.OKButton.Location = new System.Drawing.Point(160, 41);
+            this.OKButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(96, 39);
+            this.OKButton.Size = new System.Drawing.Size(72, 32);
             this.OKButton.TabIndex = 6;
             this.OKButton.Text = "&OK";
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // OneDriveNewFolderDialog
+            // OneDriveRequestInputDialog
             // 
-            this.AcceptButton = this.OKButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
-            this.ClientSize = new System.Drawing.Size(424, 101);
+            this.ClientSize = new System.Drawing.Size(318, 82);
             this.ControlBox = false;
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
-            this.Controls.Add(this.FolderNameTextBox);
+            this.Controls.Add(this.InputTextBox);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "OneDriveNewFolderDialog";
+            this.Name = "OneDriveRequestInputDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -91,7 +94,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox FolderNameTextBox;
+        private System.Windows.Forms.TextBox InputTextBox;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
     }

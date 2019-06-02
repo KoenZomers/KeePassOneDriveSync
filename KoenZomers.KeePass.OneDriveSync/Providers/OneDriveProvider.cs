@@ -287,30 +287,51 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             updateStatus("Uploading the new KeePass database to OneDrive");
 
             OneDriveItem uploadResult = null;
-            if(!string.IsNullOrEmpty(databaseConfig.RemoteItemId))
+
+            // Due to some issues with the OneDrive API throwing random errors for no reason, retry a few times to upload the database before it will be considered failed
+            for (var uploadAttempts = 1; uploadAttempts <= 5; uploadAttempts++)
             {
-                // Database is already present on OneDrive, update it
-                uploadResult = await oneDriveApi.UpdateFile(temporaryKeePassDatabasePath, oneDriveItem);
-            }
-            else
-            {
-                // Database resides on the user its own OneDrive in the root folder
-                if (oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase))
+                try
                 {
-                    uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetDriveRoot());
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
+                    if (!string.IsNullOrEmpty(databaseConfig.RemoteItemId))
                     {
-                        // Database resides on the user its own OneDrive in a folder
-                        uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
+                        // Database is already present on OneDrive, update it
+                        uploadResult = await oneDriveApi.UpdateFile(temporaryKeePassDatabasePath, oneDriveItem);
                     }
                     else
                     {
-                        // Database resides on another OneDrive
-                        uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemFromDriveById(oneDriveItem.ParentReference.Id, oneDriveItem.ParentReference.DriveId));
+                        // Database resides on the user its own OneDrive in the root folder
+                        if (oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetDriveRoot());
+                        }
+                        else
+                        {
+                            if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
+                            {
+                                // Database resides on the user its own OneDrive in a folder
+                                uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
+                            }
+                            else
+                            {
+                                // Database resides on another OneDrive
+                                uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemFromDriveById(oneDriveItem.ParentReference.Id, oneDriveItem.ParentReference.DriveId));
+                            }
+                        }
                     }
+
+                    // Uploading succeeded
+                    break;
+                }
+                catch (ArgumentNullException e)
+                {
+                    // If any other exception than the one we will get if the OneDrive API throws the random error, then ensure we pass on the exception instead of swallowing it
+                    if (e.ParamName != "oneDriveUploadSession")
+                    {
+                        throw;
+                    }
+
+                    updateStatus(string.Format("Uploading the new KeePass database to OneDrive (attempt {0})", uploadAttempts + 1));
                 }
             }
 
