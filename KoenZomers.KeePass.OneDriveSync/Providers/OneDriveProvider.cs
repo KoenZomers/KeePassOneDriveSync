@@ -153,6 +153,12 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                         // Get the folder in which the KeePass file resides
                         folder = await oneDriveApi.GetItemById(databaseConfig.RemoteFolderId);
 
+                        if (folder == null)
+                        {
+                            updateStatus("Unable to download database from OneDrive. Remote path cannot be found.");
+                            return false;
+                        }
+
                         // Locate the KeePass file in the folder
                         oneDriveItem = await oneDriveApi.GetItemInFolder(folder, databaseConfig.RemoteFileName);
                     }
