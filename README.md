@@ -17,6 +17,10 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.6.0 - June 2, 2019
+
+- The option to store the Refresh Token on disk will now use a Windows encryption library to store the Refresh Token encrypted to the KeePass config file instead of plain text as it was before. Only if being logged on with the same Windows user, the Refresh Token can be decrypted from the KeePass config file on disk. So even on machines having multiple users, this will be safe and keep other users on the same machine from getting their hands on the Refresh Token. Huge thanks to [Kjetil Limkjær](https://github.com/klimkjar) for adding this great functionality through his [Pull Request](https://github.com/KoenZomers/KeePassOneDriveSync/pull/89). Discussed in [issue 84](https://github.com/KoenZomers/KeePassOneDriveSync/issues/84). If you were using the store Refresh Token on disk option already, with this version it will automatically become encrypted if you open your KeePass database.
+
 Version 2.0.5.1 - June 2, 2019
 
 - Unblocked the KeePassOneDriveSync config dialog for allowing syncing of multiple databases by multi selecting them. The database needs to be open before it can be synced, but it doesn't have to be the active one.
