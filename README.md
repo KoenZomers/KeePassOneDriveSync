@@ -17,6 +17,13 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.5.1 - June 2, 2019
+
+- Unblocked the KeePassOneDriveSync config dialog for allowing syncing of multiple databases by multi selecting them. The database needs to be open before it can be synced, but it doesn't have to be the active one.
+- Unblocked the KeePassOneDriveSync config details dialog for allowing syncing of a database even if it's not the currently active one. The database needs to be open before it can be synced, but it doesn't have to be the active one.
+- Added that when you press CTRL+A in the KeePassOneDriveSync config dialog, that it selects all entries. Handy for bulk operations.
+- Allowed multi select for renaming multiple databases at once in the KeePassOneDriveSync config dialog using F2 or right click -> Rename
+
 Version 2.0.5.0 - June 2, 2019
 
 - Added the ability to synchronize multiple KeePass databases at the same time. So you no longer get an error message if you're trying to sync a database which is not the currently active one. This is particularly useful when you use scripts or plugins to open multiple databases at once. They all should automatically sync now when they open.

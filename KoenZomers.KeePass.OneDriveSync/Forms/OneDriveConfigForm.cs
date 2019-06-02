@@ -83,8 +83,8 @@ namespace KoenZomersKeePassOneDriveSync
             ConfigurationListViewContextItemDelete.Enabled = ConfigurationListView.SelectedItems.Count > 0;
             ConfigurationListViewContextItemViewDetails.Enabled = ConfigurationListView.SelectedItems.Count == 1;
             ConfigurationListViewContextItemOpenFileLocation.Enabled = ConfigurationListView.SelectedItems.Count > 0;
-            ConfigurationListViewContextItemSyncNow.Enabled = ConfigurationListView.SelectedItems.Count == 1 && !((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag).Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(ConfigurationListView.SelectedItems[0].Text, StringComparison.InvariantCultureIgnoreCase);
-            ConfigurationListViewContextItemRenameStorage.Enabled = ConfigurationListView.SelectedItems.Count == 1;
+            ConfigurationListViewContextItemSyncNow.Enabled = ConfigurationListView.SelectedItems.Count > 0;
+            ConfigurationListViewContextItemRenameStorage.Enabled = ConfigurationListView.SelectedItems.Count > 0;
         }
 
         private void ConfigurationListView_DoubleClick(object sender, EventArgs e)
@@ -124,42 +124,55 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void RenameEntry()
         {
-            if (ConfigurationListView.SelectedItems.Count != 1) return;
-            var configuration = ((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag);
+            if (ConfigurationListView.SelectedItems.Count == 0) return;
+
+            var selectedDatabaseText = ConfigurationListView.SelectedItems.Count == 1 ? ((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag).Value.OneDriveName : string.Format("the selected {0} databases", ConfigurationListView.SelectedItems.Count);
 
             var renameItemDialog = new Forms.OneDriveRequestInputDialog
             {
-                FormTitle = string.Format("Enter new storage name name for {0}", configuration.Value.OneDriveName),
-                InputValue = configuration.Value.OneDriveName
+                FormTitle = string.Format("Enter new storage name name for {0}", selectedDatabaseText),
+                InputValue = ConfigurationListView.SelectedItems.Count == 1 ? ((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag).Value.OneDriveName : string.Empty
             };
             renameItemDialog.ShowDialog(this);
             if (renameItemDialog.DialogResult != DialogResult.OK) return;
-            if (renameItemDialog.InputValue == configuration.Value.OneDriveName) return;
 
-            configuration.Value.OneDriveName = renameItemDialog.InputValue;
+            // Loop through all selected items to update their names
+            foreach (ListViewItem configurationItem in ConfigurationListView.SelectedItems)
+            {
+                var configuration = (KeyValuePair<string, Configuration>)configurationItem.Tag;
+                
+                // Update the name in the configuration
+                configuration.Value.OneDriveName = renameItemDialog.InputValue;
+
+                // Update the name in the configuration list shown on the screen
+                configurationItem.SubItems[1].Text = renameItemDialog.InputValue;
+            }
             Configuration.Save();
 
-            ConfigurationListView.SelectedItems[0].SubItems[1].Text = configuration.Value.OneDriveName;
             UpdateStatus("Storage Name has been changed");
         }
 
         private async Task SyncNow()
         {
-            // Only allow syncing if the database is not marked with the DoNotSync flag
-            var configuration = ((KeyValuePair<string, Configuration>)ConfigurationListView.SelectedItems[0].Tag);
-            if (configuration.Value.DoNotSync)
+            foreach (ListViewItem selectedItem in ConfigurationListView.SelectedItems)
             {
-                return;
-            }
+                // Only allow syncing if the database is not marked with the DoNotSync flag
+                var configuration = (KeyValuePair<string, Configuration>)selectedItem.Tag;
+                if (configuration.Value.DoNotSync)
+                {
+                    return;
+                }
+                
+                // Ensure the database to be synced is currently open
+                if(configuration.Value.KeePassDatabase == null)
+                {
+                    UpdateStatus(string.Format("Database {0} must be open before it can sync", configuration.Key));
+                    continue;
+                }
 
-            // Only allow syncing if the currently opened database is the one we're trying to sync
-            if(!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(ConfigurationListView.SelectedItems[0].Text, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return;
+                UpdateStatus(string.Format("Synchronizing database {0}", configuration.Value.KeePassDatabase.Name));
+                await KeePassDatabase.SyncDatabase(selectedItem.Text, UpdateStatus, true, configuration.Value);
             }
-            
-            UpdateStatus("Synchronizing");
-            await KeePassDatabase.SyncDatabase(ConfigurationListView.SelectedItems[0].Text, UpdateStatus, true, configuration.Value);
         }
 
         private async void ConfigurationListViewContextItemSyncNow_Click(object sender, EventArgs e)
@@ -185,7 +198,7 @@ namespace KoenZomersKeePassOneDriveSync
         }
 
         private void ConfigurationListView_KeyUp(object sender, KeyEventArgs e)
-        {
+        {            
             switch (e.KeyCode)
             {
                 case Keys.Enter:
@@ -202,6 +215,16 @@ namespace KoenZomersKeePassOneDriveSync
 
                 case Keys.F2:
                     RenameEntry();
+                    break;
+
+                case Keys.A:
+                    if(e.Control)
+                    {
+                        foreach(ListViewItem item in ConfigurationListView.Items)
+                        {
+                            item.Selected = true;
+                        }
+                    }
                     break;
             }
         }

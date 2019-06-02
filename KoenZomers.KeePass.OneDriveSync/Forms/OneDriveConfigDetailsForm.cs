@@ -45,7 +45,7 @@ namespace KoenZomersKeePassOneDriveSync
             LastVerifiedTextbox.Text = _configuration.Value.LastCheckedAt.HasValue ? _configuration.Value.LastCheckedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never verified yet";
             LocalKeePassFileHashTextbox.Text = _configuration.Value.LocalFileHash;
             OneDriveEtagTextBox.Text = _configuration.Value.ETag;
-            ForceSyncButton.Enabled = !_configuration.Value.DoNotSync && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Equals(_configuration.Key, StringComparison.InvariantCultureIgnoreCase);
+            ForceSyncButton.Enabled = !_configuration.Value.DoNotSync;
             ItemIdTextBox.Text = _configuration.Value.RemoteItemId;
             FolderIdTextBox.Text = _configuration.Value.RemoteFolderId;
             DriveIdTextBox.Text = _configuration.Value.RemoteDriveId;
@@ -68,6 +68,12 @@ namespace KoenZomersKeePassOneDriveSync
 
         private async void ForceSyncButton_Click(object sender, EventArgs e)
         {
+            if(_configuration.Value.KeePassDatabase == null)
+            {
+                UpdateStatus("Database must be open before it can synchronize");
+                return;
+            }
+
             UpdateStatus("Synchronizing");
             await KeePassDatabase.SyncDatabase(_configuration.Key, UpdateStatus, true, null);
             ShowConfiguration();
