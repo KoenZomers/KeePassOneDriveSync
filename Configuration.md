@@ -52,10 +52,10 @@ Starting with version 2.0.0.0 it is now also possible to sync your KeePass datab
 13. Go into KeePass and open the existing database you wish to store in SharePoint or create a new KeePass database
 14. Hit CTRL+S or click the Save button to start the KeePassOneDriveSync configuration wizard.
 15. Click OK on the "Start syncing with OneDrive" dialog to continue. Make sure that "Yes" is the selected option.
-16. On the "Choose Cloud Platform" dialog, go to the second tab called "SharePoint" and click on the banner "SharePoint"
+16. On the "Choose Cloud Platform" dialog, go to the second tab called "SharePoint" and click on the banner "SharePoint" ![](./Screenshots/SaveToSharePoint.png)
 17. In the "Provide SharePoint details" dialog, enter the Client Id and Client Secret from step 7 above and as the SharePoint Site URL, enter the URL to the site where you want to store the KeePass database, i.e. https://tenant.sharepoint.com/sites/keepass. This should be the same site you used at step 1 above.
-18. Click on "Test Connection" to see if all steps above have been performed correctly. It should show "Connection successful". If it doesn't, go over the steps above again and see what you could have missed. If it does, continue with the next step.
-19. Using the location picker that appears, select the location where you want to store the KeePass database and click "OK"
+18. Click on "Test Connection" to see if all steps above have been performed correctly. It should show "Connection successful". If it doesn't, go over the steps above again and see what you could have missed. If it does, continue with the next step. ![](./Screenshots/SharePointConnectionTest.png)
+19. Using the location picker that appears, select the location where you want to store the KeePass database and click "OK" ![](./Screenshots/SelectSharePontLocation.png)
 20. Your KeePass database will now upload to SharePoint and will stay in sync with that location and the version on your device.
 
 Few notes:
