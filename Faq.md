@@ -44,4 +44,4 @@ If you have downloaded the PLGX and placed it inside the KeePass/Plugins folder 
 
 ### Other questions ###
 
-Feel free to e-mail me at koen@zomers.eu
+Feel free to e-mail me at koen@zomers.eu or [open a GitHub Issue](https://github.com/KoenZomers/KeePassOneDriveSync/issues/new)
