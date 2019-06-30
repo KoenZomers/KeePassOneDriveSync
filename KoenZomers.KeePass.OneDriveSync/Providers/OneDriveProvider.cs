@@ -266,26 +266,29 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             // Sync database
             updateStatus(string.Format("KeePass database {0} downloaded, going to sync", databaseConfig.KeePassDatabase.Name));
 
-            // Ensure the database that needs to be synced is still the database currently selected in KeePass to avoid merging the downloaded database with the wrong database in KeePass
-            //if ((!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath) ||
-            //    (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length) != localKeePassDatabasePath))
-            //{                
-            //    updateStatus("Failed to sync. Please don't switch to another database before done.");
-
-            //    return false;
-            //}
-
             // Merge the downloaded database with the currently open KeePass database
             var syncSuccessful = KeePassDatabase.MergeDatabases(databaseConfig, temporaryKeePassDatabasePath);
 
+            string localDatabaseToUpload;
             if (!syncSuccessful)
             {
                 updateStatus(string.Format("Failed to synchronize the KeePass database {0}", databaseConfig.KeePassDatabase.Name));
-                return false;
-            }
 
-            // Upload the synced database
-            updateStatus(string.Format("Uploading the new KeePass database {0} to OneDrive", databaseConfig.KeePassDatabase.Name));
+                var confirm = MessageBox.Show("Unable to merge the databases. Did you just change the master password for this KeePass database? If so and you would like to OVERWRITE the KeePass database stored on your OneDrive with your local database, select Yes, otherwise select No.", "Confirm overwriting your KeePass database", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                if (confirm != DialogResult.Yes) return false;
+
+                // Upload the local database
+                localDatabaseToUpload = databaseConfig.KeePassDatabase.IOConnectionInfo.Path;
+
+                updateStatus(string.Format("Uploading the local KeePass database {0} to OneDrive", databaseConfig.KeePassDatabase.Name));
+            }
+            else
+            {
+                // Upload the synced database
+                localDatabaseToUpload = temporaryKeePassDatabasePath;
+
+                updateStatus(string.Format("Uploading the merged KeePass database {0} to OneDrive", databaseConfig.KeePassDatabase.Name));
+            }
 
             OneDriveItem uploadResult = null;
 
@@ -297,26 +300,26 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     if (!string.IsNullOrEmpty(databaseConfig.RemoteItemId))
                     {
                         // Database is already present on OneDrive, update it
-                        uploadResult = await oneDriveApi.UpdateFile(temporaryKeePassDatabasePath, oneDriveItem);
+                        uploadResult = await oneDriveApi.UpdateFile(localDatabaseToUpload, oneDriveItem);
                     }
                     else
                     {
                         // Database resides on the user its own OneDrive in the root folder
                         if (oneDriveItem.ParentReference.Path.Equals("/drive/root:", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetDriveRoot());
+                            uploadResult = await oneDriveApi.UploadFileAs(localDatabaseToUpload, oneDriveItem.Name, await oneDriveApi.GetDriveRoot());
                         }
                         else
                         {
                             if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId))
                             {
                                 // Database resides on the user its own OneDrive in a folder
-                                uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
+                                uploadResult = await oneDriveApi.UploadFileAs(localDatabaseToUpload, oneDriveItem.Name, await oneDriveApi.GetItemById(oneDriveItem.ParentReference.Id));
                             }
                             else
                             {
                                 // Database resides on another OneDrive
-                                uploadResult = await oneDriveApi.UploadFileAs(temporaryKeePassDatabasePath, oneDriveItem.Name, await oneDriveApi.GetItemFromDriveById(oneDriveItem.ParentReference.Id, oneDriveItem.ParentReference.DriveId));
+                                uploadResult = await oneDriveApi.UploadFileAs(localDatabaseToUpload, oneDriveItem.Name, await oneDriveApi.GetItemFromDriveById(oneDriveItem.ParentReference.Id, oneDriveItem.ParentReference.DriveId));
                             }
                         }
                     }

@@ -17,6 +17,11 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.7.0 - June 30, 2019
+
+- The ability to synchronize multiple databases at once in version 2.0.5.0 didn't work yet for KeePass databases stored on SharePoint. Fixed that in this version, syncing multiple databases at once works for OneDrive Consumer, OneDrive for Business and SharePoint hosted databases now.
+- When merging the local KeePass database with the one stored online fails, after the standard error dialog, a new dialog will now show offering you the option to overwrite the online KeePass database with your local version. Typically when this merging fails, it is because you changed the master key of the KeePass database locally. Before you had to manually upload the KeePass database again first before you could sync it again. By answering Yes to this new dialog, this manual step is no longer required and the plugin will do this for you automatically. Requested in [issue 74](https://github.com/KoenZomers/KeePassOneDriveSync/issues/74).
+
 Version 2.0.6.0 - June 2, 2019
 
 - The option to store the Refresh Token on disk will now use a Windows encryption library to store the Refresh Token encrypted to the KeePass config file instead of plain text as it was before. Only if being logged on with the same Windows user, the Refresh Token can be decrypted from the KeePass config file on disk. So even on machines having multiple users, this will be safe and keep other users on the same machine from getting their hands on the Refresh Token. Huge thanks to [Kjetil Limkjær](https://github.com/klimkjar) for adding this great functionality through his [Pull Request](https://github.com/KoenZomers/KeePassOneDriveSync/pull/89). Discussed in [issue 84](https://github.com/KoenZomers/KeePassOneDriveSync/issues/84). If you were using the store Refresh Token on disk option already, with this version it will automatically become encrypted if you open your KeePass database.

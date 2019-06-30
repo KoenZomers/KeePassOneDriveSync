@@ -60,12 +60,12 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 if (eTag == null)
                 {
                     // KeePass database not found on OneDrive
-                    updateStatus("Database does not exist yet on SharePoint, uploading it now");
+                    updateStatus(string.Format("Database {0} does not exist yet on SharePoint, uploading it now", databaseConfig.KeePassDatabase.Name));
 
                     // Upload the database to SharePoint
                     eTag = await UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient);
 
-                    updateStatus(eTag == null ? "Failed to upload the KeePass database" : "Successfully uploaded the new KeePass database to SharePoint");
+                    updateStatus(string.Format(eTag == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
                     databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
                     if (eTag != null)
@@ -81,7 +81,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 // Use the ETag from the SharePoint item to compare it against the local database config etag to see if the content has changed
                 if (!forceSync && eTag == databaseConfig.ETag)
                 {
-                    updateStatus("Databases are in sync");
+                    updateStatus(string.Format("KeePass database {0} is in sync", databaseConfig.KeePassDatabase.Name));
 
                     databaseConfig.LastCheckedAt = DateTime.Now;
                     Configuration.Save();
@@ -90,48 +90,46 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 }
 
                 // Download the database from SharePoint
-                updateStatus("Downloading KeePass database from SharePoint");
+                updateStatus(string.Format("Downloading KeePass database {0} from SharePoint", databaseConfig.KeePassDatabase.Name));
 
                 var temporaryKeePassDatabasePath = System.IO.Path.GetTempFileName();
                 var downloadSuccessful = DownloadFile(temporaryKeePassDatabasePath, serverRelativeSharePointUrl, httpClient);
 
                 if (! await downloadSuccessful)
                 {
-                    updateStatus("Failed to download the KeePass database from SharePoint");
+                    updateStatus(string.Format("Failed to download the KeePass database {0} from SharePoint", databaseConfig.KeePassDatabase.Name));
 
                     return false;
                 }
 
                 // Sync database
-                updateStatus("KeePass database downloaded, going to sync");
-
-                // Ensure the database that needs to be synced is still the database currently selected in KeePass to avoid merging the downloaded database with the wrong database in KeePass
-                if ((!KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path != localKeePassDatabasePath) ||
-                    (KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory) && KoenZomersKeePassOneDriveSyncExt.Host.Database.IOConnectionInfo.Path.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length) != localKeePassDatabasePath))
-                {
-                    updateStatus("Failed to sync. Please don't switch to another database before done.");
-
-                    return false;
-                }
+                updateStatus(string.Format("KeePass database {0} downloaded, going to sync", databaseConfig.KeePassDatabase.Name));
 
                 // Merge the downloaded database with the currently open KeePass database
                 var syncSuccessful = KeePassDatabase.MergeDatabases(databaseConfig, temporaryKeePassDatabasePath);
 
+                string localDatabaseToUpload;
                 if (!syncSuccessful)
                 {
-                    updateStatus("Failed to synchronize the KeePass databases");
-                    return false;
+                    updateStatus(string.Format("Failed to synchronize the KeePass database {0}", databaseConfig.KeePassDatabase.Name));
+
+                    var confirm = MessageBox.Show(string.Format("Unable to merge the KeePass database {0}. Did you just change the master password for this KeePass database? If so and you would like to OVERWRITE the KeePass database stored on your SharePoint site with your local database, select Yes, otherwise select No.", databaseConfig.KeePassDatabase.Name), "Confirm overwriting your KeePass database", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    if (confirm != DialogResult.Yes) return false;
+
+                    // Upload the local database
+                    updateStatus(string.Format("Uploading the local KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
+
+                    localDatabaseToUpload = databaseConfig.KeePassDatabase.IOConnectionInfo.Path;
                 }
-
-                // Upload the synced database
-                updateStatus("Uploading the new KeePass database to SharePoint");
-
-                var uploadResult = await UploadFile(temporaryKeePassDatabasePath, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient);
-                if (uploadResult == null)
+                else
                 {
-                    updateStatus("Failed to upload the KeePass database");
-                    return false;
+                    // Upload the synced database
+                    updateStatus(string.Format("Uploading the merged KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
+
+                    localDatabaseToUpload = temporaryKeePassDatabasePath;
                 }
+
+                var uploadResult = await UploadFile(localDatabaseToUpload, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient);
 
                 // Delete the temporary database used for merging
                 System.IO.File.Delete(temporaryKeePassDatabasePath);
