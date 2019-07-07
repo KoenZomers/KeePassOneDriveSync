@@ -63,7 +63,7 @@ namespace KoenZomersKeePassOneDriveSync
             databaseConfig.LastSyncedAt = DateTime.Now;
             databaseConfig.LastCheckedAt = DateTime.Now;
 
-            Configuration.PasswordDatabases[localKeePassDatabasePath] = databaseConfig;
+            databaseConfig = Configuration.GetPasswordDatabaseConfiguration(localKeePassDatabasePath);
             Configuration.Save();
 
             UpdateStatus("Opening KeePass database");

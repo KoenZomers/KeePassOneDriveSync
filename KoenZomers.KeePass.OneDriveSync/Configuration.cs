@@ -28,7 +28,7 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// <summary>
         /// Dictionary with configuration settings for all password databases. Key is the local database path, value is the configuration belonging to it.
         /// </summary>
-        public static IDictionary<string, Configuration> PasswordDatabases = new Dictionary<string, Configuration>();
+        private static IDictionary<string, Configuration> PasswordDatabases = new Dictionary<string, Configuration>();
 
         /// <summary>
         /// Boolean indicating if the syncing of this database is allowed
@@ -144,6 +144,8 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// <returns>KeePassOneDriveSync settings for the provided database</returns>
         public static Configuration GetPasswordDatabaseConfiguration(string localPasswordDatabasePath)
         {
+            localPasswordDatabasePath = NormalizePath(localPasswordDatabasePath);
+
             if (!PasswordDatabases.ContainsKey(localPasswordDatabasePath))
             {
                 PasswordDatabases.Add(new KeyValuePair<string, Configuration>(localPasswordDatabasePath, new Configuration()));
@@ -261,6 +263,8 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// <param name="localPasswordDatabasePath">Full local path to a KeePass database of which to delete the configuration</param>
         public static void DeleteConfig(string localPasswordDatabasePath)
         {
+            localPasswordDatabasePath = NormalizePath(localPasswordDatabasePath);
+
             // Verify if we have configuration available of a KeePass database stored on the provided full local path
             if (!PasswordDatabases.ContainsKey(localPasswordDatabasePath)) return;
             
@@ -289,6 +293,41 @@ namespace KoenZomers.KeePass.OneDriveSync
 
             // Initiate a save to write the results
             Save();
+        }
+
+        /// <summary>
+        /// Get the full PasswordDatabases object list, used by the configuration form
+        /// </summary>
+        /// <returns></returns>
+        internal static IDictionary<string, Configuration> GetAllConfigurations()
+        {
+            return PasswordDatabases;
+        }
+
+        /// <summary>
+        /// Boolean to indicate if some process is still running that we need to wait for before we shut down KeePass
+        /// </summary>
+        internal static bool IsSomethingStillRunning
+        {
+            get
+            {
+                return PasswordDatabases.Any(db => db.Value.IsCurrentlySyncing);
+            }
+        }
+
+        /// <summary>
+        /// Normalize database path - if located under the KeePass folder (portable install) then use a relative path, otherwise use the original (absolute)
+        /// </summary>
+        /// <param name="localPasswordDatabasePath"></param>
+        /// <returns></returns>
+        private static string NormalizePath(string localPasswordDatabasePath)
+        {
+            if (localPasswordDatabasePath.StartsWith(AppDomain.CurrentDomain.BaseDirectory))
+            {
+                localPasswordDatabasePath = localPasswordDatabasePath.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length);
+            }
+
+            return localPasswordDatabasePath;
         }
 
         #endregion
