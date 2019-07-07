@@ -478,12 +478,12 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             var saveFileDialogResult = saveFiledialog.ShowDialog();
             if (saveFileDialogResult != DialogResult.OK || string.IsNullOrEmpty(saveFiledialog.FileName))
             {
-                updateStatus(string.Format("Open KeePass database {0} from OneDrive aborted", databaseConfig.KeePassDatabase.Name));
+                updateStatus("Open KeePass database from OneDrive aborted");
                 return null;
             }
 
             // Download the KeePass database to the selected location
-            updateStatus(string.Format("Downloading KeePass database {0}", databaseConfig.KeePassDatabase.Name));
+            updateStatus("Downloading KeePass database");
             await oneDriveApi.DownloadItemAndSaveAs(oneDriveItem, saveFiledialog.FileName);
 
             // The ETag changes with every request of the item so we use the CTag instead which only changes when the file changes

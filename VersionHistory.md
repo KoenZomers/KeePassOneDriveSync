@@ -2,6 +2,23 @@
 
 ## Version History
 
+Version 2.0.2.5 - February 18, 2019
+
+- Enabled TLS 1.2 to be used to resolve [issue 72](https://github.com/KoenZomers/KeePassOneDriveSync/issues/72)
+
+Version 2.0.2.4 - February 18, 2019
+
+ - Enabled surpressing of JavaScript errors in the Internet Explorer navigation window which is used to sign in to OneDrive. The error that was shown did no harm and confused end users. This resolves [issue 76](https://github.com/KoenZomers/KeePassOneDriveSync/issues/76) .
+
+Version 2.0.2.3 - February 18, 2019
+
+- Updated the OneDrive API package to version 2.1.2.1 in which the issue with OneDrive for Business as addressed here has been fixed [issue 78](https://github.com/KoenZomers/KeePassOneDriveSync/issues/78)
+
+Version 2.0.2.2 - February 17, 2019
+
+- Fixed the instance not set to a reference of an object error reported by several people typically when still using the OneDriveConsumer Storage Provider
+- I've stopped publishing the DLL files from now on to avoid confusion. I believe everyone is using the PLGX already anyway. If not and you have a good reason to use the DLLs over the PLGX, let me know.
+
 Version 2.0.2.1 - October 16, 2018
 
 - Fixed incorrect spelling of equivalent in the where to store the token dialog. Thanks to [awesomecogs](https://github.com/awesomecogs) for [reporting it](https://github.com/KoenZomers/KeePassOneDriveSync/issues/64)!
