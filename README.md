@@ -17,6 +17,10 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.7.2 - July 19, 2019
+
+- Added column to the overview with all your KeePassOneDriveSync configurations which shows the date and time at which the sync last checked if there were updates and if so, synced them. This allows you to easily see at one glance if your local KeePass databases are up to date.
+
 Version 2.0.7.1 - July 7, 2019
 
 - Resolved an issue with using the Open from OneDrive option as reported in [issue 100](https://github.com/KoenZomers/KeePassOneDriveSync/issues/100)

@@ -27,7 +27,7 @@ namespace KoenZomersKeePassOneDriveSync
         {
             InitializeComponent();
 
-            _resetStatusTimer = new Timer {Enabled = false, Interval = 5000 };
+            _resetStatusTimer = new Timer {Enabled = false, Interval = 10000 };
             _resetStatusTimer.Tick += (sender, args) => { _resetStatusTimer.Enabled = false; UpdateStatus(_defaultStatus); };
         }
 
@@ -61,6 +61,7 @@ namespace KoenZomersKeePassOneDriveSync
                 configurationItem.ToolTipText = doesDatabaseExistLocally ? "Database has been found" : isRemoteDatabase ? "Database is a remote database which is not supported" : "Database has not been found"; 
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "OneDrive", Text = configuration.Value.DoNotSync ? "Not synced" : configuration.Value.OneDriveName });
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "CloudStorage", Text = configuration.Value.CloudStorageType.HasValue ? configuration.Value.CloudStorageType.Value.ToString() : configuration.Value.DoNotSync ? "Not in cloud" : CloudStorageType.OneDriveConsumer.ToString() });
+                configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "LastSynced", Text = configuration.Value.LastCheckedAt.HasValue ? configuration.Value.LastCheckedAt.Value.ToString("ddd d MMMM yyyy HH:mm:ss") : "Never" });
                 ConfigurationListView.Items.Add(configurationItem);
             }
 
@@ -172,7 +173,10 @@ namespace KoenZomersKeePassOneDriveSync
 
                 UpdateStatus(string.Format("Synchronizing database {0}", configuration.Value.KeePassDatabase.Name));
                 await KeePassDatabase.SyncDatabase(selectedItem.Text, UpdateStatus, true, configuration.Value);
-            }
+
+                // Update the Last Synced column
+                selectedItem.SubItems[3].Text = configuration.Value.LastCheckedAt.HasValue ? configuration.Value.LastCheckedAt.Value.ToString("ddd d MMMM yyyy HH:mm:ss") : "Never";
+        }
         }
 
         private async void ConfigurationListViewContextItemSyncNow_Click(object sender, EventArgs e)
