@@ -25,7 +25,7 @@ Version 2.0.7.3 - July 24, 2019
   - Enabled the Up button to go back to the Shared with me overview if going into a shared folder
   - Fixed an issue with uploading a new KeePass database to a subfolder of a shared location on SharePoint where it would store it in the shared location instead of the subfolder
 
-These fixes make it a lot easier now to store your KeePass database on a SharePoint Online (Team)site. See .. for instructions on how to do so.
+These fixes make it a lot easier now to store your KeePass database on a SharePoint Online (Team)site. See [this article](https://github.com/KoenZomers/KeePassOneDriveSync/blob/master/Configuration.md#sharepoint-online-teamsites) for instructions on how to do so.
 
 Version 2.0.7.2 - July 19, 2019
 
