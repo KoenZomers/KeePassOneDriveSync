@@ -113,11 +113,11 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
                 if (oneDriveItem.Size > 0)
                 {
-                    oneDriveListViewItem.ToolTipText += string.Format("Size: {0} bytes", oneDriveItem.Size) + Environment.NewLine;
+                    oneDriveListViewItem.ToolTipText += string.Format("Size: {0:n0} bytes", oneDriveItem.Size) + Environment.NewLine;
                 }
                 else if (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Size > 0)
                 {
-                    oneDriveListViewItem.ToolTipText += string.Format("Size: {0} bytes", oneDriveItem.RemoteItem.Size) + Environment.NewLine;
+                    oneDriveListViewItem.ToolTipText += string.Format("Size: {0:n0} bytes", oneDriveItem.RemoteItem.Size) + Environment.NewLine;
                 }
                 if (oneDriveItem.CreatedDateTime != null)
                 {
@@ -181,11 +181,11 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                     }
                     if (oneDriveItem.Size > 0)
                     {
-                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0} bytes", oneDriveItem.Size);
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0:n0} bytes", oneDriveItem.Size);
                     }
                     else if(oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Size > 0)
                     {
-                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0} bytes", oneDriveItem.RemoteItem.Size);
+                        oneDriveListViewItem.ToolTipText += Environment.NewLine + string.Format("Size: {0:n0} bytes", oneDriveItem.RemoteItem.Size);
                     }
                     if (oneDriveItem.CreatedDateTime != null)
                     {
@@ -202,12 +202,13 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             else
             {
                 // Parent folder provided, get its children
-                var itemCollection = await _oneDriveApi.GetAllChildrenFromDriveByFolderId(parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference.DriveId : parentItem.ParentReference.DriveId, parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference != null ? string.IsNullOrEmpty(parentItem.RemoteItem.ParentReference.Id) ? parentItem.RemoteItem.Id : parentItem.RemoteItem.ParentReference.Id : parentItem.RemoteItem.Id : parentItem.Id);
+                var itemCollection = await _oneDriveApi.GetAllChildrenFromDriveByFolderId(parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference.DriveId : parentItem.ParentReference.DriveId, 
+                                                                                          parentItem.RemoteItem != null ? parentItem.RemoteItem.ParentReference != null ? string.IsNullOrEmpty(parentItem.RemoteItem.ParentReference.Id) || parentItem.RemoteItem.Folder != null ? parentItem.RemoteItem.Id : parentItem.RemoteItem.ParentReference.Id : parentItem.RemoteItem.Id : parentItem.Id);
 
                 SharedWithMeUpButton.Tag = parentItem.Name == "root" || parentItem.ParentReference == null || parentItem.ParentReference.Id == null || (parentItem.ParentReference.Path != null && parentItem.ParentReference.Path.EndsWith("root:")) ? null : await _oneDriveApi.GetItemFromDriveById(parentItem.ParentReference.Id, parentItem.ParentReference.DriveId);
                 CurrentSharedWithMeOneDriveItem = parentItem;
                 GoToSharedWithMeRootTtoolStripMenuItem.Enabled = true;
-                SharedWithMeUpButton.Enabled = CurrentSharedWithMeOneDriveItem.ParentReference != null;
+                SharedWithMeUpButton.Enabled = true;
 
                 if (CurrentSharedWithMeOneDriveItem.ParentReference != null && CurrentSharedWithMeOneDriveItem.ParentReference.Path != null)
                 {

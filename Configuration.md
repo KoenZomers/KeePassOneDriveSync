@@ -26,6 +26,32 @@ If you're using a HTTP proxy to communicate with the internet, configure the HTT
 
 Starting with version 2.0.0.0 an option has been added under the File menu to temporarily mark the KeeOneDriveSync plugin for offline mode. This means no attempts will be made to synchronize the database after opening or saving it. This setting is purposely not retained after restarting KeePass. It could be useful if your connection isn't ideal for syncing and you have to make a lot of changes. Note that offline mode goes for all KeePass databases you may have open. If you wish to manually sync one even though you're in offline mode, just open the KeePass database, go to Tools -> KeeOneDriveSync Options -> right click on database to sync -> Sync Now.
 
+## SharePoint Online (Team)sites
+
+If you want to store your KeePass database on a SharePoint Online (Team)site, the easiest way to do so is to follow these steps.
+
+### If you already have your KeePass database uploaded to SharePoint Online
+
+1. With your internet browser go to the SharePoint Online site and into the document library where you have stored the KeePass database
+2. Right click on the KeePass database and choose Share
+3. Choose "Specific people" and check "Allow editing"
+4. Enter the e-mail address(es) of the people you want to share it with. If you just want to share it with yourself, enter your own e-mail address, even if you already have rights to the KeePass database. This sharing is required for it to show up under "Shared with me" in the KeePass OneDriveSync plugin.
+5. In KeePass use Open -> Open from OneDrive -> Microsoft Graph -> log in with your Office 365 account -> in the file picker choose the "Shared with me" tab -> it should show your KeePass database -> click on it and open it
+
+### If you still only have your KeePass database locally and would like to upload it to SharePoint Online
+
+1. With your internet browser go to the SharePoint Online site and into the document library where you want to store the KeePass database. 
+2. Create a folder in which you want to store the KeePass database. Storing it in the root of a document library is not easily possible for now.
+3. Right click on the folder you just created and choose Share
+4. Choose "Specific people" and check "Allow editing"
+5. Enter the e-mail address(es) of the people you want to share it with. If you just want to share it with yourself, enter your own e-mail address, even if you already have rights to the folder. This sharing is required for it to show up under "Shared with me" in the KeePass OneDriveSync plugin.
+6. In KeePass open the KeePass database you have locally and would like to upload to the SharePoint Online site
+7. Hit CTRL+S to initiate the KeePass OneDriveSync dialog to sync it
+8. Choose the Microsoft Graph option and log in with your Office 365 account
+9. In the file picker choose the "Shared with me" tab
+10. It should show the folder you shared with yourself at step 3, double click on it to go in there
+11. Save the database as you wish and it will be uploaded to the SharePoint Online site and stay in sync with that location
+
 ## SharePoint 2013, 2016, 2019 and SharePoint Online support
 
 Starting with version 2.0.0.0 it is now also possible to sync your KeePass database with SharePoint. As the Microsoft Graph API support for SharePoint is still very limited and I wanted to support on premises farms as well, I've chosen to implement SharePoint REST API calls with Low Trust oAuth to access SharePoint. This makes it fully asynchronous, support the KeePass proxy configuration and very little data traffic will be used. This also means you will manually have to set up the oAuth token and your SharePoint farm needs to support the Low Trust (ACS) oAuth scenario for SharePoint. You can set up an oAuth token only if you're a site collection administrator of the SharePoint site where you want to store the KeePass database. If you are, then follow these steps to set up the token:

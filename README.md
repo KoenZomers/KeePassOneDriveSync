@@ -17,6 +17,16 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.7.3 - July 24, 2019
+
+- Various fixes around using "Shared with me" with Graph API
+  - Fixed [issue 55](https://github.com/KoenZomers/KeePassOneDriveSync/issues/55)
+  - Added decimal seperator to the file size in the tooltip balloons when hovering over files
+  - Enabled the Up button to go back to the Shared with me overview if going into a shared folder
+  - Fixed an issue with uploading a new KeePass database to a subfolder of a shared location on SharePoint where it would store it in the shared location instead of the subfolder
+
+These fixes make it a lot easier now to store your KeePass database on a SharePoint Online (Team)site. See .. for instructions on how to do so.
+
 Version 2.0.7.2 - July 19, 2019
 
 - Added column to the overview with all your KeePassOneDriveSync configurations which shows the date and time at which the sync last checked if there were updates and if so, synced them. This allows you to easily see at one glance if your local KeePass databases are up to date.
