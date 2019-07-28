@@ -75,16 +75,6 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         private ToolStripMenuItem _fileOfflineMenuItem;
 
-        /// <summary>
-        /// Boolean to indicate if some process is still running that we need to wait for before we shut down KeePass
-        /// </summary>
-        internal static bool IsSomethingStillRunning
-        {
-            get
-            {
-                return Configuration.PasswordDatabases.Any(db => db.Value.IsCurrentlySyncing);
-            }
-        }
 
         #endregion
 
@@ -183,7 +173,7 @@ namespace KoenZomersKeePassOneDriveSync
         private void OnKeePassDatabaseClosing(object sender, FileClosingEventArgs e)
         {
             // Check if there's still a process running that we need to wait for before allowing KeePass to terminate
-            if (IsSomethingStillRunning)
+            if (Configuration.IsSomethingStillRunning)
             {
                 Host.MainWindow.SetStatusEx("Waiting for OneDriveSync to complete...");
 
@@ -194,7 +184,7 @@ namespace KoenZomersKeePassOneDriveSync
                 {
                     System.Threading.Thread.Sleep(1);
                     Application.DoEvents();
-                } while (IsSomethingStillRunning && DateTime.Now < waitUntil);
+                } while (Configuration.IsSomethingStillRunning && DateTime.Now < waitUntil);
             }
         }
 
@@ -204,12 +194,6 @@ namespace KoenZomersKeePassOneDriveSync
         private async void MainWindowOnFileSaved(object sender, FileSavedEventArgs fileSavedEventArgs)
         {
             var databasePath = fileSavedEventArgs.Database.IOConnectionInfo.Path;
-
-            // If the database is located under the folder from where KeePass runs, use a relative path instead of the absolute path
-            if (fileSavedEventArgs.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory))
-            {
-                databasePath = databasePath.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length);
-            }
 
             var config = Configuration.GetPasswordDatabaseConfiguration(databasePath);
             config.KeePassDatabase = fileSavedEventArgs.Database;
@@ -273,12 +257,6 @@ namespace KoenZomersKeePassOneDriveSync
         private async void OnKeePassDatabaseOpened(object sender, FileOpenedEventArgs fileOpenedEventArgs)
         {
             var databasePath = fileOpenedEventArgs.Database.IOConnectionInfo.Path;            
-
-            // If the database is located under the folder from where KeePass runs, use a relative path instead of the absolute path
-            if (fileOpenedEventArgs.Database.IOConnectionInfo.Path.StartsWith(AppDomain.CurrentDomain.BaseDirectory))
-            {
-                databasePath = databasePath.Remove(0, AppDomain.CurrentDomain.BaseDirectory.Length);
-            }
 
             // Add the KeePass database instance to the already available configuration
             var config = Configuration.GetPasswordDatabaseConfiguration(databasePath);

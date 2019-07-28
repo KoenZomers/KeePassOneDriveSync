@@ -46,7 +46,7 @@ namespace KoenZomersKeePassOneDriveSync
             // Clear the existing items
             ConfigurationListView.Items.Clear();
 
-            var configurations = Configuration.PasswordDatabases;
+            var configurations = Configuration.GetAllConfigurations();
 
             foreach (var configuration in configurations)
             {
