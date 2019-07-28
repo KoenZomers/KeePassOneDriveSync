@@ -4,8 +4,6 @@ using KeePass.Forms;
 using KeePass.Plugins;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
-using System.Threading.Tasks;
-using System.Linq;
 
 namespace KoenZomersKeePassOneDriveSync
 {

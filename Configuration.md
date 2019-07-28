@@ -12,9 +12,23 @@ In this configuration window you can right click on an entry to get a context me
 
 I.e. you can choose to delete configuration of KeePass databases you no longer want to synchronize (keyboard shortcut DEL). You can also force a synchronization to happen or view the underlying details of a synchronization as to which OneDrive it is being synced to and to which folder.
 
-You can also choose to view more details on the configuration kept for a KeePass database synchronization (keyboard shortcut ENTER).
+You can also choose to view more details on the configuration kept for a KeePass database synchronization (keyboard shortcut F1).
 
 ![](./Screenshots/ConfigurationDetails.png)
+
+A complete listing of the available keyboard and mouse shortcuts on this screen:
+ 
+- F1: Opens the sync details screen. Only works when one KeePass database is selected.
+- F2: Allows renaming of the storage name for the KeePass database(s) you have selected
+- F4: Starts syncing the selected entries, if those databases are currently open in KeePass
+- F5: Refreshes the list with configuration entries
+- F7: Open the local file locations of the KeePass database(s) you have selected
+- F8: Open the selected KeePass database(s) in KeePass (new feature)
+- DEL: Remove the KeePass OneDriveSync configuration entries for the selected KeePass database(s). It will not remove the KeePass database itself, just the KeePass OneDriveSync configuration for it.
+- CTRL+A: Select all KeePass databases
+- CTRL+SHIFT+A: Select all KeePass databases that no longer exist locally (red colored background)
+- CTRL+Click: Select another KeePass database
+- SHIFT+Click: Select all KeePass databases between the currently selected one and the one you're clicking on
 
 ## HTTP Proxies
 
@@ -25,6 +39,8 @@ If you're using a HTTP proxy to communicate with the internet, configure the HTT
 ## Offline mode
 
 Starting with version 2.0.0.0 an option has been added under the File menu to temporarily mark the KeeOneDriveSync plugin for offline mode. This means no attempts will be made to synchronize the database after opening or saving it. This setting is purposely not retained after restarting KeePass. It could be useful if your connection isn't ideal for syncing and you have to make a lot of changes. Note that offline mode goes for all KeePass databases you may have open. If you wish to manually sync one even though you're in offline mode, just open the KeePass database, go to Tools -> KeeOneDriveSync Options -> right click on database to sync -> Sync Now.
+
+![](./Screenshots/OfflineMode.png)
 
 ## SharePoint Online (Team)sites
 
@@ -87,7 +103,7 @@ Starting with version 2.0.0.0 it is now also possible to sync your KeePass datab
 Few notes:
 - You only need to perform these steps once
 - Unlimited users can use this Client Id  / Client Secret token to sync the KeePass database
-- The Client Id / Client Secret gives write access to the entire document library you have chosen at step 12, so treat the client id and client secret as credentials and keep them safe.
+- The Client Id / Client Secret gives write access to the entire document library you have chosen at step 19, so treat the client id and client secret as credentials and keep them safe.
 - Low Trust OAuth tokens expire automatically after 1 year. Instructions on how to [renew the token can be found here](https://docs.microsoft.com/en-us/sharepoint/dev/sp-add-ins/replace-an-expiring-client-secret-in-a-sharepoint-add-in). These steps allow you to extend the validity of the token with at most 3 years. If you find these steps too complex, you can also just repeat the step above to generate a new Client Id / Client Secret which will be valid for a year again.
 - If you believe the Client Id / Client Secret have been compromised by someone that shouldn't have access, you can simply revoke the oAuth trust by going to -sharepoint site collection URL-/_layouts/appprincipals.aspx and click on the black X in front of the token you wish to revoke. It will show up using the name you've provided at step 3.
 

@@ -318,8 +318,8 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// <summary>
         /// Normalize database path - if located under the KeePass folder (portable install) then use a relative path, otherwise use the original (absolute)
         /// </summary>
-        /// <param name="localPasswordDatabasePath"></param>
-        /// <returns></returns>
+        /// <param name="localPasswordDatabasePath">Full path to a KeePass database</param>
+        /// <returns>If the path resides under the folder where KeePass runs from, it will return a relative path, otherwise the full path will be returned</returns>
         private static string NormalizePath(string localPasswordDatabasePath)
         {
             if (localPasswordDatabasePath.StartsWith(AppDomain.CurrentDomain.BaseDirectory))

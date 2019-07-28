@@ -17,6 +17,24 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.8.0 - July 28, 2019
+
+- Merged [Pull Request 102](https://github.com/KoenZomers/KeePassOneDriveSync/pull/102) which should solve some issues around relative paths when using KeePass portable. Thanks to [jfurtner](https://github.com/jfurtner) for his contribution!
+- Added & changed shortcut keys to the right click menu option in the KeePass OneDriveSync config screen
+  - Enter no longer opens the sync details screen as it was interfearing with some functions, use F1 instead
+  - F1: Opens the sync details screen. Only works when one KeePass database is selected.
+  - F2: Allows renaming of the storage name for the KeePass database(s) you have selected
+  - F4: Starts syncing the selected entries, if those databases are currently open in KeePass
+  - F5: Refreshes the list with configuration entries
+  - F7: Open the local file locations of the KeePass database(s) you have selected
+  - F8: Open the selected KeePass database(s) in KeePass (new feature)
+  - DEL: Remove the KeePass OneDriveSync configuration entries for the selected KeePass database(s). It will not remove the KeePass database itself, just the KeePass OneDriveSync configuration for it.
+  - CTRL+A: Select all KeePass databases
+  - CTRL+SHIFT+A: Select all KeePass databases that no longer exist locally (red colored background)
+  - CTRL+Click: Select another KeePass database
+  - SHIFT+Click: Select all KeePass databases between the currently selected one and the one you're clicking on
+  - Use the right click menu to select all KeePass databases that haven't synced in either the last 24 hours, last week, last 2 weeks or last month
+
 Version 2.0.7.3 - July 24, 2019
 
 - Various fixes around using "Shared with me" with Graph API

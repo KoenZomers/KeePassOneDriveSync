@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KeePassLib.Serialization;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
 
@@ -61,7 +62,7 @@ namespace KoenZomersKeePassOneDriveSync
                 configurationItem.ToolTipText = doesDatabaseExistLocally ? "Database has been found" : isRemoteDatabase ? "Database is a remote database which is not supported" : "Database has not been found"; 
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "OneDrive", Text = configuration.Value.DoNotSync ? "Not synced" : configuration.Value.OneDriveName });
                 configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "CloudStorage", Text = configuration.Value.CloudStorageType.HasValue ? configuration.Value.CloudStorageType.Value.ToString() : configuration.Value.DoNotSync ? "Not in cloud" : CloudStorageType.OneDriveConsumer.ToString() });
-                configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "LastSynced", Text = configuration.Value.LastCheckedAt.HasValue ? configuration.Value.LastCheckedAt.Value.ToString("ddd d MMMM yyyy HH:mm:ss") : "Never" });
+                configurationItem.SubItems.Add(new ListViewItem.ListViewSubItem { Name = "LastSynced", Text = configuration.Value.LastCheckedAt.HasValue ? configuration.Value.LastCheckedAt.Value.ToString("ddd d MMMM yyyy HH:mm:ss") : "Never", Tag = configuration.Value.LastCheckedAt.HasValue ? (DateTime?) configuration.Value.LastCheckedAt.Value : null });
                 ConfigurationListView.Items.Add(configurationItem);
             }
 
@@ -86,6 +87,7 @@ namespace KoenZomersKeePassOneDriveSync
             ConfigurationListViewContextItemOpenFileLocation.Enabled = ConfigurationListView.SelectedItems.Count > 0;
             ConfigurationListViewContextItemSyncNow.Enabled = ConfigurationListView.SelectedItems.Count > 0;
             ConfigurationListViewContextItemRenameStorage.Enabled = ConfigurationListView.SelectedItems.Count > 0;
+            ConfigurationListViewContextItemOpenDatabase.Enabled = ConfigurationListView.SelectedItems.Count > 0;
         }
 
         private void ConfigurationListView_DoubleClick(object sender, EventArgs e)
@@ -176,7 +178,8 @@ namespace KoenZomersKeePassOneDriveSync
 
                 // Update the Last Synced column
                 selectedItem.SubItems[3].Text = configuration.Value.LastCheckedAt.HasValue ? configuration.Value.LastCheckedAt.Value.ToString("ddd d MMMM yyyy HH:mm:ss") : "Never";
-        }
+                selectedItem.SubItems[3].Tag = configuration.Value.LastCheckedAt.HasValue ? (DateTime?) configuration.Value.LastCheckedAt.Value : null;
+            }
         }
 
         private async void ConfigurationListViewContextItemSyncNow_Click(object sender, EventArgs e)
@@ -202,35 +205,8 @@ namespace KoenZomersKeePassOneDriveSync
         }
 
         private void ConfigurationListView_KeyUp(object sender, KeyEventArgs e)
-        {            
-            switch (e.KeyCode)
-            {
-                case Keys.Enter:
-                    ViewDetails();
-                    break;
+        {
 
-                case Keys.Delete:
-                    DeleteItem();
-                    break;
-
-                case Keys.F5:
-                    LoadConfigurations();
-                    break;
-
-                case Keys.F2:
-                    RenameEntry();
-                    break;
-
-                case Keys.A:
-                    if(e.Control)
-                    {
-                        foreach(ListViewItem item in ConfigurationListView.Items)
-                        {
-                            item.Selected = true;
-                        }
-                    }
-                    break;
-            }
         }
 
         private void ConfigurationListViewContextItemOpenFileLocation_Click(object sender, EventArgs e)
@@ -248,6 +224,76 @@ namespace KoenZomersKeePassOneDriveSync
         private void ConfigurationListViewContextItemRenameStorage_Click(object sender, EventArgs e)
         {
             RenameEntry();
+        }
+
+        private void ConfigurationListViewContextItemOpenDatabase_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem selectedItem in ConfigurationListView.SelectedItems)
+            {
+                // Get the full local path of the selected KeePass database configuration
+                var databaseFileLocation = ((KeyValuePair<string, Configuration>)selectedItem.Tag).Key;
+
+                // Open the KeePass database
+                var databaseFile = IOConnectionInfo.FromPath(databaseFileLocation);
+                KoenZomersKeePassOneDriveSyncExt.Host.MainWindow.OpenDatabase(databaseFile, null, false);
+            }
+        }
+
+        private void ConfigurationListViewContextItemRefresh_Click(object sender, EventArgs e)
+        {
+            LoadConfigurations();
+        }
+
+        private void ConfigurationListViewContextItemSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in ConfigurationListView.Items)
+            {
+                item.Selected = true;
+            }
+        }
+
+        private void ConfigurationListViewContextItemSelectNotAvailableLocally_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in ConfigurationListView.Items)
+            {
+                item.Selected = item.BackColor == Color.Red;
+            }
+        }
+
+        private void ConfigurationListViewContextItemSelectNotSynced24Hours_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in ConfigurationListView.Items)
+            {
+                var lastChecked = item.SubItems[3].Tag as DateTime?;
+                item.Selected = !lastChecked.HasValue || lastChecked.Value.AddHours(24) < DateTime.Now;
+            }
+        }
+
+        private void ConfigurationListViewContextItemSelectNotSyncedWeek_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in ConfigurationListView.Items)
+            {
+                var lastChecked = item.SubItems[3].Tag as DateTime?;
+                item.Selected = !lastChecked.HasValue || lastChecked.Value.AddDays(7) < DateTime.Now;
+            }
+        }
+
+        private void ConfigurationListViewContextItemSelectNotSynced2Weeks_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in ConfigurationListView.Items)
+            {
+                var lastChecked = item.SubItems[3].Tag as DateTime?;
+                item.Selected = !lastChecked.HasValue || lastChecked.Value.AddDays(14) < DateTime.Now;
+            }
+        }
+
+        private void ConfigurationListViewContextItemSelectNotSyncedMonth_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in ConfigurationListView.Items)
+            {
+                var lastChecked = item.SubItems[3].Tag as DateTime?;
+                item.Selected = !lastChecked.HasValue || lastChecked.Value.AddMonths(1) < DateTime.Now;
+            }
         }
     }
 }
