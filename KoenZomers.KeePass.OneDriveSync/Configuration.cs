@@ -141,7 +141,7 @@ namespace KoenZomers.KeePass.OneDriveSync
         /// Gets the KeePass database configuration for KeePassOneDriveSync for the KeePass database of which the local path is provided
         /// </summary>
         /// <param name="localPasswordDatabasePath">Full path to where the KeePass database resides locally</param>
-        /// <returns>KeePassOneDriveSync settings for the provided database</returns>
+        /// <returns>KeePassOneDriveSync settings for the provided database. If no configuration exists yet for the database, it will provide a new empty configuration set.</returns>
         public static Configuration GetPasswordDatabaseConfiguration(string localPasswordDatabasePath)
         {
             localPasswordDatabasePath = NormalizePath(localPasswordDatabasePath);
@@ -151,6 +151,17 @@ namespace KoenZomers.KeePass.OneDriveSync
                 PasswordDatabases.Add(new KeyValuePair<string, Configuration>(localPasswordDatabasePath, new Configuration()));
             }
             return PasswordDatabases[localPasswordDatabasePath];
+        }
+
+        /// <summary>
+        /// Sets the KeePass database configuration for KeePassOneDriveSync for the KeePass database of which the local path is provided to the configuration that is provided
+        /// </summary>
+        /// <param name="localPasswordDatabasePath">Full path to where the KeePass database resides locally</param>
+        /// <param name="configuration">Configuration that should be set for the KeePass database. If configuration already existed for the same database, it will be overwritten. If it didn't exist yet, it will be added.</param>
+        public static void SetPasswordDatabaseConfiguration(string localPasswordDatabasePath, Configuration configuration)
+        {
+            localPasswordDatabasePath = NormalizePath(localPasswordDatabasePath);
+            PasswordDatabases[localPasswordDatabasePath] = configuration;
         }
 
         /// <summary>

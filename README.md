@@ -17,6 +17,10 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.0.9.0 - September 26, 2019
+
+- Fixed the issue reported in [issue 112](https://github.com/KoenZomers/KeePassOneDriveSync/issues/112) where opening a KeePass database from OneDrive would require you to log on twice. Thanks to [keab](https://github.com/keab) for reporting this!
+
 Version 2.0.8.0 - July 28, 2019
 
 - Merged [Pull Request 102](https://github.com/KoenZomers/KeePassOneDriveSync/pull/102) which should solve some issues around relative paths when using KeePass portable. Thanks to [jfurtner](https://github.com/jfurtner) for his contribution!
