@@ -2,6 +2,10 @@
 
 I've created a free plugin for KeePass (installable and portable) that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your devices. Note that this plugin only works on Windows based platforms, but can operate in conjunction with other KeePass plugins serving other operating systems such as KeePass2Android on Android devices.
 
+**Notice**
+
+**Microsoft will deprecate the API used by the OneDrive for Business option (Office discovery API) on November 5, 2019. It may be that that option will stop working in KeePass OneDriveSync from that date onwards. Instead, use the Graph option which will remain working.**
+
 ## Download ##
 Download the PLGX and place it inside your KeePass\Plugins folder. Typically this will be C:\Program Files (x86)\KeePass Password Safe 2\Plugins or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. When upgrading from a previous version of this plugin, simply ensure KeePass is closed, overwrite the existing PLGX and start KeePass again.
 
