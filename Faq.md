@@ -42,6 +42,26 @@ It is by design that when you reset your OneDrive (Microsoft Account) password, 
 
 If you have downloaded the PLGX and placed it inside the KeePass/Plugins folder (typically C:\Program Files (x86)\KeePass Password Safe 2\Plugins) and it doesn't show its functionality, ensure that the PLGX file is not blocked. By default it will be. go to the Plugins folder, right click the KeeOneDriveSync.plgx file and go to its properties. If it shows an option to Unblock it at the bottom right of the General tab, check the box and hit OK. Restart KeePass. It should now properly load the plugin.
 
+### Is there any (KeePass) data that flows through any of your environments? ###
+
+No. There is no data that flows in any way to or through any service I host or own for this plugin. All communication goes directly between the KeePass client and the cloud provider where the data is hosted, such as Microsoft OneDrive for Business. The traffic between KeePass and Microsoft is encrypted through HTTPS encryption. The refresh token which could give access to the storage provider, such as OneDrive for Business, is stored to prevent having to authenticate over and over again on each synchronization. This token is stored either in the KeePass database, thus encrypted and secured in the same ways as everything else in your KeePass database is, or on your local file system in the user profile folder:
+
+C:\Users<username>\AppData\Roaming\KeePass
+
+The token in this config file is encrypted using built-in Windows encryption and only can be decrypted if you are logged on to Windows with the same user as under which this data is stored.
+
+Communication with the storage providers happens via my [OneDriveAPI](https://github.com/KoenZomers/OneDriveAPI) open source API, as you can see in the [package reference](https://github.com/KoenZomers/KeePassOneDriveSync/blob/master/KoenZomers.KeePass.OneDriveSync/packages.config). If you want to see exactly where it specifies which services to communicate with, see here:
+
+- [OneDrive for Business](https://github.com/KoenZomers/OneDriveAPI/blob/master/Api/OneDriveForBusinessO365Api.cs)
+- [OneDrive Consumer](https://github.com/KoenZomers/OneDriveAPI/blob/master/Api/OneDriveConsumerApi.cs)
+- [Microsoft Graph API](https://github.com/KoenZomers/OneDriveAPI/blob/master/Api/OneDriveGraphApi.cs)
+
+You will find the URLs of the services it communicates with at the top of each file. You can see that these are all Microsoft owned and managed services and all communicate through HTTPS.
+
+I recommend you to read up on the oAuth flow which will show you that all communication will always go between the client and the oAuth server directly, without having any third parties in between:
+
+https://docs.microsoft.com/en-us/onedrive/developer/rest-api/getting-started/graph-oauth?view=odsp-graph-online
+
 ### Other questions ###
 
 Feel free to e-mail me at koen@zomers.eu or [open a GitHub Issue](https://github.com/KoenZomers/KeePassOneDriveSync/issues/new)
