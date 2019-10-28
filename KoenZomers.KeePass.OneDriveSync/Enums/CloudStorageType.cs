@@ -26,6 +26,11 @@
         SharePoint = 3,
 
         /// <summary>
+        /// Microsoft Graph API Device Login
+        /// </summary>
+        MicrosoftGraphDeviceLogin = 4,
+
+        /// <summary>
         /// Do not sync
         /// </summary>
         None = 99

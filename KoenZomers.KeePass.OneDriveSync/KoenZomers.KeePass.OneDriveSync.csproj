@@ -80,6 +80,12 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Enums\OneDriveRefreshTokenStorage.cs" />
     <Compile Include="Enums\CloudStorageType.cs" />
+    <Compile Include="Forms\OneDriveGraphDeviceLoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OneDriveGraphDeviceLoginForm.Designer.cs">
+      <DependentUpon>OneDriveGraphDeviceLoginForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SharePointDocumentLibraryPickerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +154,9 @@
     <Compile Include="Forms\OneDriveConfigForm.Designer.cs">
       <DependentUpon>OneDriveConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Providers\MicrosoftGraph\MicrosoftGraphDeviceCodeAuthCheckSucceededResponse.cs" />
+    <Compile Include="Providers\MicrosoftGraph\MicrosoftGraphDeviceCodeAuthCheckFailedResponse.cs" />
+    <Compile Include="Providers\MicrosoftGraph\MicrosoftGraphDeviceCodeResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\OneDriveProvider.cs" />
     <Compile Include="Providers\SharePointProvider.cs" />
@@ -162,6 +171,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\OneDriveAboutForm.resx">
       <DependentUpon>OneDriveAboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OneDriveGraphDeviceLoginForm.resx">
+      <DependentUpon>OneDriveGraphDeviceLoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveCloudTypeForm.resx">
       <DependentUpon>OneDriveCloudTypeForm.cs</DependentUpon>
@@ -214,6 +226,7 @@
     <Content Include="Resources\DocLib.png" />
     <Content Include="Resources\File.png" />
     <Content Include="Resources\Folder.png" />
+    <None Include="Resources\mslogo.png" />
     <None Include="Resources\SharePoint.png" />
     <None Include="Resources\MSGraph.pdn" />
     <None Include="Resources\OneDriveForBusiness.png" />

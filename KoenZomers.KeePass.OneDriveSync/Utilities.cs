@@ -60,6 +60,7 @@ namespace KoenZomersKeePassOneDriveSync
                     break;
 
                 case CloudStorageType.MicrosoftGraph:
+                case CloudStorageType.MicrosoftGraphDeviceLogin:
                     cloudStorage = new OneDriveGraphApi(KoenZomersKeePassOneDriveSyncExt.GraphApiApplicationId);
                     break;
 
@@ -67,31 +68,52 @@ namespace KoenZomersKeePassOneDriveSync
                     throw new ArgumentOutOfRangeException(string.Format("Cloud storage type {0} is not supported", databaseConfig.CloudStorageType));
             }
 
+            // Ensure we have a refresh token
             if (string.IsNullOrEmpty(databaseConfig.RefreshToken))
             {
-                var oneDriveAuthenticateForm = new OneDriveAuthenticateForm(cloudStorage);
-                var result = oneDriveAuthenticateForm.ShowDialog();
-
-                if (result != System.Windows.Forms.DialogResult.OK)
+                // No refresh token available, perform the login process
+                if (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer) == CloudStorageType.MicrosoftGraphDeviceLogin)
                 {
-                    return null;
-                }
+                    // Using Microsoft Graph Device ID Code Flow
+                    var oneDriveGraphDeviceLoginForm = new OneDriveGraphDeviceLoginForm(cloudStorage);
+                    var deviceLoginResult = oneDriveGraphDeviceLoginForm.ShowDialog();
 
-                // Check if we already know where to store the Refresh Token for this database
-                if (!databaseConfig.RefreshTokenStorage.HasValue)
+                    if (deviceLoginResult != System.Windows.Forms.DialogResult.OK)
+                    {
+                        return null;
+                    }
+
+                    // Save the configuration so we keep the Refresh Token
+                    databaseConfig.RefreshToken = oneDriveGraphDeviceLoginForm.RefreshToken;
+                    Configuration.Save();
+                }
+                else
                 {
-                    // We don't know yet where the Refresh Token for this database should be stored, ask the user to choose
-                    var oneDriveRefreshTokenStorageForm = new OneDriveRefreshTokenStorageDialog(databaseConfig);
-                    oneDriveRefreshTokenStorageForm.ShowDialog();
+                    // Using any of the other authentication options
+                    var oneDriveAuthenticateForm = new OneDriveAuthenticateForm(cloudStorage);
+                    var result = oneDriveAuthenticateForm.ShowDialog();
+
+                    if (result != System.Windows.Forms.DialogResult.OK)
+                    {
+                        return null;
+                    }
+
+                    // Check if we already know where to store the Refresh Token for this database
+                    if (!databaseConfig.RefreshTokenStorage.HasValue)
+                    {
+                        // We don't know yet where the Refresh Token for this database should be stored, ask the user to choose
+                        var oneDriveRefreshTokenStorageForm = new OneDriveRefreshTokenStorageDialog(databaseConfig);
+                        oneDriveRefreshTokenStorageForm.ShowDialog();
+                    }
+
+                    // Save the configuration so we keep the Refresh Token
+                    var oneDriveApi = oneDriveAuthenticateForm.OneDriveApi;
+                    databaseConfig.RefreshToken = oneDriveApi.AccessToken.RefreshToken;
+
+                    Configuration.Save();
+
+                    return oneDriveApi;
                 }
-
-                // Save the configuration so we keep the Refresh Token
-                var oneDriveApi = oneDriveAuthenticateForm.OneDriveApi;
-                databaseConfig.RefreshToken = oneDriveApi.AccessToken.RefreshToken;
-
-                Configuration.Save();
-
-                return oneDriveApi;
             }
 
             try

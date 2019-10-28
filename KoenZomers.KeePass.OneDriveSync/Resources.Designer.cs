@@ -63,6 +63,16 @@ namespace KoenZomersKeePassOneDriveSync {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap MicrosoftLogo {
+            get {
+                object obj = ResourceManager.GetObject("MicrosoftLogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap MSGraph {
             get {
                 object obj = ResourceManager.GetObject("MSGraph", resourceCulture);

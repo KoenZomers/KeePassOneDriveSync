@@ -50,6 +50,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                             errorMessage.Append("OneDrive for Business");
                             break;
                         case CloudStorageType.MicrosoftGraph:
+                        case CloudStorageType.MicrosoftGraphDeviceLogin:
                             errorMessage.Append("Microsoft Graph");
                             break;
                         default:
@@ -85,7 +86,10 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus(string.Format("Failed to connect to OneDrive for database {0}", databaseConfig.KeePassDatabase.Name)); break;
                     case CloudStorageType.OneDriveForBusiness: updateStatus(string.Format("Failed to connect to OneDrive for Business for database {0}", databaseConfig.KeePassDatabase.Name)); break;
-                    case CloudStorageType.MicrosoftGraph: updateStatus(string.Format("Failed to connect to Microsoft Graph for database {0}", databaseConfig.KeePassDatabase.Name)); break;
+                    case CloudStorageType.MicrosoftGraph:
+                    case CloudStorageType.MicrosoftGraphDeviceLogin:
+                        updateStatus(string.Format("Failed to connect to Microsoft Graph for database {0}", databaseConfig.KeePassDatabase.Name));
+                        break;
                     default: updateStatus(string.Format("Failed to connect to cloud service for database {0}", databaseConfig.KeePassDatabase.Name)); break;
                 }
 
@@ -371,7 +375,9 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus("Failed to connect to OneDrive"); break;
                     case CloudStorageType.OneDriveForBusiness: updateStatus("Failed to connect to OneDrive for Business"); break;
-                    case CloudStorageType.MicrosoftGraph: updateStatus("Failed to connect to Microsoft Graph"); break;
+                    case CloudStorageType.MicrosoftGraph:
+                    case CloudStorageType.MicrosoftGraphDeviceLogin:
+                        updateStatus("Failed to connect to Microsoft Graph"); break;
                     default: updateStatus("Failed to connect to cloud service"); break;
                 }
                 return null;

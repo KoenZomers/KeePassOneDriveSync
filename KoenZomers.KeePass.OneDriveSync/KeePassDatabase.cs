@@ -44,6 +44,7 @@ namespace KoenZomersKeePassOneDriveSync
                 case CloudStorageType.MicrosoftGraph:
                 case CloudStorageType.OneDriveConsumer:
                 case CloudStorageType.OneDriveForBusiness:
+                case CloudStorageType.MicrosoftGraphDeviceLogin:
                     localKeePassDatabasePath = await Providers.OneDriveProvider.OpenFromOneDriveCloudProvider(databaseConfig, updateStatus);
                     break;
 
@@ -146,6 +147,7 @@ namespace KoenZomersKeePassOneDriveSync
                 switch(databaseConfig.CloudStorageType)
                 {
                     case CloudStorageType.MicrosoftGraph:
+                    case CloudStorageType.MicrosoftGraphDeviceLogin:
                     case CloudStorageType.OneDriveConsumer:
                     case CloudStorageType.OneDriveForBusiness:
                         syncSuccessful = await Providers.OneDriveProvider.SyncUsingOneDriveCloudProvider(databaseConfig, localKeePassDatabasePath, forceSync, updateStatus);

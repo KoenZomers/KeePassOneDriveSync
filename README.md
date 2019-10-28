@@ -21,6 +21,10 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.1.0.0 - October 28, 2019
+
+- Experimental new feature: added a new authentication option via the Microsoft Graph API to use the device code login flow. This will allow you to use any kind of internet browser to authenticate to your OneDrive Consumer or OneDrive for Business site to open or store your KeePass database. This will avoid the issue many people were facing especially under Windows 10 where it would not allow you to specify yourself with which account to log on.
+
 Version 2.0.9.0 - September 26, 2019
 
 - Fixed the issue reported in [issue 112](https://github.com/KoenZomers/KeePassOneDriveSync/issues/112) where opening a KeePass database from OneDrive would require you to log on twice. Thanks to [keab](https://github.com/keab) for reporting this!

@@ -62,6 +62,12 @@ I recommend you to read up on the oAuth flow which will show you that all commun
 
 https://docs.microsoft.com/en-us/onedrive/developer/rest-api/getting-started/graph-oauth?view=odsp-graph-online
 
+### How does the experimental Microsoft Graph Device Code Flow work? ###
+
+If you want the deep technical details on this, [read up here](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code).
+
+If you just want to understand the basic idea, it works as follows. When you choose this option when setting up the synchronization of your KeePass database with your OneDrive Consumer or OneDrive for Business site, the KeePass plugin will connect to the Microsoft Graph API to request a device login session. This will return a short unique identifier which will be shown to you by this plugin in your KeePass. You then open any internet browser you would like and navigate to the internet address shown in the KeePass dialog, which will typically be https://microsoft.com/devicelogin. You can even do this from any other device such as your tablet or phone. Enter the ID that is shown to you by the plugin in KeePass and go through the normal authentication process for your OneDrive Consumer or OneDrive for Business site. This process has full support for multi factor authentication and other identity providers you or your school or organization may have put in place such as AD FS, Ping Federate or one of the many others. Once authenticated, it may ask you to confirm granting the permission to access your files without you having to log on again to my plugin which will identify itself as "Koen Zomers OneDrive Sync v2". Once you grant it these rights, depending on how you have set up your account, it can be that you get a push notification on your phone, a text message on your phone and/or an e-mail stating that a new logon has just taken place under your account to the application "Koen Zomers OneDrive Sync v2". From here on the sync process works exactly like before.
+
 ### Other questions ###
 
 Feel free to e-mail me at koen@zomers.eu or [open a GitHub Issue](https://github.com/KoenZomers/KeePassOneDriveSync/issues/new)
