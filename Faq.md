@@ -68,6 +68,25 @@ It utilizes the Microsoft Graph oAuth Device Code Flow. If you want the deep tec
 
 If you just want to understand the basic idea, it works as follows. When you choose this option when setting up the synchronization of your KeePass database with your OneDrive Consumer or OneDrive for Business site, the KeePass plugin will connect to the Microsoft Graph API to request a device login session. This will return a short unique identifier which will be shown to you by this plugin in your KeePass. You then open any internet browser you would like and navigate to the internet address shown in the KeePass dialog, which will typically be https://microsoft.com/devicelogin. You can even do this from any other device such as your tablet or phone. Enter the ID that is shown to you by the plugin in KeePass and go through the normal authentication process for your OneDrive Consumer or OneDrive for Business site. This process has full support for multi factor authentication and other identity providers you or your school or organization may have put in place such as AD FS, Ping Federate or one of the many others. Once authenticated, it may ask you to confirm granting the permission to access your files without you having to log on again to my plugin which will identify itself as "Koen Zomers OneDrive Sync v2". Once you grant it these rights, depending on how you have set up your account, it can be that you get a push notification on your phone, a text message on your phone and/or an e-mail stating that a new logon has just taken place under your account to the application "Koen Zomers OneDrive Sync v2". From here on the sync process works exactly like before.
 
+### What shortcut keys can I use in the OneDriveSync dialog box ###
+
+As of version 2.0.8.0 you can use these shortcut keys to quickly find your way in the OneDriveSync dialog box
+
+  - F1: Opens the sync details screen. Only works when one KeePass database is selected.
+  - F2: Allows renaming of the storage name for the KeePass database(s) you have selected
+  - F4: Starts syncing the selected entries, if those databases are currently open in KeePass
+  - F5: Refreshes the list with configuration entries
+  - F7: Open the local file locations of the KeePass database(s) you have selected
+  - F8: Open the selected KeePass database(s) in KeePass (new feature)
+  - DEL: Remove the KeePass OneDriveSync configuration entries for the selected KeePass database(s). It will not remove the KeePass database itself, just the KeePass OneDriveSync configuration for it.
+  - CTRL+A: Select all KeePass databases
+  - CTRL+SHIFT+A: Select all KeePass databases that no longer exist locally (red colored background)
+  - CTRL+Click: Select another KeePass database
+  - SHIFT+Click: Select all KeePass databases between the currently selected one and the one you're clicking on
+  - Use the right click menu to select all KeePass databases that haven't synced in either the last 24 hours, last week, last 2 weeks or last month
+
+![](./Screenshots/KeePassOneDriveSyncConfigurationOptions.png)
+
 ### Other questions ###
 
 Feel free to e-mail me at koen@zomers.eu or [open a GitHub Issue](https://github.com/KoenZomers/KeePassOneDriveSync/issues/new)

@@ -16,7 +16,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// <summary>
         /// URL to link the More information link to
         /// </summary>
-        private const string _moreInformationUrl = "https://github.com/KoenZomers/KeePassOneDriveSync/blob/master/Faq.md";
+        private const string _moreInformationUrl = "https://github.com/KoenZomers/KeePassOneDriveSync/blob/master/Faq.md#how-does-the-microsoft-graph-any-browser-option-work";
 
         /// <summary>
         /// URL to send a POST request to in order to retrieve a Device ID Code from Microsoft Graph
