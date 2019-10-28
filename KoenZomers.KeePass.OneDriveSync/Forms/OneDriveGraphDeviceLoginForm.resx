@@ -117,14 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="StartSessionTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <data name="ExplanationLabel.Text" xml:space="preserve">
+    <value>A unique device ID will be retrieved from Microsoft to perform your logon to OneDrive or OneDrive for Business through the Microsoft Graph in your favorite web browser. Once the device ID is shown below, click on the link that shows up on this form to open your default browser, paste in the device ID and perform the authentication to continue with setting up your KeePass synchronization. Leave this form open while you authenticate in your browser. Once you've authenticated in your browser, you may close your browser and this application should automatically proceed.</value>
+  </data>
+  <metadata name="StartSessionTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </data>
-  <data name="AuthenticationCheckTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="AuthenticationCheckTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>166, 17</value>
-  </data>
-  <data name="AuthenticationCompleteTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="AuthenticationCompleteTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>362, 17</value>
-  </data>
+  </metadata>
 </root>

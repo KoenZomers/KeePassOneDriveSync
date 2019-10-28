@@ -2,12 +2,12 @@
 
 I've created a free plugin for KeePass (installable and portable) that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your devices. Note that this plugin only works on Windows based platforms, but can operate in conjunction with other KeePass plugins serving other operating systems such as KeePass2Android on Android devices.
 
-**Notice**
-
-**Microsoft will deprecate the API used by the OneDrive for Business option (Office discovery API) on November 5, 2019. It may be that that option will stop working in KeePass OneDriveSync from that date onwards. Instead, use the Graph option which will remain working.**
+> **Notice**
+>
+>Microsoft will deprecate the API used by the OneDrive for Business option (Office discovery API) on November 5, 2019. It may be that the option "OneDrive for Business" on the Other tab which utilizes this feature will stop working in KeePass OneDriveSync from that date onwards. Instead, use the Graph option which will remain working.**
 
 ## Download ##
-Download the PLGX and place it inside your KeePass\Plugins folder. Typically this will be C:\Program Files (x86)\KeePass Password Safe 2\Plugins or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. When upgrading from a previous version of this plugin, simply ensure KeePass is closed, overwrite the existing PLGX and start KeePass again.
+Download the PLGX and place it inside your KeePass\Plugins folder. Typically this will be `C:\Program Files (x86)\KeePass Password Safe 2\Plugins` or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. When upgrading from a previous version of this plugin, simply ensure KeePass is closed, overwrite the existing PLGX and start KeePass again.
 
 [You can find the latest stable version here](../../releases/latest)
 
@@ -23,7 +23,7 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 Version 2.1.0.0 - October 28, 2019
 
-- Experimental new feature: added a new authentication option via the Microsoft Graph API to use the device code login flow. This will allow you to use any kind of internet browser to authenticate to your OneDrive Consumer or OneDrive for Business site to open or store your KeePass database. This will avoid the issue many people were facing especially under Windows 10 where it would not allow you to specify yourself with which account to log on.
+- Added a new authentication option via the Microsoft Graph API to use the device code login flow. This will allow you to use any kind of internet browser to authenticate to your OneDrive Consumer or OneDrive for Business site to open or store your KeePass database. This will avoid the issue many people were facing especially under Windows 10 where it would not allow you to specify yourself with which account to log on but instead automatically log you on based on the account you had configured in Windows 10. Many people used the OneDrive options on the Other tab before to circumvent the automatic logon issue. As the OneDrive for Business option on the Other tab will stop working in a week, this feature has been added to deal with the issue once and for all.
 
 Version 2.0.9.0 - September 26, 2019
 

@@ -14,6 +14,11 @@ namespace KoenZomersKeePassOneDriveSync
     public partial class OneDriveGraphDeviceLoginForm : Form
     {
         /// <summary>
+        /// URL to link the More information link to
+        /// </summary>
+        private const string _moreInformationUrl = "https://github.com/KoenZomers/KeePassOneDriveSync/blob/master/Faq.md";
+
+        /// <summary>
         /// URL to send a POST request to in order to retrieve a Device ID Code from Microsoft Graph
         /// </summary>
         private const string _microsoftGraphDeviceAuthorizationInitiationUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/devicecode";
@@ -336,6 +341,11 @@ namespace KoenZomersKeePassOneDriveSync
         {
             AuthenticationCompleteTimer.Enabled = false;
             Close();
+        }
+
+        private void MoreInformationLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(_moreInformationUrl);
         }
     }
 }

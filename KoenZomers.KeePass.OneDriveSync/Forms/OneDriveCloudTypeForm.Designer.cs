@@ -32,6 +32,7 @@
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.CloudPlatformTabs = new System.Windows.Forms.TabControl();
             this.OneDriveTab = new System.Windows.Forms.TabPage();
+            this.GraphDeviceLoginPictureButton = new System.Windows.Forms.Button();
             this.GraphPictureButton = new System.Windows.Forms.Button();
             this.SharePointTab = new System.Windows.Forms.TabPage();
             this.SharePointPictureButton = new System.Windows.Forms.Button();
@@ -39,7 +40,6 @@
             this.OtherLabel = new System.Windows.Forms.Label();
             this.OneDriveForBusinessPictureButton = new System.Windows.Forms.Button();
             this.OneDriveConsumerPictureButton = new System.Windows.Forms.Button();
-            this.GraphDeviceLoginPictureButton = new System.Windows.Forms.Button();
             this.CloudPlatformTabs.SuspendLayout();
             this.OneDriveTab.SuspendLayout();
             this.SharePointTab.SuspendLayout();
@@ -98,20 +98,35 @@
             this.OneDriveTab.Text = "OneDrive";
             this.OneDriveTab.UseVisualStyleBackColor = true;
             // 
+            // GraphDeviceLoginPictureButton
+            // 
+            this.GraphDeviceLoginPictureButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.GraphDeviceLoginPictureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.GraphDeviceLoginPictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.GraphDeviceLoginPictureButton.Location = new System.Drawing.Point(7, 10);
+            this.GraphDeviceLoginPictureButton.Margin = new System.Windows.Forms.Padding(2);
+            this.GraphDeviceLoginPictureButton.Name = "GraphDeviceLoginPictureButton";
+            this.GraphDeviceLoginPictureButton.Size = new System.Drawing.Size(322, 98);
+            this.GraphDeviceLoginPictureButton.TabIndex = 0;
+            this.GraphDeviceLoginPictureButton.Text = "&Any browser";
+            this.GraphDeviceLoginPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.GraphDeviceLoginPictureButton.UseVisualStyleBackColor = false;
+            this.GraphDeviceLoginPictureButton.Click += new System.EventHandler(this.GraphDeviceLoginPictureButton_Click);
+            // 
             // GraphPictureButton
             // 
             this.GraphPictureButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.GraphPictureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GraphPictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.GraphPictureButton.Location = new System.Drawing.Point(8, 11);
+            this.GraphPictureButton.Location = new System.Drawing.Point(7, 114);
             this.GraphPictureButton.Margin = new System.Windows.Forms.Padding(2);
             this.GraphPictureButton.Name = "GraphPictureButton";
             this.GraphPictureButton.Size = new System.Drawing.Size(322, 98);
-            this.GraphPictureButton.TabIndex = 0;
-            this.GraphPictureButton.Text = "OneDrive & OneDrive for Business";
+            this.GraphPictureButton.TabIndex = 1;
+            this.GraphPictureButton.Text = "&Built-in browser";
             this.GraphPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.GraphPictureButton.UseMnemonic = false;
             this.GraphPictureButton.UseVisualStyleBackColor = false;
             this.GraphPictureButton.Click += new System.EventHandler(this.GraphPictureButton_Click);
             // 
@@ -202,23 +217,6 @@
             this.OneDriveConsumerPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.OneDriveConsumerPictureButton.UseVisualStyleBackColor = false;
             this.OneDriveConsumerPictureButton.Click += new System.EventHandler(this.OneDriveConsumerPictureButton_Click);
-            // 
-            // GraphDeviceLoginPictureButton
-            // 
-            this.GraphDeviceLoginPictureButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GraphDeviceLoginPictureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.GraphDeviceLoginPictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.GraphDeviceLoginPictureButton.Location = new System.Drawing.Point(8, 113);
-            this.GraphDeviceLoginPictureButton.Margin = new System.Windows.Forms.Padding(2);
-            this.GraphDeviceLoginPictureButton.Name = "GraphDeviceLoginPictureButton";
-            this.GraphDeviceLoginPictureButton.Size = new System.Drawing.Size(322, 98);
-            this.GraphDeviceLoginPictureButton.TabIndex = 1;
-            this.GraphDeviceLoginPictureButton.Text = "Experimental Login";
-            this.GraphDeviceLoginPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.GraphDeviceLoginPictureButton.UseMnemonic = false;
-            this.GraphDeviceLoginPictureButton.UseVisualStyleBackColor = false;
-            this.GraphDeviceLoginPictureButton.Click += new System.EventHandler(this.GraphDeviceLoginPictureButton_Click);
             // 
             // OneDriveCloudTypeForm
             // 

@@ -41,6 +41,7 @@
             this.StartSessionTimer = new System.Windows.Forms.Timer(this.components);
             this.AuthenticationCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.AuthenticationCompleteTimer = new System.Windows.Forms.Timer(this.components);
+            this.MoreInformationLinkLabel = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.MicrosoftLogoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,7 +53,7 @@
             this.MicrosoftLogoPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.MicrosoftLogoPictureBox.Location = new System.Drawing.Point(12, 12);
             this.MicrosoftLogoPictureBox.Name = "MicrosoftLogoPictureBox";
-            this.MicrosoftLogoPictureBox.Size = new System.Drawing.Size(419, 103);
+            this.MicrosoftLogoPictureBox.Size = new System.Drawing.Size(497, 103);
             this.MicrosoftLogoPictureBox.TabIndex = 0;
             this.MicrosoftLogoPictureBox.TabStop = false;
             // 
@@ -62,7 +63,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.StatusLabel.Location = new System.Drawing.Point(12, 244);
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(419, 31);
+            this.StatusLabel.Size = new System.Drawing.Size(497, 31);
             this.StatusLabel.TabIndex = 1;
             this.StatusLabel.Text = "Initializing";
             this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -76,7 +77,7 @@
             this.DeviceIdTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DeviceIdTextBox.Location = new System.Drawing.Point(10, 284);
             this.DeviceIdTextBox.Name = "DeviceIdTextBox";
-            this.DeviceIdTextBox.Size = new System.Drawing.Size(419, 37);
+            this.DeviceIdTextBox.Size = new System.Drawing.Size(497, 37);
             this.DeviceIdTextBox.TabIndex = 2;
             this.DeviceIdTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.DeviceIdTextBox.Visible = false;
@@ -87,9 +88,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ExplanationLabel.Location = new System.Drawing.Point(12, 121);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(419, 120);
+            this.ExplanationLabel.Size = new System.Drawing.Size(497, 85);
             this.ExplanationLabel.TabIndex = 3;
-            this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
+            this.ExplanationLabel.Text = "A unique device ID will be retrieved from Microsoft to perform your logon to OneDrive or OneDrive for Business through the Microsoft Graph in your favorite web browser. Once the device ID is shown below, click on the link that shows up on this form to open your default browser, paste in the device ID and perform the authentication to continue with setting up your KeePass synchronization. Leave this form open while you authenticate in your browser. Once you've authenticated in your browser, you may close your browser and this application should automatically proceed.";
+            this.ExplanationLabel.UseMnemonic = false;
             // 
             // DeviceAuthLinkLabel
             // 
@@ -97,7 +99,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DeviceAuthLinkLabel.Location = new System.Drawing.Point(12, 220);
             this.DeviceAuthLinkLabel.Name = "DeviceAuthLinkLabel";
-            this.DeviceAuthLinkLabel.Size = new System.Drawing.Size(419, 23);
+            this.DeviceAuthLinkLabel.Size = new System.Drawing.Size(497, 23);
             this.DeviceAuthLinkLabel.TabIndex = 4;
             this.DeviceAuthLinkLabel.TabStop = true;
             this.DeviceAuthLinkLabel.Text = "Unknown";
@@ -121,7 +123,7 @@
             // 
             this.CopyDeviceIdButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CopyDeviceIdButton.Enabled = false;
-            this.CopyDeviceIdButton.Location = new System.Drawing.Point(170, 332);
+            this.CopyDeviceIdButton.Location = new System.Drawing.Point(131, 334);
             this.CopyDeviceIdButton.Name = "CopyDeviceIdButton";
             this.CopyDeviceIdButton.Size = new System.Drawing.Size(106, 37);
             this.CopyDeviceIdButton.TabIndex = 6;
@@ -133,7 +135,7 @@
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(325, 334);
+            this.CancelButton.Location = new System.Drawing.Point(403, 334);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(106, 37);
             this.CancelButton.TabIndex = 7;
@@ -143,7 +145,7 @@
             // 
             // StartSessionTimer
             // 
-            this.StartSessionTimer.Interval = 2000;
+            this.StartSessionTimer.Interval = 1000;
             this.StartSessionTimer.Tick += new System.EventHandler(this.StartSessionTimer_Tick);
             // 
             // AuthenticationCheckTimer
@@ -156,12 +158,25 @@
             this.AuthenticationCompleteTimer.Interval = 3000;
             this.AuthenticationCompleteTimer.Tick += new System.EventHandler(this.AuthenticationCompleteTimer_Tick);
             // 
+            // MoreInformationLinkLabel
+            // 
+            this.MoreInformationLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MoreInformationLinkLabel.AutoSize = true;
+            this.MoreInformationLinkLabel.Location = new System.Drawing.Point(259, 346);
+            this.MoreInformationLinkLabel.Name = "MoreInformationLinkLabel";
+            this.MoreInformationLinkLabel.Size = new System.Drawing.Size(85, 13);
+            this.MoreInformationLinkLabel.TabIndex = 8;
+            this.MoreInformationLinkLabel.TabStop = true;
+            this.MoreInformationLinkLabel.Text = "More information";
+            this.MoreInformationLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.MoreInformationLinkLabel_LinkClicked);
+            // 
             // OneDriveGraphDeviceLoginForm
             // 
             this.AcceptButton = this.OpenBrowserButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 383);
+            this.ClientSize = new System.Drawing.Size(521, 383);
+            this.Controls.Add(this.MoreInformationLinkLabel);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.CopyDeviceIdButton);
             this.Controls.Add(this.OpenBrowserButton);
@@ -198,5 +213,6 @@
         private System.Windows.Forms.Timer StartSessionTimer;
         private System.Windows.Forms.Timer AuthenticationCheckTimer;
         private System.Windows.Forms.Timer AuthenticationCompleteTimer;
+        private System.Windows.Forms.LinkLabel MoreInformationLinkLabel;
     }
 }

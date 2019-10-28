@@ -86,6 +86,11 @@
     <Compile Include="Forms\OneDriveGraphDeviceLoginForm.Designer.cs">
       <DependentUpon>OneDriveGraphDeviceLoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OneDriveGraphDeviceLoginForm1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OneDriveGraphDeviceLoginForm.resx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SharePointDocumentLibraryPickerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,6 +179,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveGraphDeviceLoginForm.resx">
       <DependentUpon>OneDriveGraphDeviceLoginForm.cs</DependentUpon>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OneDriveGraphDeviceLoginForm1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveCloudTypeForm.resx">
       <DependentUpon>OneDriveCloudTypeForm.cs</DependentUpon>
