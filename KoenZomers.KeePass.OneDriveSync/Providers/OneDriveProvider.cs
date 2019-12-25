@@ -30,7 +30,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     oneDriveApi = await Utilities.GetOneDriveApi(databaseConfig);
                 }
-                catch (KoenZomers.OneDrive.Api.Exceptions.TokenRetrievalFailedException e)
+                catch (KoenZomers.OneDrive.Api.Exceptions.TokenRetrievalFailedException)
                 {
                     // Failed to get a OneDrive API instance because retrieving an oAuth token failed. This could be because the oAuth token expired or has been removed. Show the login dialog again so we can get a new token.
                     databaseConfig.RefreshToken = null;
@@ -45,9 +45,6 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     {
                         case CloudStorageType.OneDriveConsumer:
                             errorMessage.Append("OneDrive");
-                            break;
-                        case CloudStorageType.OneDriveForBusiness:
-                            errorMessage.Append("OneDrive for Business");
                             break;
                         case CloudStorageType.MicrosoftGraph:
                         case CloudStorageType.MicrosoftGraphDeviceLogin:
@@ -85,7 +82,6 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus(string.Format("Failed to connect to OneDrive for database {0}", databaseConfig.KeePassDatabase.Name)); break;
-                    case CloudStorageType.OneDriveForBusiness: updateStatus(string.Format("Failed to connect to OneDrive for Business for database {0}", databaseConfig.KeePassDatabase.Name)); break;
                     case CloudStorageType.MicrosoftGraph:
                     case CloudStorageType.MicrosoftGraphDeviceLogin:
                         updateStatus(string.Format("Failed to connect to Microsoft Graph for database {0}", databaseConfig.KeePassDatabase.Name));
@@ -374,7 +370,6 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 switch (databaseConfig.CloudStorageType.Value)
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus("Failed to connect to OneDrive"); break;
-                    case CloudStorageType.OneDriveForBusiness: updateStatus("Failed to connect to OneDrive for Business"); break;
                     case CloudStorageType.MicrosoftGraph:
                     case CloudStorageType.MicrosoftGraphDeviceLogin:
                         updateStatus("Failed to connect to Microsoft Graph"); break;
@@ -465,7 +460,6 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 switch (databaseConfig.CloudStorageType.Value)
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus(string.Format("Unable to find the database {0} on your OneDrive", databaseConfig.KeePassDatabase.Name)); break;
-                    case CloudStorageType.OneDriveForBusiness: updateStatus(string.Format("Unable to find the database {0} on your OneDrive for Business", databaseConfig.KeePassDatabase.Name)); break;
                     case CloudStorageType.MicrosoftGraph: updateStatus(string.Format("Unable to find the database {0} through Microsoft Graph", databaseConfig.KeePassDatabase.Name)); break;
                     default: updateStatus("Failed to connect to cloud service"); break;
                 }

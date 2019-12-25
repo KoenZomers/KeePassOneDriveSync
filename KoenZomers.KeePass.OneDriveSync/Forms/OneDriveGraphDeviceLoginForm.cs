@@ -102,8 +102,29 @@ namespace KoenZomersKeePassOneDriveSync
                 request.Content = new FormUrlEncodedContent(postFormValues);
 
                 // Request the response from the webservice
-                var response = _httpClient.SendAsync(request).Result;
-                var microsoftGraphDeviceCodeResponse = JsonConvert.DeserializeObject<Providers.MicrosoftGraph.MicrosoftGraphDeviceCodeResponse>(response.Content.ReadAsStringAsync().Result);
+                HttpResponseMessage response;
+                try
+                {
+                    response = _httpClient.SendAsync(request).Result;
+                }
+                catch(Exception e)
+                {
+                    while (e.InnerException != null) e = e.InnerException;
+                    StatusLabel.Text = string.Format("Failed to connect to the Graph API ({0})", e.Message);
+                    return;
+                }
+
+                Providers.MicrosoftGraph.MicrosoftGraphDeviceCodeResponse microsoftGraphDeviceCodeResponse;
+                try
+                {                    
+                    microsoftGraphDeviceCodeResponse = JsonConvert.DeserializeObject<Providers.MicrosoftGraph.MicrosoftGraphDeviceCodeResponse>(response.Content.ReadAsStringAsync().Result);
+                }
+                catch(Exception e)
+                {
+                    while (e.InnerException != null) e = e.InnerException;
+                    StatusLabel.Text = string.Format("Failed to parse the Graph API response ({0})", e.Message);
+                    return;
+                }
 
                 // Ensure the required information has been received
                 if (microsoftGraphDeviceCodeResponse != null && !string.IsNullOrEmpty(microsoftGraphDeviceCodeResponse.DeviceCode) && !string.IsNullOrEmpty(microsoftGraphDeviceCodeResponse.UserCode) && microsoftGraphDeviceCodeResponse.VerificationUri != null)

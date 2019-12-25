@@ -55,10 +55,6 @@ namespace KoenZomersKeePassOneDriveSync
                     cloudStorage = new OneDriveConsumerApi(KoenZomersKeePassOneDriveSyncExt.OneDriveConsumerClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveConsumerClientSecret);
                     break;
 
-                case CloudStorageType.OneDriveForBusiness:
-                    cloudStorage = new OneDriveForBusinessO365Api(KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveForBusinessClientSecret);
-                    break;
-
                 case CloudStorageType.MicrosoftGraph:
                 case CloudStorageType.MicrosoftGraphDeviceLogin:
                     cloudStorage = new OneDriveGraphApi(KoenZomersKeePassOneDriveSyncExt.GraphApiApplicationId);
@@ -122,7 +118,7 @@ namespace KoenZomersKeePassOneDriveSync
                 await cloudStorage.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
                 return cloudStorage;
             }
-            catch (KoenZomers.OneDrive.Api.Exceptions.TokenRetrievalFailedException e)
+            catch (KoenZomers.OneDrive.Api.Exceptions.TokenRetrievalFailedException)
             {
                 // Something went wrong with retrieving the access token
                 throw;

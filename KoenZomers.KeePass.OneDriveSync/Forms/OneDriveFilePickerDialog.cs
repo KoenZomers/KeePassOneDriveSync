@@ -351,7 +351,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 MessageBox.Show("Folder has been created", "New Folder", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadFolderItems(newFolderItem.Id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Folder could not be created", "New Folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -371,7 +371,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 MessageBox.Show("Item has been deleted", "Delete item", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadFolderItems(CurrentMyOneDriveItem.Id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Item could not be deleted", "Delete item", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -409,7 +409,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                     MessageBox.Show("Item could not be renamed", "Rename item", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Item could not be renamed", "Rename item", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }

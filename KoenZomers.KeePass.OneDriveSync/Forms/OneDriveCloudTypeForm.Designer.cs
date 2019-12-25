@@ -38,7 +38,6 @@
             this.SharePointPictureButton = new System.Windows.Forms.Button();
             this.OtherTab = new System.Windows.Forms.TabPage();
             this.OtherLabel = new System.Windows.Forms.Label();
-            this.OneDriveForBusinessPictureButton = new System.Windows.Forms.Button();
             this.OneDriveConsumerPictureButton = new System.Windows.Forms.Button();
             this.CloudPlatformTabs.SuspendLayout();
             this.OneDriveTab.SuspendLayout();
@@ -109,7 +108,7 @@
             this.GraphDeviceLoginPictureButton.Name = "GraphDeviceLoginPictureButton";
             this.GraphDeviceLoginPictureButton.Size = new System.Drawing.Size(322, 98);
             this.GraphDeviceLoginPictureButton.TabIndex = 0;
-            this.GraphDeviceLoginPictureButton.Text = "&Any browser";
+            this.GraphDeviceLoginPictureButton.Text = "&Any browser (recommended)";
             this.GraphDeviceLoginPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.GraphDeviceLoginPictureButton.UseVisualStyleBackColor = false;
             this.GraphDeviceLoginPictureButton.Click += new System.EventHandler(this.GraphDeviceLoginPictureButton_Click);
@@ -162,7 +161,6 @@
             // OtherTab
             // 
             this.OtherTab.Controls.Add(this.OtherLabel);
-            this.OtherTab.Controls.Add(this.OneDriveForBusinessPictureButton);
             this.OtherTab.Controls.Add(this.OneDriveConsumerPictureButton);
             this.OtherTab.Location = new System.Drawing.Point(4, 22);
             this.OtherTab.Margin = new System.Windows.Forms.Padding(2);
@@ -182,24 +180,8 @@
             this.OtherLabel.Name = "OtherLabel";
             this.OtherLabel.Size = new System.Drawing.Size(319, 22);
             this.OtherLabel.TabIndex = 9;
-            this.OtherLabel.Text = "Only use these if the OneDrive tab doesn\'t work";
+            this.OtherLabel.Text = "Only use this if the OneDrive tab doesn\'t work";
             this.OtherLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // OneDriveForBusinessPictureButton
-            // 
-            this.OneDriveForBusinessPictureButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.OneDriveForBusinessPictureButton.BackColor = System.Drawing.Color.White;
-            this.OneDriveForBusinessPictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.OneDriveForBusinessPictureButton.Location = new System.Drawing.Point(8, 128);
-            this.OneDriveForBusinessPictureButton.Margin = new System.Windows.Forms.Padding(2);
-            this.OneDriveForBusinessPictureButton.Name = "OneDriveForBusinessPictureButton";
-            this.OneDriveForBusinessPictureButton.Size = new System.Drawing.Size(322, 84);
-            this.OneDriveForBusinessPictureButton.TabIndex = 8;
-            this.OneDriveForBusinessPictureButton.Text = "OneDrive for Business";
-            this.OneDriveForBusinessPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.OneDriveForBusinessPictureButton.UseVisualStyleBackColor = false;
-            this.OneDriveForBusinessPictureButton.Click += new System.EventHandler(this.OneDriveForBusinessPictureButton_Click);
             // 
             // OneDriveConsumerPictureButton
             // 
@@ -252,7 +234,6 @@
         private System.Windows.Forms.TabPage SharePointTab;
         private System.Windows.Forms.TabPage OtherTab;
         private System.Windows.Forms.Label OtherLabel;
-        private System.Windows.Forms.Button OneDriveForBusinessPictureButton;
         private System.Windows.Forms.Button OneDriveConsumerPictureButton;
         private System.Windows.Forms.Button SharePointPictureButton;
         private System.Windows.Forms.Button GraphDeviceLoginPictureButton;

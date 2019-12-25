@@ -11,11 +11,6 @@
         OneDriveConsumer = 0,
 
         /// <summary>
-        /// OneDrive for Business
-        /// </summary>
-        OneDriveForBusiness = 1,
-
-        /// <summary>
         /// Microsoft Graph API
         /// </summary>
         MicrosoftGraph = 2,
