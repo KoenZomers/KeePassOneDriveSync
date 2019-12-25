@@ -54,23 +54,20 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                             errorMessage.Append("cloud storage provider");
                             break;
                     }
-                    errorMessage.AppendLine(string.Format(" for database {0}", databaseConfig.KeePassDatabase.Name));
-                    errorMessage.AppendLine(":");
+                    errorMessage.AppendLine(string.Format(" for database {0}:", databaseConfig.KeePassDatabase.Name));
                     errorMessage.AppendLine();
+
+                    // Revert to the most inner exception to get the best details on what went wrong
+                    while (e.InnerException != null) e = e.InnerException;
+
                     errorMessage.AppendLine(e.Message);
 
-                    // If there's an inner exception, show its message as well as it typically gives more detail why it went wrong
-                    if (e.InnerException != null)
+                    // Verify if we're offline
+                    if (e.Message.Contains("remote name could not be resolved"))
                     {
-                        errorMessage.AppendLine(e.InnerException.Message);
-
-                        // Verify if we're offline
-                        if (e.InnerException.Message.Contains("remote name could not be resolved"))
-                        {
-                            // Offline, don't display a modal dialog but use the status bar instead
-                            KeePassDatabase.UpdateStatus("Can't connect. Working offline.");
-                            return false;
-                        }
+                        // Offline, don't display a modal dialog but use the status bar instead
+                        KeePassDatabase.UpdateStatus("Can't connect. Working offline.");
+                        return false;
                     }
 
                     MessageBox.Show(errorMessage.ToString(), "Connection failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
