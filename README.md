@@ -17,6 +17,11 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.1.1.1 - January 20, 2020
+
+- Fixed a bug when you would go into the Graph Any Browser screen and close it again, that it would start throwing exceptions
+- Fixed a bug when you were in the SharePoint screen and would enter invalid data, that it would throw an exception
+
 Version 2.1.1.0 - December 25, 2019
 
 - Removed the OneDrive for Business option as the APIs behind this option have been removed by Microsoft. Use the "Any Browser" option on the OneDrive tab regardless of using OneDrive for Business or OneDrive Consumer from now on.

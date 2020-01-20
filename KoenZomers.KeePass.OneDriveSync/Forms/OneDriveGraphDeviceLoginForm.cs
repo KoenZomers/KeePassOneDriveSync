@@ -65,6 +65,9 @@ namespace KoenZomersKeePassOneDriveSync
             // Cast the OneDrive instance to a Graph API instance so it can be used in this form
             OneDriveApi = (OneDriveGraphApi)oneDriveApi;
 
+            // When the form is being closed, ensure the Timer processes are being stopped to avoid exceptions
+            FormClosing += OneDriveGraphDeviceLoginForm_FormClosing;
+
             // Set the defaults of the components on the form
             StatusLabel.Text = "Communicating with the Microsoft Graph API...";
             DeviceAuthLinkLabel.Visible = false;
@@ -82,6 +85,25 @@ namespace KoenZomersKeePassOneDriveSync
 
             // Enable a timer to initiate the communication with Microsoft Graph so the UI thread doesn't block
             StartSessionTimer.Enabled = true;
+        }
+
+        /// <summary>
+        /// When the form is closed, ensure Timer resources are being stopped
+        /// </summary>
+        private void OneDriveGraphDeviceLoginForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(AuthenticationCheckTimer != null && AuthenticationCheckTimer.Enabled)
+            {
+                AuthenticationCheckTimer.Enabled = false;
+            }
+            if(StartSessionTimer != null && StartSessionTimer.Enabled)
+            {
+                StartSessionTimer.Enabled = false;
+            }
+            if (AuthenticationCompleteTimer != null && AuthenticationCompleteTimer.Enabled)
+            {
+                AuthenticationCompleteTimer.Enabled = false;
+            }
         }
 
         /// <summary>
@@ -283,7 +305,6 @@ namespace KoenZomersKeePassOneDriveSync
         private void StartSessionTimer_Tick(object sender, EventArgs e)
         {
             // Only perform this action once
-            StartSessionTimer.Enabled = false;
             StartSessionTimer.Enabled = false;
 
             // Initiate the retrieval of a Device ID

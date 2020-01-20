@@ -52,11 +52,13 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         /// <returns>True if all fields contain a value, False if this is not the case</returns>
         private bool EnsureAllFieldsEntered()
         {
-            if (!AllFieldsContainText)
+            var allChecksPassed = AllFieldsContainText;
+
+            if(!allChecksPassed)
             {
                 MessageBox.Show(this, "All fields are required fields", "Please enter all fields", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            return true;
+            return allChecksPassed;
         }
 
         /// <summary>
@@ -70,10 +72,20 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 return;
             }
 
+            // Ensure the entered URL is a valid URI
+            Uri SharePointUri;
+            if (!Uri.TryCreate(SharePointUrl, UriKind.Absolute, out SharePointUri))
+            {
+                MessageBox.Show(this, "SharePoint site URL field does not contain a valid URL", "Invalid data entered", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                SharePointUrlTextBox.SelectAll();
+                SharePointUrlTextBox.Focus();
+                return;
+            }
+
             // Test the connection
             try
             {
-                using (var clientContext = Providers.SharePointProvider.CreateSharePointHttpClient(new Uri(SharePointUrl), SharePointClientId, SharePointClientSecret))
+                using (var clientContext = Providers.SharePointProvider.CreateSharePointHttpClient(SharePointUri, SharePointClientId, SharePointClientSecret))
                 {
                     if (await Providers.SharePointProvider.TestConnection(clientContext))
                     {
@@ -88,6 +100,9 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             catch(Exception ex)
             {
                 MessageBox.Show("Connection failed: '" + ex.Message + "'. Check your entered Client ID and Client Secret.", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ClientIdTextBox.SelectAll();
+                ClientIdTextBox.Focus();
+                return;
             }
         }
 
