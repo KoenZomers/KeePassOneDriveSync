@@ -17,6 +17,10 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.1.1.2 - March 13, 2020
+
+- Fixed a bug where corrupted configuration entries could not be deleted [issue 128](https://github.com/KoenZomers/KeePassOneDriveSync/issues/128)
+
 Version 2.1.1.1 - January 20, 2020
 
 - Fixed a bug when you would go into the Graph Any Browser screen and close it again, that it would start throwing exceptions

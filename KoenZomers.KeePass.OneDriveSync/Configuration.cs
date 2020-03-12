@@ -202,7 +202,7 @@ namespace KoenZomers.KeePass.OneDriveSync
             var encryptedDatabaseConfigs = PasswordDatabases.Where(pwdDb => pwdDb.Value.RefreshTokenStorage == Enums.OneDriveRefreshTokenStorage.DiskEncrypted);
             foreach (var encryptedDatabaseConfig in encryptedDatabaseConfigs)
             {
-                encryptedDatabaseConfig.Value.RefreshToken = Utilities.Unprotect(encryptedDatabaseConfig.Value.RefreshToken);
+                encryptedDatabaseConfig.Value.RefreshToken = string.IsNullOrWhiteSpace(encryptedDatabaseConfig.Value.RefreshToken) ? null : Utilities.Unprotect(encryptedDatabaseConfig.Value.RefreshToken);
             }
         }
 
@@ -226,7 +226,7 @@ namespace KoenZomers.KeePass.OneDriveSync
 
                         // Refresh token will be stored encrypted on disk, we create a copy of the configuration and encrypt the refresh token
                         var diskConfiguration = (Configuration)passwordDatabase.Value.Clone();
-                        diskConfiguration.RefreshToken = Utilities.Protect(diskConfiguration.RefreshToken);
+                        diskConfiguration.RefreshToken = string.IsNullOrWhiteSpace(diskConfiguration.RefreshToken) ? null : Utilities.Protect(diskConfiguration.RefreshToken);
                         passwordDatabasesForStoring.Add(passwordDatabase.Key, diskConfiguration);
                         break;
 
