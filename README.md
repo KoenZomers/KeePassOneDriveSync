@@ -21,7 +21,7 @@ Version 2.1.1.2 - March 13, 2020
 
 - Fixed a bug where corrupted configuration entries could not be deleted [issue 128](https://github.com/KoenZomers/KeePassOneDriveSync/issues/128)
 
-[Full version history](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/Version-history)
+[Full version history](https://github.com/KoenZomers/KeePassOneDriveSync/releases)
 
 ## TODO
 
