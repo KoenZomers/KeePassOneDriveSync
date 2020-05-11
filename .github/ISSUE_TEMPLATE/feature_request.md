@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea for the plugin
 title: "[FEATURE REQUEST] Brief description"
 labels: need to test
 assignees: KoenZomers
