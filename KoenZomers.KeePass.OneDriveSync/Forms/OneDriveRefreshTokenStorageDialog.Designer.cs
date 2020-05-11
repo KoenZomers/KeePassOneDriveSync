@@ -44,7 +44,7 @@
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Size = new System.Drawing.Size(744, 43);
             this.ExplanationLabel.TabIndex = 0;
-            this.ExplanationLabel.Text = "You\'ve successfully authenticated to OneDrive. Where should KeeOneDriveSync store" +
+            this.ExplanationLabel.Text = "You\'ve successfully authenticated to OneDrive. Where should KeePassOneDriveSync store" +
     " the OneDrive Refresh Token so it can keep your local database in sync with its " +
     "equivalent on OneDrive?";
             // 
