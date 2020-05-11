@@ -53,7 +53,7 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.CloseButton.Location = new System.Drawing.Point(431, 212);
+            this.CloseButton.Location = new System.Drawing.Point(431, 194);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(148, 51);
@@ -66,10 +66,10 @@
             // 
             this.NameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.NameLabel.Location = new System.Drawing.Point(18, 184);
+            this.NameLabel.Location = new System.Drawing.Point(13, 194);
             this.NameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.NameLabel.Name = "NameLabel";
-            this.NameLabel.Size = new System.Drawing.Size(559, 28);
+            this.NameLabel.Size = new System.Drawing.Size(405, 28);
             this.NameLabel.TabIndex = 6;
             this.NameLabel.Text = "Koen Zomers (koen@zomers.eu)";
             this.NameLabel.UseMnemonic = false;
@@ -81,8 +81,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ExplanationLabel.Location = new System.Drawing.Point(19, 71);
             this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ExplanationLabel.MinimumSize = new System.Drawing.Size(558, 118);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(558, 96);
+            this.ExplanationLabel.Size = new System.Drawing.Size(558, 118);
             this.ExplanationLabel.TabIndex = 7;
             this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
             // 
@@ -90,20 +91,20 @@
             // 
             this.WebsiteLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WebsiteLinkLabel.AutoSize = true;
-            this.WebsiteLinkLabel.Location = new System.Drawing.Point(20, 212);
+            this.WebsiteLinkLabel.Location = new System.Drawing.Point(15, 222);
             this.WebsiteLinkLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.WebsiteLinkLabel.Name = "WebsiteLinkLabel";
-            this.WebsiteLinkLabel.Size = new System.Drawing.Size(398, 20);
+            this.WebsiteLinkLabel.Size = new System.Drawing.Size(287, 20);
             this.WebsiteLinkLabel.TabIndex = 9;
             this.WebsiteLinkLabel.TabStop = true;
-            this.WebsiteLinkLabel.Text = "https://github.com/KoenZomers/KeePassOneDriveSync";
+            this.WebsiteLinkLabel.Text = "https://zomers.eu/keepassonedrivesync";
             this.WebsiteLinkLabel.Click += new System.EventHandler(this.WebsiteLinkLabel_Click);
             // 
             // OneDriveAboutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(597, 280);
+            this.ClientSize = new System.Drawing.Size(597, 262);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.WebsiteLinkLabel);
             this.Controls.Add(this.ExplanationLabel);
@@ -112,7 +113,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(619, 336);
+            this.MinimumSize = new System.Drawing.Size(619, 250);
             this.Name = "OneDriveAboutForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
