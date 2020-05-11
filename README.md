@@ -8,12 +8,12 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 [You can find the latest stable version here](../../releases/latest)
 
 ## Documentation ##
-- [System requirements](./SystemRequirements.md)
-- [Installation instructions](./Installaton%20Instructions.md)
-- [Configuration options](./Configuration.md)
-- [Checking for updates](./UpdateCheck.md)
-- [Troubleshooting](./Troubleshooting.md)
-- [Frequently Asked Questions](./Faq.md)
+- [System requirements](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/System-Requirements)
+- [Installation instructions](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/Installation-instructions)
+- [Configuration options](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/Configuration-options)
+- [Checking for updates](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/Update-check)
+- [Troubleshooting](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/Troubleshooting)
+- [Frequently Asked Questions](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/FAQ)
 
 ## Latest Version
 
@@ -115,9 +115,9 @@ Version 2.0.4.0 - May 5, 2019
 
 Version 2.0.3.0 - April 9, 2019
 
-- Removed the option to store the OneDrive Refresh Token in the Windows Credential Manager. Several people raised an issue where storing the Refresh Token in the Windows Credential Manager kept prompting them to log in each time they would restart KeePass or reopen the database. I found out that the Refresh Tokens have become longer. Because of this they don't fit into the Windows Credential Manager store anymore. There is no way for me to enlarge the storage in the Windows Credential Manager store nor to truncate the Refresh Token, so the only option I had left was to remove it as an option. Existing databases which are using it will keep using it. New databases won't get the option anymore. If you are facing the login prompt each time you open your database, go to Tools -> OneDriveSync Options and remove the line with your database. Hit ctrl+s again and set up your sync again choosing one of the two remaining options: storing it in the KeePass database or in the KeePass config file on your local disk. [More information on both options](OneDriveRefreshToken.md).
+- Removed the option to store the OneDrive Refresh Token in the Windows Credential Manager. Several people raised an issue where storing the Refresh Token in the Windows Credential Manager kept prompting them to log in each time they would restart KeePass or reopen the database. I found out that the Refresh Tokens have become longer. Because of this they don't fit into the Windows Credential Manager store anymore. There is no way for me to enlarge the storage in the Windows Credential Manager store nor to truncate the Refresh Token, so the only option I had left was to remove it as an option. Existing databases which are using it will keep using it. New databases won't get the option anymore. If you are facing the login prompt each time you open your database, go to Tools -> OneDriveSync Options and remove the line with your database. Hit ctrl+s again and set up your sync again choosing one of the two remaining options: storing it in the KeePass database or in the KeePass config file on your local disk. [More information on both options](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/OneDrive-Refresh-Token).
 
-[Version History](./VersionHistory.md)
+[Version History](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/Version-history)
 
 ## TODO
 
@@ -130,7 +130,7 @@ Special thanks to Oleksandr Senyuk for making [KeeSkyDrive](http://sourceforge.n
 
 ## Feedback
 
-Comments\suggestions\bug reports are welcome!
+[Comments\suggestions\bug reports](https://github.com/KoenZomers/KeePassOneDriveSync/issues/new/choose) are welcome!
 
 Koen Zomers
 koen@zomers.eu
