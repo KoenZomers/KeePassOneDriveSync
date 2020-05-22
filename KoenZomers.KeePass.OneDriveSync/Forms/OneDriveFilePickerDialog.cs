@@ -108,7 +108,8 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 {
                     Text = oneDriveItem.Name,
                     Tag = oneDriveItem.RemoteItem != null ? oneDriveItem.RemoteItem.Id : oneDriveItem.Id,
-                    ImageKey = oneDriveItem.Folder != null ? "Folder" : oneDriveItem.RemoteItem != null ? "RemoteFolder" : "File"
+                    ImageKey = oneDriveItem.Folder != null ? "Folder" : oneDriveItem.RemoteItem != null ? "RemoteFolder" : "File",
+                    Selected = oneDriveItem.Name.Equals(FileNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
                 };
 
                 if (oneDriveItem.Size > 0)
@@ -160,6 +161,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                         Text = oneDriveItem.Name,
                         Tag = oneDriveItem,
                         ImageKey = (oneDriveItem.RemoteItem != null && oneDriveItem.RemoteItem.Folder != null) || oneDriveItem.Folder != null ? "RemoteFolder" : "File",
+                        Selected = oneDriveItem.Name.Equals(FileNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
                     };
 
                     OneDriveIdentity sharedInfo = null;
@@ -227,6 +229,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                         Text = oneDriveItem.Name,
                         Tag = oneDriveItem,
                         ImageKey = oneDriveItem.Folder != null ? "RemoteFolder" : "File",
+                        Selected = oneDriveItem.Name.Equals(FileNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
                     };
 
                     OneDriveIdentity sharedInfo = null;

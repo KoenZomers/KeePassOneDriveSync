@@ -19,6 +19,17 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.1.2.0 - May 22, 2020
+
+- Fixed a bug where uploading a KeePass database to a document library on SharePoint having "Require documents to be checked out before they can be edited?" set to Yes would never make the KeePass database show up in SharePoint [issue 131](https://github.com/KoenZomers/KeePassOneDriveSync/issues/131)
+- Updated the SharePoint connector so that it now makes use of versioning in the SharePoint document library allowing you to see in SharePoint when it was updated and allowing you to revert to previous versions of the KeePass database just like already was the case when storing the KeePass database on OneDrive for Business
+- Removed OneDrive option in the cloud storage providers as there really should not be a reason anymore to use it instead of the Microsoft Graph options on the first tab
+- Removed the wording Microsoft Graph on the first tab of the cloud storage providers as I noticed it is confusing for many people. Named them OneDrive & OneDrive for Business instead. Technically, they're still using the Microsoft Graph to connect to OneDrive, so it's just a visual change.
+- Fixed a small issue when refreshing the SharePoint location picker or enabling/disabling showing of hidden libraries not entirely working well
+- Changed that in the OneDrive and SharePoint file pickers, if an item in the folder has the same name as shown in the filename textbox, that it will get selected by default to make it clearer that it already exists in that folder
+- Added tooltips for files and folders in the SharePoint file picker to show additional information on these items when hovering over them such as creation date/time, last modified date/time, file size and file version number
+- Updated links pointing to the GitHub documentation to the new GitHub Wiki location
+
 Version 2.1.1.2 - March 13, 2020
 
 - Fixed a bug where corrupted configuration entries could not be deleted [issue 128](https://github.com/KoenZomers/KeePassOneDriveSync/issues/128)
