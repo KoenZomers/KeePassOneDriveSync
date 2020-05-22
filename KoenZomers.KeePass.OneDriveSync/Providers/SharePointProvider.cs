@@ -63,7 +63,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     updateStatus(string.Format("Database {0} does not exist yet on SharePoint, uploading it now", databaseConfig.KeePassDatabase.Name));
 
                     // Upload the database to SharePoint
-                    eTag = await UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient);
+                    eTag = await UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, true);
 
                     updateStatus(string.Format(eTag == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
@@ -129,7 +129,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     localDatabaseToUpload = temporaryKeePassDatabasePath;
                 }
 
-                var uploadResult = await UploadFile(localDatabaseToUpload, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient);
+                var uploadResult = await UploadFile(localDatabaseToUpload, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, false);
 
                 // Delete the temporary database used for merging
                 System.IO.File.Delete(temporaryKeePassDatabasePath);
@@ -180,7 +180,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// <param name="fileName">Filename under which to store the file in SharePoint</param>
         /// <param name="httpClient">HttpClientt to use for the SharePoint communication</param>
         /// <returns>ETag of the uploaded file if successful, NULL if it failed</returns>
-        public static async Task<string> UploadFile(string localDatabasePath, string serverRelativeUrl, string fileName, HttpClient httpClient)
+        public static async Task<string> UploadFile(string localDatabasePath, string serverRelativeUrl, string fileName, HttpClient httpClient, bool asNewFile)
         {
             try
             {
@@ -194,11 +194,28 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     return null;
                 }
 
+                if(!asNewFile)
+                {
+                    // Send a check out request for the file, in case require checkout is enabled on the SharePoint Document Library
+                    using (var checkOutRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFileByServerRelativeUrl('" + serverRelativeUrl + "/" + fileName + "')/CheckOut()"))
+                    {
+                        checkOutRequest.Headers.Add("X-RequestDigest", formDigest);
+                        await httpClient.SendAsync(checkOutRequest);
+                    }
+                }
+
                 // Construct a new HTTP message
-                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFolderByServerRelativeUrl('" + serverRelativeUrl + "')/Files/Add(url='" + fileName + "',overwrite=true)?$select=ETag"))
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, asNewFile ? "web/GetFolderByServerRelativeUrl('" + serverRelativeUrl + "')/Files/Add(url='" + fileName + "',overwrite=true)?$select=ETag" :
+                                                                                              "web/GetFileByServerRelativeUrl('" + serverRelativeUrl + "/" + fileName + "')/$value"))
                 {
                     // Add the FormDiges to the request header
-                    httpRequest.Headers.Add("X-RequestDigest", formDigest);                    
+                    httpRequest.Headers.Add("X-RequestDigest", formDigest);
+                    
+                    if (!asNewFile)
+                    {
+                        // Add the header to indicate an update to an existing file should be done
+                        httpRequest.Headers.Add("X-HTTP-Method", "PUT");
+                    }
 
                     // Open the local file to upload
                     using (var fileContent = new StreamContent(System.IO.File.OpenRead(localDatabasePath)))
@@ -216,15 +233,31 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                             return null;
                         }
 
-                        // Upload was successful. Parse the result of the request.
-                        var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-                        // Validate if a ETag node exists in the result
-                        JToken value;
-                        if (responseJson.TryGetValue("ETag", out value))
+                        // Send a check in request of the file, in case require checkout is enabled on the SharePoint Document Library
+                        using (var checkInRequest = new HttpRequestMessage(HttpMethod.Post, "web/GetFileByServerRelativeUrl('" + serverRelativeUrl + "/" + fileName + "')/CheckIn(comment='" + (asNewFile ? "Added" : "Updated") + " by " + httpClient.DefaultRequestHeaders.UserAgent + "',checkintype=0)"))
                         {
-                            // ETag node exists, return it
-                            return value.Value<string>();
+                            checkInRequest.Headers.Add("X-RequestDigest", formDigest);
+                            await httpClient.SendAsync(checkInRequest);
+                        }
+
+                        if (asNewFile)
+                        {
+                            // Parse the result of the upload new file request to get the ETag
+                            var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+                            // Validate if a ETag node exists in the result
+                            JToken value;
+                            if (responseJson.TryGetValue("ETag", out value))
+                            {
+                                // ETag node exists, return it
+                                return value.Value<string>();
+                            }
+                        }
+                        else
+                        {
+                            // Updating a file does not support retrieval of the new ETag, so send out another request to get it
+                            var eTag = await GetEtagOfFile(httpClient, serverRelativeUrl + "/" + fileName);
+                            return eTag;
                         }
                     }
                 }
@@ -631,7 +664,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var assemblyVersion = Assembly.GetCallingAssembly().GetName().Version;
-            httpClient.DefaultRequestHeaders.Add("User-Agent", string.Format("KoenZomers KeePass OneDriveSync v{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
+            httpClient.DefaultRequestHeaders.Add("User-Agent", string.Format("KoenZomers KeePass OneDriveSync v{0}.{1}.{2}.{3}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build, assemblyVersion.Revision));
 
             return httpClient;
         }

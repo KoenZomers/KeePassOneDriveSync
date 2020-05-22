@@ -20,6 +20,7 @@ using System.Web.Script.Serialization;
 using AudienceRestriction = Microsoft.IdentityModel.Tokens.AudienceRestriction;
 using SecurityTokenHandlerConfiguration = Microsoft.IdentityModel.Tokens.SecurityTokenHandlerConfiguration;
 using X509SigningCredentials = Microsoft.IdentityModel.SecurityTokenService.X509SigningCredentials;
+using System.Net.Http;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -390,11 +391,12 @@ namespace KoenZomersKeePassOneDriveSync
         /// <returns>String representation of the realm GUID</returns>
         public static string GetRealmFromTargetUrl(Uri targetApplicationUri)
         {
-            WebRequest request = WebRequest.Create(targetApplicationUri + "/_vti_bin/client.svc");
+            WebRequest request = WebRequest.Create(targetApplicationUri.ToString().TrimEnd('/') + "/_vti_bin/client.svc");
             request.Headers.Add("Authorization: Bearer ");
 
             try
             {
+                // We're expecting an exception here as the server should return a 401 telling us how we can authenticate
                 using (request.GetResponse())
                 {
                 }

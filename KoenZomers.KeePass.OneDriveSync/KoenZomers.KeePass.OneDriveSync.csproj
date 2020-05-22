@@ -233,6 +233,7 @@
     <Content Include="Resources\DocLib.png" />
     <Content Include="Resources\File.png" />
     <Content Include="Resources\Folder.png" />
+    <Content Include="Resources\OneDriveBothClouds.png" />
     <None Include="Resources\mslogo.png" />
     <None Include="Resources\SharePoint.png" />
     <None Include="Resources\MSGraph.pdn" />

@@ -24,9 +24,8 @@ namespace KoenZomersKeePassOneDriveSync
         {
             InitializeComponent();
 
-            OneDriveConsumerPictureButton.BackgroundImage = Resources.OneDrive;
-            GraphPictureButton.BackgroundImage = Resources.MSGraph;
-            GraphDeviceLoginPictureButton.BackgroundImage = Resources.MSGraph;
+            GraphPictureButton.BackgroundImage = Resources.OneDriveBothClouds;
+            GraphDeviceLoginPictureButton.BackgroundImage = Resources.OneDriveBothClouds;
             SharePointPictureButton.BackgroundImage = Resources.SharePoint;
         }
 
