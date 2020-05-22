@@ -38,8 +38,9 @@ Version 2.1.2.0 - May 22, 2020
 
 ## TODO
 
-1. Add support for High Trust oAuth towards SharePoint 2013/2016/2019 on premises
-2. Add an easier way for SharePoint Online TeamSites to authenticate instead of using ACS oAuth tokens
+1. Add an easier way for SharePoint Online TeamSites to authenticate instead of using ACS oAuth tokens
+2. Add Microsoft Teams support to allow storing your KeePass database with a Microsoft Team
+3. Add option to automatically check for KeePass database updates
 
 ## Special Thanks
 
