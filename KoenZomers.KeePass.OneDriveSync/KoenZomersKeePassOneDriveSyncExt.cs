@@ -81,7 +81,7 @@ namespace KoenZomersKeePassOneDriveSync
         /// </summary>
         public override string UpdateUrl
         {
-            get { return "http://services.zomers.eu/KeeOneDrive/VersionCheck.txt"; }
+            get { return "https://raw.githubusercontent.com/KoenZomers/KeePassOneDriveSync/master/version.txt"; }
         }
 
         /// <summary>

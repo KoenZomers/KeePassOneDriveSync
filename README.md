@@ -19,6 +19,10 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
+Version 2.1.2.2 - November 24, 2021
+
+- Fixed the issue where the plugin cannot check for an update [#151](https://github.com/KoenZomers/KeePassOneDriveSync/issues/151)
+
 Version 2.1.2.1 - May 22, 2020
 
 - Bugfix causing opening of the KeePassOneDriveSync about dialog to crash KeePass. Thanks to Drew O'Hara for letting me know!
