@@ -66,7 +66,7 @@
             // 
             this.NameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.NameLabel.Location = new System.Drawing.Point(13, 194);
+            this.NameLabel.Location = new System.Drawing.Point(20, 194);
             this.NameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.NameLabel.Name = "NameLabel";
             this.NameLabel.Size = new System.Drawing.Size(405, 28);
@@ -85,19 +85,19 @@
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Size = new System.Drawing.Size(558, 118);
             this.ExplanationLabel.TabIndex = 7;
-            this.ExplanationLabel.Text = "This KeePass plugin allows synchronizing your KeePass databases with one or multiple OneDrive accounts. It is inspired by KeeSkyDrive by Oleksandr Senyuk. It is free to use and open source. Please leave these credits in place if you decide to use my source code. Feel free to contact me in case of questions or suggestions.";
+            this.ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
             // 
             // WebsiteLinkLabel
             // 
             this.WebsiteLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WebsiteLinkLabel.AutoSize = true;
-            this.WebsiteLinkLabel.Location = new System.Drawing.Point(15, 222);
+            this.WebsiteLinkLabel.Location = new System.Drawing.Point(19, 222);
             this.WebsiteLinkLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.WebsiteLinkLabel.Name = "WebsiteLinkLabel";
-            this.WebsiteLinkLabel.Size = new System.Drawing.Size(287, 20);
+            this.WebsiteLinkLabel.Size = new System.Drawing.Size(398, 20);
             this.WebsiteLinkLabel.TabIndex = 9;
             this.WebsiteLinkLabel.TabStop = true;
-            this.WebsiteLinkLabel.Text = "https://zomers.eu/keepassonedrivesync";
+            this.WebsiteLinkLabel.Text = "https://github.com/KoenZomers/KeePassOneDriveSync";
             this.WebsiteLinkLabel.Click += new System.EventHandler(this.WebsiteLinkLabel_Click);
             // 
             // OneDriveAboutForm

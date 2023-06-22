@@ -25,7 +25,7 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void WebsiteLinkLabel_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://zomers.eu/KeePassOneDriveSync"); 
+            System.Diagnostics.Process.Start("https://github.com/KoenZomers/KeePassOneDriveSync"); 
         }
     }
 }
