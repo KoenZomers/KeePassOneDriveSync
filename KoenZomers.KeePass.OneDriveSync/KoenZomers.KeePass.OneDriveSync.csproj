@@ -39,7 +39,7 @@
       <HintPath>.\CredentialManagement.dll</HintPath>
     </Reference>
     <Reference Include="KeePass">
-      <HintPath>C:\Program Files (x86)\KeePass Password Safe 2\KeePass.exe</HintPath>
+      <HintPath>..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe</HintPath>
     </Reference>
     <Reference Include="KoenZomers.OneDrive.Api, Version=2.3.0.3, Culture=neutral, PublicKeyToken=c94340d84666bdcb, processorArchitecture=MSIL">
       <HintPath>Packages\KoenZomers.OneDrive.Api.2.3.0.3\lib\net452\KoenZomers.OneDrive.Api.dll</HintPath>
