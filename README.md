@@ -1,13 +1,11 @@
 # KeePass OneDrive Sync
 
-> Notice: Through the years I have enjoyed building and maintaining this code. I have been surprised to see how many people started using this plugin and how often around the globe I met people that asked me if I was the person behind the plugin. Time however is scarse and as much as I would like to, I'm having too many projects to work on in my spare time, so I need to get rid of some, this unfortunately being one. I will therefore no longer maintain this code. Feel free to fork off of it and make your own version out of it. I'll be happy to link to it.
-
 ![](https://github.com/KoenZomers/KeePassOneDriveSync/workflows/.NET%20Core/badge.svg) ![](https://img.shields.io/github/downloads/koenzomers/KeePassOneDriveSync/total.svg) ![](https://img.shields.io/github/issues/koenzomers/KeePassOneDriveSync.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-A free plugin for KeePass (installable and portable) that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Office 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your devices. Note that this plugin is only supported on Windows based platforms, but [has been reported to work on \*nix as well using Mono](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/System-Requirements#nix-through-mono). It can also operate in conjunction with other KeePass plugins serving other operating systems such as KeePass2Android on Android devices.
+A free plugin for KeePass (installable and portable) that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Microsoft 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your devices. Note that this plugin is only supported on Windows based platforms, but [has been reported to work on \*nix as well using Mono](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/System-Requirements#nix-through-mono). It can also operate in conjunction with other KeePass plugins serving other operating systems such as KeePass2Android on Android devices.
 
 ## Download ##
-Download the PLGX and place it inside your KeePass\Plugins folder. Typically this will be `C:\Program Files (x86)\KeePass Password Safe 2\Plugins` or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. When upgrading from a previous version of this plugin, simply ensure KeePass is closed, overwrite the existing PLGX and start KeePass again.
+Download the PLGX and place it inside your KeePass\Plugins folder. Typically this will be `C:\Program Files\KeePass Password Safe 2\Plugins` or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. When upgrading from a previous version of this plugin, simply ensure KeePass is closed, overwrite the existing PLGX and start KeePass again.
 
 [You can find the latest stable version here](../../releases/latest)
 
@@ -23,6 +21,7 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 Version 3.0.0.0 - July 11, 2026
 
+- Fixed the authentication issue of the previous version
 - Migrated to version 3 of the [KoenZomers.OneDrive.Api](https://github.com/KoenZomers/OneDriveAPI) library, which now authenticates using the Microsoft Authentication Library (MSAL) instead of the legacy hand-rolled OAuth implementation
 - Removed the "Built-in browser" OneDrive sign-in option; only the "Any browser" option remains, which now opens your system's default browser and signs you in via MSAL's system browser flow (listening on `http://localhost`) instead of the device code flow
 - Removed the consumer OneDrive (Live Connect) and legacy SharePoint REST v2.0 (OneDrive for Business O365) connectors; all OneDrive traffic now goes through the Microsoft Graph API. It still works with Consumer and Business OneDrives.
