@@ -1,18 +1,27 @@
-name: Build
+name: Release
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 3.0.1)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark this release as a pre-release'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
 
     env:
       Solution_Path: KoenZomers.KeePass.OneDriveSync.sln
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -47,6 +56,18 @@ jobs:
           New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
           Copy-Item -Path (Join-Path $keePassExe.DirectoryName '*') -Destination $targetDir -Recurse -Force
 
+      - name: Update version number
+        working-directory: repo
+        run: |
+          $version = "${{ inputs.version }}"
+          $assemblyVersion = $version
+          if (($version.Split('.')).Length -lt 4) {
+            $assemblyVersion = "$version.0"
+          }
+          $assemblyInfoPath = 'KoenZomers.KeePass.OneDriveSync\Properties\AssemblyInfo.cs'
+          (Get-Content $assemblyInfoPath) -replace 'AssemblyVersion\("[^"]+"\)', "AssemblyVersion(`"$assemblyVersion`")" | Set-Content $assemblyInfoPath
+          Set-Content -Path 'version.txt' -Value ":`nKoenZomers.KeePass.OneDriveSync:$assemblyVersion`n:"
+
       - name: Restore NuGet packages
         working-directory: repo
         run: nuget restore $env:Solution_Path
@@ -61,9 +82,13 @@ jobs:
           $stagingDir = 'plugin-package\KeePassOneDriveSync'
           New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
           Get-ChildItem -Path $releaseDir -Include *.dll,*.pdb -Recurse | Copy-Item -Destination $stagingDir -Force
+          Compress-Archive -Path $stagingDir -DestinationPath "KeePassOneDriveSync-${{ inputs.version }}.zip" -Force
 
-      - name: Upload plugin artifact
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: KeePassOneDriveSync
-          path: plugin-package\*
+          tag_name: ${{ inputs.version }}
+          name: Version ${{ inputs.version }}
+          prerelease: ${{ inputs.prerelease }}
+          generate_release_notes: true
+          files: KeePassOneDriveSync-${{ inputs.version }}.zip
