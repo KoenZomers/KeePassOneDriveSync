@@ -1,6 +1,4 @@
-# KeePass OneDrive Sync
-
-<img src="./Screenshots/Logo.png" width="250" alt="KeePass OneDriveSync logo" />
+<img src="./Screenshots/Logo.png" width="450" alt="KeePass OneDriveSync logo" />
 
 ![](https://github.com/KoenZomers/KeePassOneDriveSync/workflows/.NET%20Core/badge.svg) ![](https://img.shields.io/github/downloads/koenzomers/KeePassOneDriveSync/total.svg) ![](https://img.shields.io/github/issues/koenzomers/KeePassOneDriveSync.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
