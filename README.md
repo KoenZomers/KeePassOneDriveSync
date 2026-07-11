@@ -5,11 +5,11 @@
 A free plugin for KeePass (installable and portable) that allows syncing of multiple password databases from multiple OneDrives to a local version. It allows you to synchronize an unlimited amount of KeePass databases with an unlimited amount of OneDrives. So i.e. you can synchronize your personal KeePass database with your personal OneDrive and your work related KeePass with a OneDrive for Business on Microsoft 365 that is shared among your colleagues, if you wish. This way it's also easy to be able to access your same KeePass database from all of your devices. Note that this plugin is only supported on Windows based platforms, but [has been reported to work on \*nix as well using Mono](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/System-Requirements#nix-through-mono). It can also operate in conjunction with other KeePass plugins serving other operating systems such as KeePass2Android on Android devices.
 
 ## How to use ##
-Download the **KeePassOneDriveSync.zip** and extract its contents to your KeePass\Plugins folder. Typically this will be `C:\Program Files\KeePass Password Safe 2\Plugins` or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. It should create a folder named KeePassOneDriveSync inside your plugins folder, which will contain a bunch of DLL files.
+Download the **KeePassOneDriveSync-<version>.zip** from [here](../../releases/latest) and extract its contents to your KeePass\Plugins folder. Typically this will be `C:\Program Files\KeePass Password Safe 2\Plugins` or if you're using KeePass Portable, put it in a subfolder called Plugins from where your keepass.exe is located. It should create a folder named KeePassOneDriveSync inside your plugins folder, which will contain a bunch of DLL files.
 
 When upgrading from a previous version of this plugin, simply ensure KeePass is closed, delete the existing KeePassOneDriveSync folder inside the KeePass plugins folder, extract the new files to it and launch it again. If having used a version of this plugin prior to 3.0, ensure you manually delete the existing KeeOneDriveSync.plgx file inside your KeePass plugins root folder so it doesn't conflict with the latest version.
 
-[You can find the latest stable version here](../../releases/latest)
+[You can find the latest version here](../../releases/latest)
 
 ## Documentation ##
 - [System requirements](https://github.com/KoenZomers/KeePassOneDriveSync/wiki/System-Requirements)
