@@ -40,10 +40,12 @@
   </PropertyGroup>
   <Target Name="BuildLocalOneDriveApi" BeforeTargets="ResolveAssemblyReferences;BeforeBuild" Condition="Exists('$(OneDriveApiLocalRepo)')">
     <Exec Command="dotnet build &quot;$(OneDriveApiLocalRepo)&quot; -c Debug -f netstandard2.0" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Libs" Condition="!Exists('$(MSBuildProjectDirectory)\Libs')" />
+    <Copy SourceFiles="$(OneDriveApiLocalDll)" DestinationFolder="$(MSBuildProjectDirectory)\Libs" SkipUnchangedFiles="true" />
   </Target>
   <ItemGroup Condition="Exists('$(OneDriveApiLocalRepo)')">
     <Reference Include="KoenZomers.OneDrive.Api">
-      <HintPath>..\..\OneDriveAPI\Api\bin\Debug\netstandard2.0\KoenZomers.OneDrive.Api.dll</HintPath>
+      <HintPath>Libs\KoenZomers.OneDrive.Api.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
