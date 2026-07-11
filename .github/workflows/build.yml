@@ -18,6 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout OneDrive API dependency
+        uses: actions/checkout@v4
+        with:
+          repository: KoenZomers/OneDriveAPI
+          path: OneDriveAPI-src
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
@@ -27,11 +33,28 @@ jobs:
       - name: Install KeePass
         run: choco install keepass -y --no-progress
 
+      - name: Resolve build properties
+        id: props
+        run: |
+          $keePassExe = Get-ChildItem -Path 'C:\Program Files*','C:\ProgramData\chocolatey\lib' -Filter 'KeePass.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $keePassExe) {
+            throw "KeePass.exe not found after installation"
+          }
+          $oneDriveApiRepo = Join-Path $env:GITHUB_WORKSPACE 'OneDriveAPI-src\Api\API.csproj'
+          $oneDriveApiDll = Join-Path $env:GITHUB_WORKSPACE 'OneDriveAPI-src\Api\bin\Debug\netstandard2.0\KoenZomers.OneDrive.Api.dll'
+          "KeePassExePath=$($keePassExe.FullName)" >> $env:GITHUB_OUTPUT
+          "OneDriveApiLocalRepo=$oneDriveApiRepo" >> $env:GITHUB_OUTPUT
+          "OneDriveApiLocalDll=$oneDriveApiDll" >> $env:GITHUB_OUTPUT
+
       - name: Restore NuGet packages
         run: nuget restore $env:Solution_Path
 
       - name: Build solution
-        run: msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
+        run: >
+          msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
+          /p:KeePassExePath="${{ steps.props.outputs.KeePassExePath }}"
+          /p:OneDriveApiLocalRepo="${{ steps.props.outputs.OneDriveApiLocalRepo }}"
+          /p:OneDriveApiLocalDll="${{ steps.props.outputs.OneDriveApiLocalDll }}"
 
       - name: Upload PLGX artifact
         uses: actions/upload-artifact@v4

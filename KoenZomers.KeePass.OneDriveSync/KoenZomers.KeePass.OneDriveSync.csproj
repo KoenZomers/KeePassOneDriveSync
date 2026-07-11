@@ -37,6 +37,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <OneDriveApiLocalRepo>..\..\OneDriveAPI\Api\API.csproj</OneDriveApiLocalRepo>
     <OneDriveApiLocalDll>..\..\OneDriveAPI\Api\bin\Debug\netstandard2.0\KoenZomers.OneDrive.Api.dll</OneDriveApiLocalDll>
+    <KeePassExePath Condition="'$(KeePassExePath)' == ''">..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe</KeePassExePath>
   </PropertyGroup>
   <Target Name="BuildLocalOneDriveApi" BeforeTargets="ResolveAssemblyReferences;BeforeBuild" Condition="Exists('$(OneDriveApiLocalRepo)')">
     <Exec Command="dotnet build &quot;$(OneDriveApiLocalRepo)&quot; -c Debug -f netstandard2.0" />
@@ -49,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="KeePass">
-      <HintPath>..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe</HintPath>
+      <HintPath>$(KeePassExePath)</HintPath>
     </Reference>
     <PackageReference Include="Microsoft.Identity.Client" Version="4.86.0" />
     <PackageReference Include="Microsoft.IdentityModel" Version="6.1.7600.16394" />
