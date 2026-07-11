@@ -58,7 +58,7 @@ jobs:
       - name: Package plugin output
         run: |
           $releaseDir = 'repo\KoenZomers.KeePass.OneDriveSync\bin\Release'
-          $stagingDir = 'plugin-package'
+          $stagingDir = 'plugin-package\KeePassOneDriveSync'
           New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
           Get-ChildItem -Path $releaseDir -Include *.dll,*.pdb -Recurse | Copy-Item -Destination $stagingDir -Force
 
