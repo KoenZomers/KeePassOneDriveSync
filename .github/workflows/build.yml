@@ -35,14 +35,17 @@ jobs:
       - name: Install KeePass
         run: choco install keepass -y --no-progress
 
-      - name: Resolve build properties
-        id: props
+      - name: Stage KeePass at expected relative reference path
         run: |
           $keePassExe = Get-ChildItem -Path 'C:\Program Files*','C:\ProgramData\chocolatey\lib' -Filter 'KeePass.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
           if (-not $keePassExe) {
             throw "KeePass.exe not found after installation"
           }
-          "KeePassExePath=$($keePassExe.FullName)" >> $env:GITHUB_OUTPUT
+          # Matches the project's literal HintPath: ..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe
+          $projectDir = Join-Path $env:GITHUB_WORKSPACE 'repo\KoenZomers.KeePass.OneDriveSync'
+          $targetDir = [System.IO.Path]::GetFullPath((Join-Path $projectDir '..\..\..\..\Program Files\KeePass Password Safe 2'))
+          New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+          Copy-Item -Path (Join-Path $keePassExe.DirectoryName '*') -Destination $targetDir -Recurse -Force
 
       - name: Restore NuGet packages
         working-directory: repo
@@ -50,12 +53,17 @@ jobs:
 
       - name: Build solution
         working-directory: repo
-        run: >
-          msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
-          /p:KeePassExePath="${{ steps.props.outputs.KeePassExePath }}"
+        run: msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
 
-      - name: Upload PLGX artifact
+      - name: Package plugin output
+        run: |
+          $releaseDir = 'repo\KoenZomers.KeePass.OneDriveSync\bin\Release'
+          $stagingDir = 'plugin-package'
+          New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
+          Get-ChildItem -Path $releaseDir -Include *.dll,*.pdb -Recurse | Copy-Item -Destination $stagingDir -Force
+
+      - name: Upload plugin artifact
         uses: actions/upload-artifact@v4
         with:
-          name: KeeOneDriveSync-plgx
-          path: repo\KeeOneDriveSync.plgx
+          name: KeeOneDriveSync-dll
+          path: plugin-package\*

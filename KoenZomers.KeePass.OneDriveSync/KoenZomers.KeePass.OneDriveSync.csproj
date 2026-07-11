@@ -36,22 +36,19 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <OneDriveApiLocalRepo>..\..\OneDriveAPI\Api\API.csproj</OneDriveApiLocalRepo>
     <OneDriveApiLocalDll>..\..\OneDriveAPI\Api\bin\Debug\netstandard2.0\KoenZomers.OneDrive.Api.dll</OneDriveApiLocalDll>
-    <KeePassExePath Condition="'$(KeePassExePath)' == ''">..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe</KeePassExePath>
   </PropertyGroup>
   <Target Name="BuildLocalOneDriveApi" BeforeTargets="ResolveAssemblyReferences;BeforeBuild" Condition="Exists('$(OneDriveApiLocalRepo)')">
     <Exec Command="dotnet build &quot;$(OneDriveApiLocalRepo)&quot; -c Debug -f netstandard2.0" />
-    <MakeDir Directories="$(MSBuildProjectDirectory)\Libs" Condition="!Exists('$(MSBuildProjectDirectory)\Libs')" />
-    <Copy SourceFiles="$(OneDriveApiLocalDll)" DestinationFolder="$(MSBuildProjectDirectory)\Libs" SkipUnchangedFiles="true" />
   </Target>
   <ItemGroup Condition="Exists('$(OneDriveApiLocalRepo)')">
     <Reference Include="KoenZomers.OneDrive.Api">
-      <HintPath>Libs\KoenZomers.OneDrive.Api.dll</HintPath>
+      <HintPath>$(OneDriveApiLocalDll)</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="KeePass">
-      <HintPath>$(KeePassExePath)</HintPath>
+      <HintPath>..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe</HintPath>
     </Reference>
     <PackageReference Include="Microsoft.Identity.Client" Version="4.86.0" />
     <PackageReference Include="Microsoft.IdentityModel" Version="6.1.7600.16394" />
@@ -211,14 +208,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF "$(ConfigurationName)"=="Release" (
-    CALL "$(SolutionDir)create-plgx.cmd"
-) ELSE (
-    IF EXIST "$(ProgramFiles)\KeePass Password Safe 2\KeePass.exe" (
-        IF NOT EXIST "$(ProgramFiles)\KeePass Password Safe 2\Plugins" MKDIR "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
-        XCOPY /Y /D "$(TargetDir)*.dll" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
-        XCOPY /Y /D "$(TargetDir)*.pdb" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
-    )
+    <PostBuildEvent>IF EXIST "$(ProgramFiles)\KeePass Password Safe 2\KeePass.exe" (
+    IF NOT EXIST "$(ProgramFiles)\KeePass Password Safe 2\Plugins" MKDIR "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
+    XCOPY /Y /D "$(TargetDir)*.dll" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
+    XCOPY /Y /D "$(TargetDir)*.pdb" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

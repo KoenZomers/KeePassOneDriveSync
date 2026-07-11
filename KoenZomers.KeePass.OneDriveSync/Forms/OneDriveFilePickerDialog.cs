@@ -98,7 +98,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 itemCollection = await _oneDriveApi.GetChildrenByFolderId(parentItemId);
                 CurrentMyOneDriveItem = await _oneDriveApi.GetItemById(parentItemId);
                 GoToRootToolStripMenuItem.Enabled = true;
-                UpButton.Enabled = CurrentMyOneDriveItem?.ParentReference != null;
+                UpButton.Enabled = CurrentMyOneDriveItem.ParentReference != null;
                 UpButton.Tag = CurrentMyOneDriveItem.ParentReference != null ? CurrentMyOneDriveItem.ParentReference.Id : null;
                 CloudLocationPath.Text = CurrentMyOneDriveItem.ParentReference != null ? CurrentMyOneDriveItem.ParentReference.Path + "/" + CurrentMyOneDriveItem.Name : "";
              }

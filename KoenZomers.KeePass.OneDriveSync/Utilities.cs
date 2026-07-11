@@ -126,11 +126,11 @@ namespace KoenZomersKeePassOneDriveSync
                 ? "You have successfully authenticated. You can close this browser tab and return to KeePass."
                 : "Something went wrong while authenticating. You can close this browser tab and return to KeePass to try again.";
 
-            return $@"<html><head><title>{title}</title></head>
+            return string.Format(@"<html><head><title>{0}</title></head>
 <body style=""font-family: Segoe UI, Arial, sans-serif; text-align: center; margin-top: 15%;"">
-<h1 style=""color: {accentColor};"">{title}</h1>
-<p>{message}</p>
-</body></html>";
+<h1 style=""color: {1};"">{0}</h1>
+<p>{2}</p>
+</body></html>", title, accentColor, message);
         }
 
         #endregion
