@@ -24,17 +24,14 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
 
+      - name: Install KeePass
+        run: choco install keepass -y --no-progress
+
       - name: Restore NuGet packages
         run: nuget restore $env:Solution_Path
 
       - name: Build solution
         run: msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
-
-      - name: Install KeePass
-        run: choco install keepass -y --no-progress
-
-      - name: Create PLGX package
-        run: .\create-plgx.cmd
 
       - name: Upload PLGX artifact
         uses: actions/upload-artifact@v4
