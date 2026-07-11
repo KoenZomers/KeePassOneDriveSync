@@ -43,7 +43,7 @@
   </Target>
   <ItemGroup Condition="Exists('$(OneDriveApiLocalRepo)')">
     <Reference Include="KoenZomers.OneDrive.Api">
-      <HintPath>$(OneDriveApiLocalDll)</HintPath>
+      <HintPath>..\..\OneDriveAPI\Api\bin\Debug\netstandard2.0\KoenZomers.OneDrive.Api.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
