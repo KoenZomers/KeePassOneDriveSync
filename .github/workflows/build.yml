@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      Solution_Path: KoenZomers.KeePass.OneDriveSync.sln
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore $env:Solution_Path
+
+      - name: Build solution
+        run: msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
+
+      - name: Install KeePass
+        run: choco install keepass -y --no-progress
+
+      - name: Create PLGX package
+        run: .\create-plgx.cmd
+
+      - name: Upload PLGX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeeOneDriveSync-plgx
+          path: KeeOneDriveSync.plgx
