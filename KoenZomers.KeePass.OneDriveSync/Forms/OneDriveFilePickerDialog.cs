@@ -12,7 +12,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         /// <summary>
         /// Instance of the OneDrive API that can be used to communicate with the cloud service
         /// </summary>
-        private readonly OneDriveApi _oneDriveApi;
+        private readonly OneDriveGraphApi _oneDriveApi;
 
         /// <summary>
         /// Reference to the currently displayed folder on OneDrive for the My files tab
@@ -59,13 +59,14 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             set { FileNameTextBox.Enabled = value; }
         }
 
-        public OneDriveFilePickerDialog(OneDriveApi oneDriveApi)
+        public OneDriveFilePickerDialog(OneDriveGraphApi oneDriveApi)
         {
             InitializeComponent();
 
             _oneDriveApi = oneDriveApi;
 
-            var sharedWithMeDisabled = (oneDriveApi is OneDriveForBusinessO365Api);
+            // "Shared with me" is supported via the Microsoft Graph API, which is the only OneDrive API implementation in use now
+            var sharedWithMeDisabled = false;
 
             SharedWithMePicker.Visible = !sharedWithMeDisabled;
             SharedWithMeUpButton.Visible = !sharedWithMeDisabled;
@@ -97,7 +98,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 itemCollection = await _oneDriveApi.GetChildrenByFolderId(parentItemId);
                 CurrentMyOneDriveItem = await _oneDriveApi.GetItemById(parentItemId);
                 GoToRootToolStripMenuItem.Enabled = true;
-                UpButton.Enabled = CurrentMyOneDriveItem.ParentReference != null;
+                UpButton.Enabled = CurrentMyOneDriveItem?.ParentReference != null;
                 UpButton.Tag = CurrentMyOneDriveItem.ParentReference != null ? CurrentMyOneDriveItem.ParentReference.Id : null;
                 CloudLocationPath.Text = CurrentMyOneDriveItem.ParentReference != null ? CurrentMyOneDriveItem.ParentReference.Path + "/" + CurrentMyOneDriveItem.Name : "";
              }

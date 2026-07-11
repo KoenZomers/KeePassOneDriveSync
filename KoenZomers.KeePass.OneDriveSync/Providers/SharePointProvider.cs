@@ -1,9 +1,9 @@
 ﻿using KoenZomers.KeePass.OneDriveSync;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -158,14 +158,15 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 }
 
                 // Attempt was successful, parse the JSON response
-                var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-                // Validate if ETag node exists in the result
-                JToken value;
-                if (responseJson.TryGetValue("ETag", out value))
+                using (var responseJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
                 {
-                    // ETag node exists, return it
-                    return value.Value<string>();
+                    // Validate if ETag node exists in the result
+                    JsonElement value;
+                    if (responseJson.RootElement.TryGetProperty("ETag", out value))
+                    {
+                        // ETag node exists, return it
+                        return value.GetString();
+                    }
                 }
             }
 
@@ -243,14 +244,15 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                         if (asNewFile)
                         {
                             // Parse the result of the upload new file request to get the ETag
-                            var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-                            // Validate if a ETag node exists in the result
-                            JToken value;
-                            if (responseJson.TryGetValue("ETag", out value))
+                            using (var responseJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
                             {
-                                // ETag node exists, return it
-                                return value.Value<string>();
+                                // Validate if a ETag node exists in the result
+                                JsonElement value;
+                                if (responseJson.RootElement.TryGetProperty("ETag", out value))
+                                {
+                                    // ETag node exists, return it
+                                    return value.GetString();
+                                }
                             }
                         }
                         else
@@ -557,14 +559,15 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     }
 
                     // Request was successful. Parse the result of the request.
-                    var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-                    // Validate if a ServerRelativeUrl node exists in the result
-                    JToken value;
-                    if (responseJson.TryGetValue("ServerRelativeUrl", out value))
+                    using (var responseJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
                     {
-                        // ServerRelativeUrl node exists, return it
-                        return value.Value<string>();
+                        // Validate if a ServerRelativeUrl node exists in the result
+                        JsonElement value;
+                        if (responseJson.RootElement.TryGetProperty("ServerRelativeUrl", out value))
+                        {
+                            // ServerRelativeUrl node exists, return it
+                            return value.GetString();
+                        }
                     }
                 }
             }
@@ -595,14 +598,15 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     }
 
                     // Request was successful. Parse the result of the request.
-                    var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-                    // Validate if a FormDigestValue node exists in the result
-                    JToken value;
-                    if (responseJson.TryGetValue("FormDigestValue", out value))
+                    using (var responseJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
                     {
-                        // FormDigestValue node exists, return it
-                        return value.Value<string>();
+                        // Validate if a FormDigestValue node exists in the result
+                        JsonElement value;
+                        if (responseJson.RootElement.TryGetProperty("FormDigestValue", out value))
+                        {
+                            // FormDigestValue node exists, return it
+                            return value.GetString();
+                        }
                     }
                 }
             }
@@ -720,14 +724,15 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     }
 
                     // Database config was provided. Parse the result of the request.
-                    var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-                    // Validate if a Title node exists in the result
-                    JToken value;
-                    if (responseJson.TryGetValue("Title", out value))
+                    using (var responseJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
                     {
-                        // Title node exists, update the database config with the site title
-                        databaseConfig.OneDriveName = value.Value<string>();
+                        // Validate if a Title node exists in the result
+                        JsonElement value;
+                        if (responseJson.RootElement.TryGetProperty("Title", out value))
+                        {
+                            // Title node exists, update the database config with the site title
+                            databaseConfig.OneDriveName = value.GetString();
+                        }
                     }
                 }
 

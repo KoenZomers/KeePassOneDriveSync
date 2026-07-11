@@ -21,9 +21,14 @@ Download the PLGX and place it inside your KeePass\Plugins folder. Typically thi
 
 ## Latest Version
 
-Version 2.1.2.2 - November 24, 2021
+Version 3.0.0.0 - July 11, 2026
 
-- Fixed the issue where the plugin cannot check for an update [#151](https://github.com/KoenZomers/KeePassOneDriveSync/issues/151)
+- Migrated to version 3 of the [KoenZomers.OneDrive.Api](https://github.com/KoenZomers/OneDriveAPI) library, which now authenticates using the Microsoft Authentication Library (MSAL) instead of the legacy hand-rolled OAuth implementation
+- Removed the "Built-in browser" OneDrive sign-in option; only the "Any browser" option remains, which now opens your system's default browser and signs you in via MSAL's system browser flow (listening on `http://localhost`) instead of the device code flow
+- Removed the consumer OneDrive (Live Connect) and legacy SharePoint REST v2.0 (OneDrive for Business O365) connectors; all OneDrive traffic now goes through the Microsoft Graph API. It still works with Consumer and Business OneDrives.
+- Removed the option to choose where the OneDrive refresh token is stored (disk, Windows Credential Manager or the KeePass database itself). The (now MSAL-based) token cache is always stored DPAPI-encrypted in KeePass.config.xml, fully automatically
+- Replaced Newtonsoft.Json with the native `System.Text.Json` for all JSON (de)serialization
+- Various internal cleanup and dependency updates
 
 Version 2.1.2.1 - May 22, 2020
 

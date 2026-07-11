@@ -24,7 +24,6 @@ namespace KoenZomersKeePassOneDriveSync
         {
             InitializeComponent();
 
-            GraphPictureButton.BackgroundImage = Resources.OneDriveBothClouds;
             GraphDeviceLoginPictureButton.BackgroundImage = Resources.OneDriveBothClouds;
             SharePointPictureButton.BackgroundImage = Resources.SharePoint;
         }
@@ -45,14 +44,6 @@ namespace KoenZomersKeePassOneDriveSync
             Close();
         }
 
-        private void GraphPictureButton_Click(object sender, EventArgs e)
-        {
-            ChosenCloudStorageType = CloudStorageType.MicrosoftGraph;
-            DialogResult = DialogResult.OK;
-
-            Close();
-        }
-
         private void SharePointPictureButton_Click(object sender, EventArgs e)
         {
             ChosenCloudStorageType = CloudStorageType.SharePoint;
@@ -68,7 +59,7 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void GraphDeviceLoginPictureButton_Click(object sender, EventArgs e)
         {
-            ChosenCloudStorageType = CloudStorageType.MicrosoftGraphDeviceLogin;
+            ChosenCloudStorageType = CloudStorageType.MicrosoftGraphMsalLogin;
             DialogResult = DialogResult.OK;
 
             Close();

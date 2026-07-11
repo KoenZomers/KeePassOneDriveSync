@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KoenZomersKeePassOneDriveSync</RootNamespace>
     <AssemblyName>KoenZomersKeePassOneDriveSync</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,28 +33,28 @@
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>5</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="CredentialManagement, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\CredentialManagement.dll</HintPath>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <OneDriveApiLocalRepo>..\..\OneDriveAPI\Api\API.csproj</OneDriveApiLocalRepo>
+    <OneDriveApiLocalDll>..\..\OneDriveAPI\Api\bin\Debug\netstandard2.0\KoenZomers.OneDrive.Api.dll</OneDriveApiLocalDll>
+  </PropertyGroup>
+  <Target Name="BuildLocalOneDriveApi" BeforeTargets="ResolveAssemblyReferences;BeforeBuild" Condition="Exists('$(OneDriveApiLocalRepo)')">
+    <Exec Command="dotnet build &quot;$(OneDriveApiLocalRepo)&quot; -c Debug -f netstandard2.0" />
+  </Target>
+  <ItemGroup Condition="Exists('$(OneDriveApiLocalRepo)')">
+    <Reference Include="KoenZomers.OneDrive.Api">
+      <HintPath>$(OneDriveApiLocalDll)</HintPath>
+      <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="KeePass">
       <HintPath>..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe</HintPath>
     </Reference>
-    <Reference Include="KoenZomers.OneDrive.Api, Version=2.3.0.3, Culture=neutral, PublicKeyToken=c94340d84666bdcb, processorArchitecture=MSIL">
-      <HintPath>Packages\KoenZomers.OneDrive.Api.2.3.0.3\lib\net452\KoenZomers.OneDrive.Api.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>Packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca, processorArchitecture=MSIL">
-      <HintPath>Packages\Microsoft.Identity.Model.Extensions.2.0.1459.0\lib\Microsoft.IdentityModel.Extensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>Packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.86.0" />
+    <PackageReference Include="Microsoft.IdentityModel" Version="6.1.7600.16394" />
+    <PackageReference Include="Microsoft.Identity.Model.Extensions" Version="2.0.1459.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.9" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -78,19 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
-    <Compile Include="Enums\OneDriveRefreshTokenStorage.cs" />
     <Compile Include="Enums\CloudStorageType.cs" />
-    <Compile Include="Forms\OneDriveGraphDeviceLoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OneDriveGraphDeviceLoginForm.Designer.cs">
-      <DependentUpon>OneDriveGraphDeviceLoginForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\OneDriveGraphDeviceLoginForm1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OneDriveGraphDeviceLoginForm.resx</DependentUpon>
-    </Compile>
     <Compile Include="Forms\SharePointDocumentLibraryPickerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,23 +117,11 @@
     <Compile Include="Forms\OneDriveCloudTypeForm.Designer.cs">
       <DependentUpon>OneDriveCloudTypeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OneDriveRefreshTokenStorageDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OneDriveRefreshTokenStorageDialog.Designer.cs">
-      <DependentUpon>OneDriveRefreshTokenStorageDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\OneDriveAskToStartSyncingDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\OneDriveAskToStartSyncingDialog.Designer.cs">
       <DependentUpon>OneDriveAskToStartSyncingDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\OneDriveAuthenticateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OneDriveAuthenticateForm.Designer.cs">
-      <DependentUpon>OneDriveAuthenticateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OneDriveConfigDetailsForm.cs">
       <SubType>Form</SubType>
@@ -159,9 +135,6 @@
     <Compile Include="Forms\OneDriveConfigForm.Designer.cs">
       <DependentUpon>OneDriveConfigForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Providers\MicrosoftGraph\MicrosoftGraphDeviceCodeAuthCheckSucceededResponse.cs" />
-    <Compile Include="Providers\MicrosoftGraph\MicrosoftGraphDeviceCodeAuthCheckFailedResponse.cs" />
-    <Compile Include="Providers\MicrosoftGraph\MicrosoftGraphDeviceCodeResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\OneDriveProvider.cs" />
     <Compile Include="Providers\SharePointProvider.cs" />
@@ -177,11 +150,6 @@
     <EmbeddedResource Include="Forms\OneDriveAboutForm.resx">
       <DependentUpon>OneDriveAboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OneDriveGraphDeviceLoginForm.resx">
-      <DependentUpon>OneDriveGraphDeviceLoginForm.cs</DependentUpon>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>OneDriveGraphDeviceLoginForm1.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveCloudTypeForm.resx">
       <DependentUpon>OneDriveCloudTypeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -194,14 +162,8 @@
     <EmbeddedResource Include="Forms\OneDriveRequestInputDialog.resx">
       <DependentUpon>OneDriveRequestInputDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OneDriveRefreshTokenStorageDialog.resx">
-      <DependentUpon>OneDriveRefreshTokenStorageDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveAskToStartSyncingDialog.resx">
       <DependentUpon>OneDriveAskToStartSyncingDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OneDriveAuthenticateForm.resx">
-      <DependentUpon>OneDriveAuthenticateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OneDriveConfigDetailsForm.resx">
       <DependentUpon>OneDriveConfigDetailsForm.cs</DependentUpon>
@@ -224,12 +186,15 @@
     </None>
     <None Include="Resources\SharePoint.pdn" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Providers\MicrosoftGraph\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Images\KeePassLive.png" />
     <Content Include="Images\KeePassO365.png" />
     <Content Include="Images\OneDriveConsumer.png" />
     <Content Include="Images\OneDriveForBusiness.png" />
+    <Content Include="Resources\KeePassOneDriveSync.png" />
     <Content Include="Resources\DocLib.png" />
     <Content Include="Resources\File.png" />
     <Content Include="Resources\Folder.png" />
@@ -240,12 +205,19 @@
     <None Include="Resources\OneDriveForBusiness.png" />
     <None Include="Resources\OneDrive.png" />
     <None Include="Resources\MSGraph.png" />
-    <None Include="packages.config" />
     <None Include="Resources\OneDriveIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM $(SolutionDir)create-plgx.cmd</PostBuildEvent>
+    <PostBuildEvent>IF "$(ConfigurationName)"=="Release" (
+    CALL "$(SolutionDir)create-plgx.cmd"
+) ELSE (
+    IF EXIST "$(ProgramFiles)\KeePass Password Safe 2\KeePass.exe" (
+        IF NOT EXIST "$(ProgramFiles)\KeePass Password Safe 2\Plugins" MKDIR "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
+        XCOPY /Y /D "$(TargetDir)*.dll" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
+        XCOPY /Y /D "$(TargetDir)*.pdb" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
+    )
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

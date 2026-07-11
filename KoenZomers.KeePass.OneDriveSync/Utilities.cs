@@ -1,14 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using CredentialManagement;
 using KeePassLib;
 using KoenZomers.KeePass.OneDriveSync;
 using KoenZomers.KeePass.OneDriveSync.Enums;
 using KoenZomers.OneDrive.Api;
+using Microsoft.Identity.Client;
 
 namespace KoenZomersKeePassOneDriveSync
 {
@@ -41,98 +42,95 @@ namespace KoenZomersKeePassOneDriveSync
         #region OneDrive
 
         /// <summary>
-        /// Returns an active OneDriveApi instance. If a RefreshToken is available, it will set up an instance based on that, otherwise it will show the login dialog
+        /// Returns an active OneDriveGraphApi instance. If a cached MSAL token is available, it will set up an instance based on that, otherwise it will show the login dialog
         /// </summary>
         /// <param name="databaseConfig">Configuration of the KeePass database</param>
         /// <returns>Active OneDrive instance or NULL if unable to get an authenticated instance</returns>
-        public static async Task<OneDriveApi> GetOneDriveApi(Configuration databaseConfig)
+        public static async Task<OneDriveGraphApi> GetOneDriveApi(Configuration databaseConfig)
         {
-            OneDriveApi cloudStorage;
+            // All OneDrive traffic (consumer and business) goes through Microsoft Graph, authenticating interactively via
+            // MSAL's system browser flow (opens the default OS browser and listens for the redirect on http://localhost).
+            // Legacy CloudStorageType values (OneDriveConsumer, MicrosoftGraph "built-in browser") are no longer
+            // selectable from the UI, but existing configurations using them will simply be treated the same way.
+            var cloudStorage = new OneDriveGraphApi(KoenZomersKeePassOneDriveSyncExt.GraphApiApplicationId);
+            ApplyProxySettings(cloudStorage);
 
-            switch (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer))
+            // Try to restore a previously cached MSAL token cache so the user doesn't need to log in again
+            if (!string.IsNullOrEmpty(databaseConfig.RefreshToken) && cloudStorage.PublicClientApplication != null)
             {
-                case CloudStorageType.OneDriveConsumer:
-                    cloudStorage = new OneDriveConsumerApi(KoenZomersKeePassOneDriveSyncExt.OneDriveConsumerClientId, KoenZomersKeePassOneDriveSyncExt.OneDriveConsumerClientSecret);
-                    break;
-
-                case CloudStorageType.MicrosoftGraph:
-                case CloudStorageType.MicrosoftGraphDeviceLogin:
-                    cloudStorage = new OneDriveGraphApi(KoenZomersKeePassOneDriveSyncExt.GraphApiApplicationId);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(string.Format("Cloud storage type {0} is not supported", databaseConfig.CloudStorageType));
-            }
-
-            // Ensure we have a refresh token
-            if (string.IsNullOrEmpty(databaseConfig.RefreshToken))
-            {
-                // No refresh token available, perform the login process
-                if (databaseConfig.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer) == CloudStorageType.MicrosoftGraphDeviceLogin)
+                try
                 {
-                    // Using Microsoft Graph Device ID Code Flow
-                    var oneDriveGraphDeviceLoginForm = new OneDriveGraphDeviceLoginForm(cloudStorage);
-                    var deviceLoginResult = oneDriveGraphDeviceLoginForm.ShowDialog();
+                    var cacheBytes = Convert.FromBase64String(databaseConfig.RefreshToken);
+                    ((ITokenCacheSerializer)cloudStorage.PublicClientApplication.UserTokenCache).DeserializeMsalV3(cacheBytes);
 
-                    if (deviceLoginResult != System.Windows.Forms.DialogResult.OK)
+                    var accounts = await cloudStorage.PublicClientApplication.GetAccountsAsync();
+                    var account = accounts.FirstOrDefault();
+
+                    if (account != null)
                     {
-                        return null;
-                    }
+                        var silentResult = await cloudStorage.PublicClientApplication.AcquireTokenSilent(cloudStorage.GetDefaultScopes(), account).ExecuteAsync();
+                        cloudStorage.SetAuthenticationResult(silentResult);
 
-                    // Save the configuration so we keep the Refresh Token
-                    databaseConfig.RefreshToken = oneDriveGraphDeviceLoginForm.RefreshToken;
-                    Configuration.Save();
+                        return cloudStorage;
+                    }
                 }
-                else
+                catch (MsalUiRequiredException)
                 {
-                    // Using any of the other authentication options
-                    var oneDriveAuthenticateForm = new OneDriveAuthenticateForm(cloudStorage);
-                    var result = oneDriveAuthenticateForm.ShowDialog();
-
-                    if (result != System.Windows.Forms.DialogResult.OK)
-                    {
-                        return null;
-                    }
-
-                    // Check if we already know where to store the Refresh Token for this database
-                    if (!databaseConfig.RefreshTokenStorage.HasValue)
-                    {
-                        // We don't know yet where the Refresh Token for this database should be stored, ask the user to choose
-                        var oneDriveRefreshTokenStorageForm = new OneDriveRefreshTokenStorageDialog(databaseConfig);
-                        oneDriveRefreshTokenStorageForm.ShowDialog();
-                    }
-
-                    // Save the configuration so we keep the Refresh Token
-                    var oneDriveApi = oneDriveAuthenticateForm.OneDriveApi;
-                    databaseConfig.RefreshToken = oneDriveApi.AccessToken.RefreshToken;
-
-                    Configuration.Save();
-
-                    return oneDriveApi;
+                    // The cached token can no longer be used silently (e.g. expired or revoked), fall through to interactive login
+                }
+                catch (Exception)
+                {
+                    // The cached token is invalid, corrupt or from an incompatible version, fall through to interactive login
                 }
             }
 
+            // No usable cached token available, perform an interactive login by opening the system's default browser
+            // and listening for the redirect on http://localhost (MSAL's system browser interactive flow)
             try
             {
-                ApplyProxySettings(cloudStorage);
-                await cloudStorage.AuthenticateUsingRefreshToken(databaseConfig.RefreshToken);
-                return cloudStorage;
+                var interactiveResult = await cloudStorage.PublicClientApplication.AcquireTokenInteractive(cloudStorage.GetDefaultScopes())
+                    .WithUseEmbeddedWebView(false)
+                    .WithSystemWebViewOptions(new SystemWebViewOptions
+                    {
+                        HtmlMessageSuccess = BuildAuthResultHtmlPage(success: true),
+                        HtmlMessageError = BuildAuthResultHtmlPage(success: false)
+                    })
+                    .ExecuteAsync();
+
+                cloudStorage.SetAuthenticationResult(interactiveResult);
             }
-            catch (KoenZomers.OneDrive.Api.Exceptions.TokenRetrievalFailedException)
+            catch (MsalException)
             {
-                // Something went wrong with retrieving the access token
-                throw;
-            }
-            catch (Exception e)
-            {
-                // If specifically the HttpRequestException occurred, it likely contains more information on what went wrong, so pass it up to the callstack
-                if (e.GetType().ToString() == "System.Net.Http.HttpRequestException")
-                {
-                    throw;
-                }
-                // Occurs if no connection can be made with the OneDrive service. It will be handled properly in the calling code.
+                // The user cancelled the sign-in or it failed for another reason
                 return null;
             }
+
+            // Persist the serialized MSAL token cache (DPAPI-encrypted on disk by Configuration.Save) so it can be silently reused next time
+            databaseConfig.RefreshToken = Convert.ToBase64String(((ITokenCacheSerializer)cloudStorage.PublicClientApplication.UserTokenCache).SerializeMsalV3());
+            Configuration.Save();
+
+            return cloudStorage;
+        }
+
+        /// <summary>
+        /// Builds the HTML page shown in the system browser tab after MSAL's interactive sign-in flow completes on the
+        /// http://localhost loopback listener, replacing MSAL's plain default page with a simple styled message.
+        /// </summary>
+        /// <param name="success">True to render the success variant, false to render the error/failure variant</param>
+        /// <returns>Self-contained HTML document (inline styles, no external resources) for the given result</returns>
+        private static string BuildAuthResultHtmlPage(bool success)
+        {
+            var accentColor = success ? "#107C10" : "#D13438";
+            var title = success ? "You're signed in" : "Sign-in failed";
+            var message = success
+                ? "You have successfully authenticated. You can close this browser tab and return to KeePass."
+                : "Something went wrong while authenticating. You can close this browser tab and return to KeePass to try again.";
+
+            return $@"<html><head><title>{title}</title></head>
+<body style=""font-family: Segoe UI, Arial, sans-serif; text-align: center; margin-top: 15%;"">
+<h1 style=""color: {accentColor};"">{title}</h1>
+<p>{message}</p>
+</body></html>";
         }
 
         #endregion
@@ -177,107 +175,16 @@ namespace KoenZomersKeePassOneDriveSync
         }
 
         /// <summary>
-        /// Applies the correct web proxy settings to the provided OneDriveApi instance based on KeePass proxy configuration
+        /// Applies the correct web proxy settings to the provided OneDriveGraphApi instance based on KeePass proxy configuration
         /// </summary>
-        /// <param name="oneDriveApi">OneDriveApi instance to apply the proper proxy settings to</param>
-        public static void ApplyProxySettings(OneDriveApi oneDriveApi)
+        /// <param name="oneDriveApi">OneDriveGraphApi instance to apply the proper proxy settings to</param>
+        public static void ApplyProxySettings(OneDriveGraphApi oneDriveApi)
         {
             // Set the WebProxy to use
             oneDriveApi.ProxyConfiguration = GetProxySettings();
 
             // Configure the credentials to use for the proxy
             oneDriveApi.ProxyCredential = GetProxyCredentials();
-        }
-
-        #endregion
-
-        #region Windows Credential Manager
-
-        /// <summary>
-        /// Saves the provided OneDrive Refresh Token in the Windows Credential Manager
-        /// </summary>
-        /// <param name="databaseFilePath">Full local path to the KeePass database for which to save the OneDrive Refresh Token</param>
-        /// <param name="refreshToken">The OneDrive Refresh Token to store securely in the Windows Credential Manager</param>
-        public static void SaveRefreshTokenInWindowsCredentialManager(string databaseFilePath, string refreshToken)
-        {
-            // Some refresh tokens can be longer than the maximum permitted 512 characters for a password field. If this is the case, put the first 512 characters of the refresh token in the password field and the rest in the comments field. Also the comments field has a limit. So far I have not run into this limit yet.
-            string passwordPart1;
-            string passwordPart2;
-
-            if (refreshToken != null && refreshToken.Length > 512)
-            {
-                passwordPart1 = refreshToken.Remove(512);
-                passwordPart2 = refreshToken.Remove(0, 512);
-            }
-            else
-            {
-                passwordPart1 = refreshToken;
-                passwordPart2 = string.Empty;
-            }
-
-            using (var saved = new Credential(databaseFilePath, passwordPart1, string.Concat("KoenZomers.KeePass.OneDriveSync:", databaseFilePath), CredentialType.Generic) {PersistanceType = PersistanceType.LocalComputer})
-            {
-                saved.Description = passwordPart2;
-                saved.Save();
-            }
-        }
-
-        /// <summary>
-        /// Retrieves a OneDrive Refresh Token from the Windows Credential Manager
-        /// </summary>
-        /// <param name="databaseFilePath">Full local path to the KeePass database for which to retrieve the OneDrive Refresh Token</param>
-        /// <returns>OneDrive Refresh Token if available or NULL if no Refresh Token found for the provided database</returns>
-        public static string GetRefreshTokenFromWindowsCredentialManager(string databaseFilePath)
-        {
-            using (var credential = new Credential {Target = string.Concat("KoenZomers.KeePass.OneDriveSync:", databaseFilePath), Type = CredentialType.Generic})
-            {
-                credential.Load();
-
-                // Concatenate the contents of the password and comments fields to retrieve the refresh token
-                return credential.Exists() ? credential.Password + (!string.IsNullOrEmpty(credential.Description) ? credential.Description : string.Empty) + (!string.IsNullOrEmpty(credential.Target) ? credential.Target : string.Empty) : null;
-            }
-        }
-
-        /// <summary>
-        /// Deletes a OneDrive Refresh Token from the Windows Credential Manager
-        /// </summary>
-        /// <param name="databaseFilePath">Full local path to the KeePass database for which to delete the OneDrive Refresh Token</param>
-        public static void DeleteRefreshTokenFromWindowsCredentialManager(string databaseFilePath)
-        {
-            using (var credential = new Credential {Target = string.Concat("KoenZomers.KeePass.OneDriveSync:", databaseFilePath), Type = CredentialType.Generic})
-            {
-                // Verify if we have stored a token for this database
-                if (credential.Exists())
-                {
-                    // Delete the Windows Credential Manager entry
-                    credential.Delete();
-                }
-            }
-        }
-
-        #endregion
-
-        #region KeePass Database Storage
-
-        /// <summary>
-        /// Saves the provided OneDrive Refresh Token in the provided KeePass database
-        /// </summary>
-        /// <param name="keePassDatabase">KeePass database instance to store the Refresh Token in</param>
-        /// <param name="refreshToken">The OneDrive Refresh Token to store securely in the KeePass database</param>
-        public static void SaveRefreshTokenInKeePassDatabase(PwDatabase keePassDatabase, string refreshToken)
-        {
-            keePassDatabase.CustomData.Set("KoenZomers.KeePass.OneDriveSync.RefreshToken", refreshToken);
-        }
-
-        /// <summary>
-        /// Retrieves a OneDrive Refresh Token from the provided KeePass database
-        /// </summary>
-        /// <param name="keePassDatabase">KeePass database instance to get the Refresh Token from</param>
-        /// <returns>OneDrive Refresh Token if available or NULL if no Refresh Token found for the provided database</returns>
-        public static string GetRefreshTokenFromKeePassDatabase(PwDatabase keePassDatabase)
-        {
-            var refreshToken = keePassDatabase.CustomData.Get("KoenZomers.KeePass.OneDriveSync.RefreshToken");
-            return refreshToken;
         }
 
         #endregion
@@ -318,11 +225,11 @@ namespace KoenZomersKeePassOneDriveSync
         /// <returns>The decrypted refresh token or NULL if decryption fails</returns>
         public static string Unprotect(string encryptedRefreshToken)
         {
-            // Decode Base64-encoded encrypted data
-            var rawEncryptedToken = Convert.FromBase64String(encryptedRefreshToken);
-
             try
             {
+                // Decode Base64-encoded encrypted data
+                var rawEncryptedToken = Convert.FromBase64String(encryptedRefreshToken);
+
                 // Decrypt using DPAPI with user scope, only possible if the currently logged-in user is the same as the one who encrypted it
                 var rawToken = ProtectedData.Unprotect(rawEncryptedToken, null, DataProtectionScope.CurrentUser);
 
@@ -333,7 +240,8 @@ namespace KoenZomersKeePassOneDriveSync
             }
             catch (Exception)
             {
-                // If decryption fails, lose the token
+                // If decryption fails (e.g. the value is corrupt, was never encrypted to begin with, or was encrypted
+                // by a different user/machine), lose the token so the user will simply be prompted to log in again
                 return null;
             }
         }

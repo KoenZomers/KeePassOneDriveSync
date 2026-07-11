@@ -21,9 +21,10 @@
         SharePoint = 3,
 
         /// <summary>
-        /// Microsoft Graph API Device Login
+        /// Microsoft Graph API, authenticating interactively via MSAL's system browser flow (opens the default OS
+        /// browser and listens for the redirect on http://localhost)
         /// </summary>
-        MicrosoftGraphDeviceLogin = 4,
+        MicrosoftGraphMsalLogin = 4,
 
         /// <summary>
         /// Do not sync

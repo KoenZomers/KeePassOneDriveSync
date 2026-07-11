@@ -21,7 +21,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         public static async Task<bool> SyncUsingOneDriveCloudProvider(Configuration databaseConfig, string localKeePassDatabasePath, bool forceSync, Action<string> updateStatus)
         {
             // Connect to OneDrive
-            OneDriveApi oneDriveApi = null;
+            OneDriveGraphApi oneDriveApi = null;
             bool retryGettingApiInstance;
             do
             {
@@ -47,7 +47,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                             errorMessage.Append("OneDrive");
                             break;
                         case CloudStorageType.MicrosoftGraph:
-                        case CloudStorageType.MicrosoftGraphDeviceLogin:
+                        case CloudStorageType.MicrosoftGraphMsalLogin:
                             errorMessage.Append("Microsoft Graph");
                             break;
                         default:
@@ -80,7 +80,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus(string.Format("Failed to connect to OneDrive for database {0}", databaseConfig.KeePassDatabase.Name)); break;
                     case CloudStorageType.MicrosoftGraph:
-                    case CloudStorageType.MicrosoftGraphDeviceLogin:
+                    case CloudStorageType.MicrosoftGraphMsalLogin:
                         updateStatus(string.Format("Failed to connect to Microsoft Graph for database {0}", databaseConfig.KeePassDatabase.Name));
                         break;
                     default: updateStatus(string.Format("Failed to connect to cloud service for database {0}", databaseConfig.KeePassDatabase.Name)); break;
@@ -88,9 +88,6 @@ namespace KoenZomersKeePassOneDriveSync.Providers
 
                 return false;
             }
-
-            // Save the RefreshToken in the configuration so we can use it again next time
-            databaseConfig.RefreshToken = oneDriveApi.AccessToken.RefreshToken;
 
             // Verify if we already have retrieved the name of this OneDrive
             if (string.IsNullOrEmpty(databaseConfig.OneDriveName))
@@ -368,15 +365,12 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     case CloudStorageType.OneDriveConsumer: updateStatus("Failed to connect to OneDrive"); break;
                     case CloudStorageType.MicrosoftGraph:
-                    case CloudStorageType.MicrosoftGraphDeviceLogin:
+                    case CloudStorageType.MicrosoftGraphMsalLogin:
                         updateStatus("Failed to connect to Microsoft Graph"); break;
                     default: updateStatus("Failed to connect to cloud service"); break;
                 }
                 return null;
             }
-
-            // Save the RefreshToken in the configuration so we can use it again next time
-            databaseConfig.RefreshToken = oneDriveApi.AccessToken.RefreshToken;
 
             // Fetch details about this OneDrive account
             var oneDriveAccount = await oneDriveApi.GetDrive();

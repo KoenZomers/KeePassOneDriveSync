@@ -40,7 +40,7 @@ namespace KoenZomersKeePassOneDriveSync
             LocalDatabasePathLinkLabel.LinkColor = System.IO.File.Exists(_configuration.Key) ? System.Drawing.Color.Blue : System.Drawing.Color.Red;
             RemoteKeePassPathTextbox.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteFolderId + "/" + _configuration.Value.RemoteFileName : _configuration.Value.RemoteDatabasePath;
             OneDriveRefreshTokenTextbox.Text = _configuration.Value.RefreshToken;
-            RefreshTokenStorageTextBox.Text = _configuration.Value.RefreshTokenStorage.ToString();
+            RefreshTokenStorageTextBox.Text = "Encrypted on disk (KeePass.config.xml)";
             LastSyncedTextbox.Text = _configuration.Value.LastSyncedAt.HasValue ? _configuration.Value.LastSyncedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never synced yet";
             LastVerifiedTextbox.Text = _configuration.Value.LastCheckedAt.HasValue ? _configuration.Value.LastCheckedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never verified yet";
             LocalKeePassFileHashTextbox.Text = _configuration.Value.LocalFileHash;

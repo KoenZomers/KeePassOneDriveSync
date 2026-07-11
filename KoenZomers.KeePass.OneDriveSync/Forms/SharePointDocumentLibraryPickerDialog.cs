@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
 
 namespace KoenZomersKeePassOneDriveSync.Forms
 {
@@ -90,19 +90,22 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             }
 
             // Request was succesful. Parse the JSON result.
-            var responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-            // Loop through each document library in the result
-            foreach (var listViewItem in responseJson["value"])
+            using (var responseJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
             {
-                // Create a new tile in the form for each document library
-                SharePointDocumentLibraryPicker.Items.Add(new ListViewItem
+                // Loop through each document library in the result
+                foreach (var listViewItem in responseJson.RootElement.GetProperty("value").EnumerateArray())
                 {
-                    Text = listViewItem["Title"].ToString(),
-                    Tag = listViewItem["RootFolder"]["ServerRelativeUrl"].ToString(),
-                    ImageKey = "DocLib",
-                    Selected = listViewItem["Title"].ToString().Equals(FileNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
-                });
+                    var title = listViewItem.GetProperty("Title").GetString();
+
+                    // Create a new tile in the form for each document library
+                    SharePointDocumentLibraryPicker.Items.Add(new ListViewItem
+                    {
+                        Text = title,
+                        Tag = listViewItem.GetProperty("RootFolder").GetProperty("ServerRelativeUrl").GetString(),
+                        ImageKey = "DocLib",
+                        Selected = title.Equals(FileNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
+                    });
+                }
             }
 
             // Do not allow the use of the up button or the root context menu option as this is the highest level
@@ -133,36 +136,40 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 }
 
                 // Request was succesful. Parse the JSON result.
-                var foldersResponseJson = JObject.Parse(await foldersResponse.Content.ReadAsStringAsync());
-
-                // Loop through each document library in the result
-                foreach (var listViewItem in foldersResponseJson["value"])
+                using (var foldersResponseJson = JsonDocument.Parse(await foldersResponse.Content.ReadAsStringAsync()))
                 {
-                    // Create a new tile in the form for each document library
-                    var folderItem = new ListViewItem
+                    // Loop through each document library in the result
+                    foreach (var listViewItem in foldersResponseJson.RootElement.GetProperty("value").EnumerateArray())
                     {
-                        Text = listViewItem["Name"].ToString(),
-                        Tag = listViewItem["ServerRelativeUrl"].ToString(),
-                        ImageKey = "Folder"                        
-                    };
+                        // Create a new tile in the form for each document library
+                        var folderItem = new ListViewItem
+                        {
+                            Text = listViewItem.GetProperty("Name").GetString(),
+                            Tag = listViewItem.GetProperty("ServerRelativeUrl").GetString(),
+                            ImageKey = "Folder"
+                        };
 
-                    long itemCount;
-                    if (listViewItem["ItemCount"] != null && long.TryParse(listViewItem["ItemCount"].ToString(), out itemCount))
-                    {
-                        folderItem.ToolTipText += string.Format("Items inside: {0}", itemCount) + Environment.NewLine;
-                    }
-                    DateTime created;
-                    if (listViewItem["TimeCreated"] != null && DateTime.TryParse(listViewItem["TimeCreated"].ToString(), out created))
-                    {
-                        folderItem.ToolTipText += string.Format("Created: {0:d MMMM yyyy HH:mm:ss}", created) + Environment.NewLine;
-                    }
-                    DateTime lastModified;
-                    if (listViewItem["TimeLastModified"] != null && DateTime.TryParse(listViewItem["TimeLastModified"].ToString(), out lastModified))
-                    {
-                        folderItem.ToolTipText += string.Format("Last modified: {0:d MMMM yyyy HH:mm:ss}", lastModified) + Environment.NewLine;
-                    }
+                        JsonElement itemCountElement;
+                        long itemCount;
+                        if (listViewItem.TryGetProperty("ItemCount", out itemCountElement) && long.TryParse(itemCountElement.ToString(), out itemCount))
+                        {
+                            folderItem.ToolTipText += string.Format("Items inside: {0}", itemCount) + Environment.NewLine;
+                        }
+                        JsonElement createdElement;
+                        DateTime created;
+                        if (listViewItem.TryGetProperty("TimeCreated", out createdElement) && DateTime.TryParse(createdElement.ToString(), out created))
+                        {
+                            folderItem.ToolTipText += string.Format("Created: {0:d MMMM yyyy HH:mm:ss}", created) + Environment.NewLine;
+                        }
+                        JsonElement lastModifiedElement;
+                        DateTime lastModified;
+                        if (listViewItem.TryGetProperty("TimeLastModified", out lastModifiedElement) && DateTime.TryParse(lastModifiedElement.ToString(), out lastModified))
+                        {
+                            folderItem.ToolTipText += string.Format("Last modified: {0:d MMMM yyyy HH:mm:ss}", lastModified) + Environment.NewLine;
+                        }
 
-                    SharePointDocumentLibraryPicker.Items.Add(folderItem);
+                        SharePointDocumentLibraryPicker.Items.Add(folderItem);
+                    }
                 }
             }
 
@@ -177,41 +184,48 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 }
 
                 // Request was succesful. Parse the JSON result.
-                var filesResponseJson = JObject.Parse(await filesResponse.Content.ReadAsStringAsync());
-
-                // Loop through each file in the result
-                foreach (var listViewItem in filesResponseJson["value"])
+                using (var filesResponseJson = JsonDocument.Parse(await filesResponse.Content.ReadAsStringAsync()))
                 {
-                    // Create a new tile in the form for each file
-                    var fileItem = new ListViewItem
+                    // Loop through each file in the result
+                    foreach (var listViewItem in filesResponseJson.RootElement.GetProperty("value").EnumerateArray())
                     {
-                        Text = listViewItem["Name"].ToString(),
-                        Tag = listViewItem["ServerRelativeUrl"].ToString(),
-                        ImageKey = "File",
-                        Selected = listViewItem["Name"].ToString().Equals(FileNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
-                    };
+                        var name = listViewItem.GetProperty("Name").GetString();
 
-                    long fileSize;
-                    if (listViewItem["Length"] != null && long.TryParse(listViewItem["Length"].ToString(), out fileSize))
-                    {
-                        fileItem.ToolTipText += string.Format("Size: {0:n0} bytes", fileSize) + Environment.NewLine;
-                    }
-                    if (listViewItem["UIVersionLabel"] != null && listViewItem["UIVersionLabel"].ToString().Length > 0)
-                    {
-                        fileItem.ToolTipText += string.Format("Version: {0}", listViewItem["UIVersionLabel"]) + Environment.NewLine;
-                    }
-                    DateTime created;
-                    if (listViewItem["TimeCreated"] != null && DateTime.TryParse(listViewItem["TimeCreated"].ToString(), out created))
-                    {
-                        fileItem.ToolTipText += string.Format("Created: {0:d MMMM yyyy HH:mm:ss}", created) + Environment.NewLine;
-                    }
-                    DateTime lastModified;
-                    if (listViewItem["TimeLastModified"] != null && DateTime.TryParse(listViewItem["TimeLastModified"].ToString(), out lastModified))
-                    {
-                        fileItem.ToolTipText += string.Format("Last modified: {0:d MMMM yyyy HH:mm:ss}", lastModified) + Environment.NewLine;
-                    }
+                        // Create a new tile in the form for each file
+                        var fileItem = new ListViewItem
+                        {
+                            Text = name,
+                            Tag = listViewItem.GetProperty("ServerRelativeUrl").GetString(),
+                            ImageKey = "File",
+                            Selected = name.Equals(FileNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
+                        };
 
-                    SharePointDocumentLibraryPicker.Items.Add(fileItem);
+                        JsonElement lengthElement;
+                        long fileSize;
+                        if (listViewItem.TryGetProperty("Length", out lengthElement) && long.TryParse(lengthElement.ToString(), out fileSize))
+                        {
+                            fileItem.ToolTipText += string.Format("Size: {0:n0} bytes", fileSize) + Environment.NewLine;
+                        }
+                        JsonElement uiVersionLabelElement;
+                        if (listViewItem.TryGetProperty("UIVersionLabel", out uiVersionLabelElement) && uiVersionLabelElement.ToString().Length > 0)
+                        {
+                            fileItem.ToolTipText += string.Format("Version: {0}", uiVersionLabelElement) + Environment.NewLine;
+                        }
+                        JsonElement createdElement;
+                        DateTime created;
+                        if (listViewItem.TryGetProperty("TimeCreated", out createdElement) && DateTime.TryParse(createdElement.ToString(), out created))
+                        {
+                            fileItem.ToolTipText += string.Format("Created: {0:d MMMM yyyy HH:mm:ss}", created) + Environment.NewLine;
+                        }
+                        JsonElement lastModifiedElement;
+                        DateTime lastModified;
+                        if (listViewItem.TryGetProperty("TimeLastModified", out lastModifiedElement) && DateTime.TryParse(lastModifiedElement.ToString(), out lastModified))
+                        {
+                            fileItem.ToolTipText += string.Format("Last modified: {0:d MMMM yyyy HH:mm:ss}", lastModified) + Environment.NewLine;
+                        }
+
+                        SharePointDocumentLibraryPicker.Items.Add(fileItem);
+                    }
                 }
             }
 

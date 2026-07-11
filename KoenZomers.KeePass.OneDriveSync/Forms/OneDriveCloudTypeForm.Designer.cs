@@ -33,7 +33,6 @@
             this.CloudPlatformTabs = new System.Windows.Forms.TabControl();
             this.OneDriveTab = new System.Windows.Forms.TabPage();
             this.GraphDeviceLoginPictureButton = new System.Windows.Forms.Button();
-            this.GraphPictureButton = new System.Windows.Forms.Button();
             this.SharePointTab = new System.Windows.Forms.TabPage();
             this.SharePointPictureButton = new System.Windows.Forms.Button();
             this.CloudPlatformTabs.SuspendLayout();
@@ -80,7 +79,6 @@
             // OneDriveTab
             // 
             this.OneDriveTab.Controls.Add(this.GraphDeviceLoginPictureButton);
-            this.OneDriveTab.Controls.Add(this.GraphPictureButton);
             this.OneDriveTab.Location = new System.Drawing.Point(4, 29);
             this.OneDriveTab.Name = "OneDriveTab";
             this.OneDriveTab.Size = new System.Drawing.Size(506, 345);
@@ -96,27 +94,12 @@
             this.GraphDeviceLoginPictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.GraphDeviceLoginPictureButton.Location = new System.Drawing.Point(10, 15);
             this.GraphDeviceLoginPictureButton.Name = "GraphDeviceLoginPictureButton";
-            this.GraphDeviceLoginPictureButton.Size = new System.Drawing.Size(483, 151);
+            this.GraphDeviceLoginPictureButton.Size = new System.Drawing.Size(483, 311);
             this.GraphDeviceLoginPictureButton.TabIndex = 0;
-            this.GraphDeviceLoginPictureButton.Text = "&Any browser (recommended)";
+            this.GraphDeviceLoginPictureButton.Text = "&Any browser";
             this.GraphDeviceLoginPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.GraphDeviceLoginPictureButton.UseVisualStyleBackColor = false;
             this.GraphDeviceLoginPictureButton.Click += new System.EventHandler(this.GraphDeviceLoginPictureButton_Click);
-            // 
-            // GraphPictureButton
-            // 
-            this.GraphPictureButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GraphPictureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.GraphPictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.GraphPictureButton.Location = new System.Drawing.Point(10, 175);
-            this.GraphPictureButton.Name = "GraphPictureButton";
-            this.GraphPictureButton.Size = new System.Drawing.Size(483, 151);
-            this.GraphPictureButton.TabIndex = 1;
-            this.GraphPictureButton.Text = "&Built-in browser";
-            this.GraphPictureButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.GraphPictureButton.UseVisualStyleBackColor = false;
-            this.GraphPictureButton.Click += new System.EventHandler(this.GraphPictureButton_Click);
             // 
             // SharePointTab
             // 
@@ -173,7 +156,6 @@
         private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.TabControl CloudPlatformTabs;
         private System.Windows.Forms.TabPage OneDriveTab;
-        private System.Windows.Forms.Button GraphPictureButton;
         private System.Windows.Forms.TabPage SharePointTab;
         private System.Windows.Forms.Button SharePointPictureButton;
         private System.Windows.Forms.Button GraphDeviceLoginPictureButton;
