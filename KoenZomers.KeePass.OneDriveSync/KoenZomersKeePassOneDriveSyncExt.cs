@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using KeePass.Forms;
 using KeePass.Plugins;
@@ -12,6 +14,37 @@ namespace KoenZomersKeePassOneDriveSync
     /// <remarks>KeePass SDK documentation: http://keepass.info/help/v2_dev/plg_index.html</remarks>
     public class KoenZomersKeePassOneDriveSyncExt : Plugin
     {
+        /// <summary>
+        /// Registers an AssemblyResolve handler as early as possible (before any of this plugin's
+        /// dependencies are touched) so that requests for our dependency assemblies (e.g.
+        /// System.Text.Json and its transitive dependencies) are always satisfied by the exact
+        /// DLLs shipped alongside this plugin, regardless of the version being requested.
+        /// This avoids relying on binding redirects in KeePass.exe.config, which is shared with
+        /// (and could conflict with) other plugins.
+        /// </summary>
+        static KoenZomersKeePassOneDriveSyncExt()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveDependencyAssembly;
+        }
+
+        /// <summary>
+        /// Resolves requests for this plugin's dependency assemblies by loading them directly
+        /// from the plugin's own folder, bypassing strict assembly version matching.
+        /// </summary>
+        private static Assembly ResolveDependencyAssembly(object sender, ResolveEventArgs args)
+        {
+            var requestedAssemblyName = new AssemblyName(args.Name);
+
+            var pluginDirectory = Path.GetDirectoryName(typeof(KoenZomersKeePassOneDriveSyncExt).Assembly.Location);
+            if (string.IsNullOrEmpty(pluginDirectory))
+            {
+                return null;
+            }
+
+            var candidatePath = Path.Combine(pluginDirectory, requestedAssemblyName.Name + ".dll");
+            return File.Exists(candidatePath) ? Assembly.LoadFrom(candidatePath) : null;
+        }
+
         #region Constants
 
         /// <summary>

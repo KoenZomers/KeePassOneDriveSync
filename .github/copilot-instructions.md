@@ -2,3 +2,4 @@
 
 ## Project Guidelines
 - In this KeePass plugin project (KoenZomersKeePassOneDriveSync), debugging (F5) starts KeePass.exe as an external program (configured in .csproj.user via StartAction=Program/StartProgram). The plugin is loaded from C:\Program Files\KeePass Password Safe 2\Plugins, not directly from bin\Debug. The post-build event copies the built DLL/PDB there; this requires write permissions on that folder (set up once via icacls), and KeePass must not be running during the build (otherwise the DLL is locked).
+- For KeePass plugin dependency-version conflicts (assembly load failures), prefer registering an AppDomain.AssemblyResolve handler in the plugin itself to load the exact bundled DLL, rather than requiring users to edit the shared KeePass.exe.config with binding redirects (which could break other plugins).
