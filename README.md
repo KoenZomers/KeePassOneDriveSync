@@ -21,6 +21,10 @@ When upgrading from a previous version of this plugin, simply ensure KeePass is 
 
 ## Latest Version
 
+Version 3.1.0.0 - July 12, 2026
+
+- Addressed issue with JSON DLL missing
+
 Version 3.0.0.0 - July 11, 2026
 
 - Fixed the authentication issue of the previous version
