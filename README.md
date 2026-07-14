@@ -21,6 +21,10 @@ When upgrading from a previous version of this plugin, simply ensure KeePass is 
 
 ## Latest Version
 
+Version 3.2.0.0 - July 14, 2026
+
+- Fixed "Failed to upload the KeePass database" errors affecting databases larger than a few KB. This was caused by a bug in the [KoenZomers.OneDrive.Api](https://github.com/KoenZomers/OneDriveAPI) library where the simple upload size threshold was incorrectly set to 4KB instead of 4MB, which has now been corrected upstream
+
 Version 3.1.0.0 - July 12, 2026
 
 - Addressed issue with JSON DLL missing
