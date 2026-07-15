@@ -411,7 +411,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button CancelButton;
+        private new System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.Button UpButton;
         private System.Windows.Forms.ContextMenuStrip MyFilesContextMenu;

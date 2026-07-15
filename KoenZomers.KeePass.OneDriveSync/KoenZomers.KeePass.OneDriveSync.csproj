@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,17 +35,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <OneDriveApiLocalRepo>..\..\OneDriveAPI\Api\API.csproj</OneDriveApiLocalRepo>
-    <OneDriveApiLocalDll>..\..\OneDriveAPI\Api\bin\Debug\netstandard2.0\KoenZomers.OneDrive.Api.dll</OneDriveApiLocalDll>
   </PropertyGroup>
-  <Target Name="BuildLocalOneDriveApi" BeforeTargets="ResolveAssemblyReferences;BeforeBuild" Condition="Exists('$(OneDriveApiLocalRepo)')">
-    <Exec Command="dotnet build &quot;$(OneDriveApiLocalRepo)&quot; -c Debug -f netstandard2.0" />
-  </Target>
-  <ItemGroup Condition="Exists('$(OneDriveApiLocalRepo)')">
-    <Reference Include="KoenZomers.OneDrive.Api">
-      <HintPath>$(OneDriveApiLocalDll)</HintPath>
+  <ItemGroup>
+    <ProjectReference Include="..\..\OneDriveAPI\Api\API.csproj">
+      <Name>API</Name>
+      <SetTargetFramework>TargetFramework=netstandard2.0</SetTargetFramework>
       <Private>True</Private>
-    </Reference>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="KeePass">
@@ -206,9 +203,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF EXIST "$(ProgramFiles)\KeePass Password Safe 2\KeePass.exe" (
-    IF NOT EXIST "$(ProgramFiles)\KeePass Password Safe 2\Plugins" MKDIR "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
-    XCOPY /Y /D "$(TargetDir)*.dll" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
-    XCOPY /Y /D "$(TargetDir)*.pdb" "$(ProgramFiles)\KeePass Password Safe 2\Plugins"
+    IF NOT EXIST "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync" MKDIR "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync"
+    XCOPY /Y /D "$(TargetDir)*.dll" "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync\"
+    XCOPY /Y /D "$(TargetDir)*.pdb" "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync\"
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

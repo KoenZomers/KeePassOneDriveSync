@@ -156,7 +156,7 @@
 
          private System.Windows.Forms.Label ExplanationLabel;
          private System.Windows.Forms.Button OKButton;
-         private System.Windows.Forms.Button CancelButton;
+         private new System.Windows.Forms.Button CancelButton;
          private System.Windows.Forms.RadioButton YesRadio;
          private System.Windows.Forms.RadioButton NotNowRadio;
          private System.Windows.Forms.RadioButton NoNeverAskAgainRadio;

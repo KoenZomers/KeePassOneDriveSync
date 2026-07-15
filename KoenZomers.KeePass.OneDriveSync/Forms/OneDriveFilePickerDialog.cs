@@ -147,8 +147,10 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
             if (parentItem == null)
             {
+#pragma warning disable CS0618
                 // Get the root of the shared with me items
                 var itemCollection = await _oneDriveApi.GetSharedWithMe();
+#pragma warning restore CS0618
                 var sortedItemCollection = itemCollection.Collection.OrderBy(i => i.Name).OrderBy(i => i.Folder == null).OrderBy(i => i.RemoteItem.Folder == null);
                 SharedWithMeUpButton.Enabled = false;
                 CurrentSharedWithMeOneDriveItem = null;

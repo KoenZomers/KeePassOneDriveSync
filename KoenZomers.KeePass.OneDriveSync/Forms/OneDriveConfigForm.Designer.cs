@@ -359,7 +359,6 @@
         private System.Windows.Forms.Label StatusLabel;
         private System.Windows.Forms.Button AboutButton;
         private System.Windows.Forms.ToolStripMenuItem ConfigurationListViewContextItemOpenFileLocation;
-        private System.Windows.Forms.CheckBox UseSystemProxyCheckBox;
         private System.Windows.Forms.ColumnHeader StorageProviderColumn;
         private System.Windows.Forms.ToolStripMenuItem ConfigurationListViewContextItemRenameStorage;
         private System.Windows.Forms.ColumnHeader LastSyncedColumn;

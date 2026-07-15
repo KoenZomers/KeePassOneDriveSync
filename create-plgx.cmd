@@ -1,8 +1,7 @@
-ECHO Creating KeePass plugin package
-set PLUGIN_NAME=KeeOneDriveSync
-set SourceFolder=KoenZomers.KeePass.OneDriveSync
-rd /s /q %~dp0%SourceFolder%\obj %~dp0%SourceFolder%\bin
-del %~dp0%PLUGIN_NAME%.plgx
-"C:\Program Files\KeePass Password Safe 2\KeePass.exe" --plgx-create %~dp0%SourceFolder% --plgx-prereq-net:4.0
-ren %~dp0%SourceFolder%.plgx %PLUGIN_NAME%.plgx
-ECHO KeePass Plugin package has been created
+@ECHO OFF
+SET "POWERSHELL_EXE=pwsh.exe"
+WHERE pwsh.exe >NUL 2>NUL
+IF ERRORLEVEL 1 SET "POWERSHELL_EXE=powershell.exe"
+
+"%POWERSHELL_EXE%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0create-plgx.ps1"
+EXIT /B %ERRORLEVEL%

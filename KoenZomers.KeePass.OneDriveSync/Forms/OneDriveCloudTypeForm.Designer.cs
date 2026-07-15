@@ -152,7 +152,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button CancelButton;
+        private new System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.TabControl CloudPlatformTabs;
         private System.Windows.Forms.TabPage OneDriveTab;

@@ -68,21 +68,12 @@ jobs:
           (Get-Content $assemblyInfoPath) -replace 'AssemblyVersion\("[^"]+"\)', "AssemblyVersion(`"$assemblyVersion`")" | Set-Content $assemblyInfoPath
           Set-Content -Path 'version.txt' -Value ":`nKoenZomers.KeePass.OneDriveSync:$assemblyVersion`n:"
 
-      - name: Restore NuGet packages
+      - name: Build PLGX package
         working-directory: repo
-        run: nuget restore $env:Solution_Path
+        run: .\create-plgx.cmd
 
-      - name: Build solution
-        working-directory: repo
-        run: msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
-
-      - name: Package plugin output
-        run: |
-          $releaseDir = 'repo\KoenZomers.KeePass.OneDriveSync\bin\Release'
-          $stagingDir = 'plugin-package\KeePassOneDriveSync'
-          New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
-          Get-ChildItem -Path $releaseDir -Include *.dll,*.pdb -Recurse | Copy-Item -Destination $stagingDir -Force
-          Compress-Archive -Path $stagingDir -DestinationPath "KeePassOneDriveSync-${{ inputs.version }}.zip" -Force
+      - name: Rename PLGX release asset
+        run: Copy-Item -Path repo\KeeOneDriveSync.plgx -Destination "KeeOneDriveSync-${{ inputs.version }}.plgx" -Force
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -91,4 +82,4 @@ jobs:
           name: Version ${{ inputs.version }}
           prerelease: ${{ inputs.prerelease }}
           generate_release_notes: true
-          files: KeePassOneDriveSync-${{ inputs.version }}.zip
+          files: KeeOneDriveSync-${{ inputs.version }}.plgx

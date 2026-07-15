@@ -193,7 +193,7 @@
         private System.Windows.Forms.TextBox ClientIdTextBox;
         private System.Windows.Forms.TextBox ClientSecretTextBox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button CancelButton;
+        private new System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.Button TestButton;
     }

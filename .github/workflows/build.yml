@@ -47,23 +47,12 @@ jobs:
           New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
           Copy-Item -Path (Join-Path $keePassExe.DirectoryName '*') -Destination $targetDir -Recurse -Force
 
-      - name: Restore NuGet packages
+      - name: Build PLGX package
         working-directory: repo
-        run: nuget restore $env:Solution_Path
-
-      - name: Build solution
-        working-directory: repo
-        run: msbuild $env:Solution_Path /p:Configuration=Release /p:Platform="Any CPU" /m
-
-      - name: Package plugin output
-        run: |
-          $releaseDir = 'repo\KoenZomers.KeePass.OneDriveSync\bin\Release'
-          $stagingDir = 'plugin-package\KeePassOneDriveSync'
-          New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
-          Get-ChildItem -Path $releaseDir -Include *.dll,*.pdb -Recurse | Copy-Item -Destination $stagingDir -Force
+        run: .\create-plgx.cmd
 
       - name: Upload plugin artifact
         uses: actions/upload-artifact@v4
         with:
-          name: KeePassOneDriveSync
-          path: plugin-package\*
+          name: KeeOneDriveSync-plgx
+          path: repo\KeeOneDriveSync.plgx

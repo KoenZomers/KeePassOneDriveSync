@@ -4,9 +4,9 @@ All notable changes to this project are documented in this file.
 
 ## [3.2.1.0] - July 15, 2026
 
-
 - Fixed potential issue with uploading larger KeePass databases, likely only occurring with OneDrive Personal
 - Fixed strict dependency on KeePass 2.61.1.0 to be more flexible. It will try to use any KeePass version now.
+- Switched back to providing one PLGX file instead of a ZIP with a bunch of DLL files
 
 ## [3.2.0.0] - July 14, 2026
 
