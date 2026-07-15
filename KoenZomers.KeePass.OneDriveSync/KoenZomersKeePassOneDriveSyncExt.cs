@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using KeePass.Forms;
@@ -34,6 +35,23 @@ namespace KoenZomersKeePassOneDriveSync
         private static Assembly ResolveDependencyAssembly(object sender, ResolveEventArgs args)
         {
             var requestedAssemblyName = new AssemblyName(args.Name);
+
+            // This plugin is compiled against a specific KeePass.exe version (the one present on the
+            // build machine), which embeds that exact version into the strong name reference. Older
+            // (or newer) KeePass hosts that don't exactly match that version would otherwise fail to
+            // load the plugin with a FileNotFoundException, even though KeePass.exe is already loaded
+            // in the process. To support any KeePass version, redirect requests for the "KeePass"
+            // assembly to whichever KeePass assembly is already loaded in the current AppDomain,
+            // regardless of the requested version.
+            if (string.Equals(requestedAssemblyName.Name, "KeePass", StringComparison.OrdinalIgnoreCase))
+            {
+                var loadedKeePassAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(assembly => string.Equals(assembly.GetName().Name, "KeePass", StringComparison.OrdinalIgnoreCase));
+                if (loadedKeePassAssembly != null)
+                {
+                    return loadedKeePassAssembly;
+                }
+            }
 
             var pluginDirectory = Path.GetDirectoryName(typeof(KoenZomersKeePassOneDriveSyncExt).Assembly.Location);
             if (string.IsNullOrEmpty(pluginDirectory))
