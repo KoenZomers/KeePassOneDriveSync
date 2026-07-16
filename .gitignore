@@ -15,6 +15,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+KeeOneDriveSync.plgx
 
 # Roslyn cache directories
 *.ide/
