@@ -21,7 +21,7 @@ When upgrading from a previous version of this plugin, simply ensure KeePass is 
 
 ## Changelog
 
-[Full version history](Changelog.md)
+[Full version history](CHANGELOG.md)
 
 ## Special Thanks
 
