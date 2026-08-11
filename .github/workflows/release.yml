@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g. 3.0.1.0)'
-        required: true
+        description: 'Release version (e.g. 3.0.1.0). Leave empty to use version.txt'
+        required: false
         type: string
+        default: ''
       prerelease:
         description: 'Mark this release as a pre-release'
         required: false
@@ -28,6 +29,28 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: repo
+
+      - name: Determine release version
+        id: release-version
+        working-directory: repo
+        run: |
+          $version = "${{ inputs.version }}"
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            $versionLine = Get-Content -Path 'version.txt' | Where-Object { $_ -like 'KoenZomers.KeePass.OneDriveSync:*' } | Select-Object -First 1
+            if ([string]::IsNullOrWhiteSpace($versionLine)) {
+              throw "Unable to determine release version from version.txt"
+            }
+            $version = $versionLine.Split(':')[-1].Trim()
+          }
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            throw "Release version cannot be empty"
+          }
+          $assemblyVersion = $version
+          if (($version.Split('.')).Length -lt 4) {
+            $assemblyVersion = "$version.0"
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "assembly-version=$assemblyVersion" >> $env:GITHUB_OUTPUT
 
       - name: Checkout OneDrive API dependency
         uses: actions/checkout@v4
@@ -59,11 +82,7 @@ jobs:
       - name: Update version number
         working-directory: repo
         run: |
-          $version = "${{ inputs.version }}"
-          $assemblyVersion = $version
-          if (($version.Split('.')).Length -lt 4) {
-            $assemblyVersion = "$version.0"
-          }
+          $assemblyVersion = "${{ steps.release-version.outputs.assembly-version }}"
           $assemblyInfoPath = 'KoenZomers.KeePass.OneDriveSync\Properties\AssemblyInfo.cs'
           (Get-Content $assemblyInfoPath) -replace 'AssemblyVersion\("[^"]+"\)', "AssemblyVersion(`"$assemblyVersion`")" | Set-Content $assemblyInfoPath
           Set-Content -Path 'version.txt' -Value ":`nKoenZomers.KeePass.OneDriveSync:$assemblyVersion`n:"
@@ -73,13 +92,13 @@ jobs:
         run: .\create-plgx.cmd
 
       - name: Rename PLGX release asset
-        run: Copy-Item -Path repo\KeeOneDriveSync.plgx -Destination "KeeOneDriveSync-${{ inputs.version }}.plgx" -Force
+        run: Copy-Item -Path repo\KeeOneDriveSync.plgx -Destination "KeeOneDriveSync-${{ steps.release-version.outputs.version }}.plgx" -Force
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.version }}
-          name: Version ${{ inputs.version }}
+          tag_name: ${{ steps.release-version.outputs.version }}
+          name: Version ${{ steps.release-version.outputs.version }}
           prerelease: ${{ inputs.prerelease }}
           generate_release_notes: true
-          files: KeeOneDriveSync-${{ inputs.version }}.plgx
+          files: KeeOneDriveSync-${{ steps.release-version.outputs.version }}.plgx
