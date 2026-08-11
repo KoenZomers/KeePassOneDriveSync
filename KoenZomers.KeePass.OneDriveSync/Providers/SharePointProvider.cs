@@ -79,7 +79,9 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 }
 
                 // Use the ETag from the SharePoint item to compare it against the local database config etag to see if the content has changed
-                if (!forceSync && eTag == databaseConfig.ETag)
+                if (!forceSync &&
+                    eTag == databaseConfig.ETag &&
+                    Utilities.GetDatabaseFileHash(localKeePassDatabasePath) == databaseConfig.LocalFileHash)
                 {
                     updateStatus(string.Format("KeePass database {0} is in sync", databaseConfig.KeePassDatabase.Name));
 

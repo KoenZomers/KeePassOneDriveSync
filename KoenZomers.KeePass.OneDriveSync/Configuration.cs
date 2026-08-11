@@ -113,6 +113,12 @@ namespace KoenZomers.KeePass.OneDriveSync
         public string ETag { get; set; }
 
         /// <summary>
+        /// The last modified date and time reported for the remote KeePass database at the last successful sync
+        /// </summary>
+        [DataMember]
+        public DateTimeOffset? RemoteLastModifiedAt { get; set; }
+
+        /// <summary>
         /// Date and time at which the database last synced with OneDrive
         /// </summary>
         [DataMember]

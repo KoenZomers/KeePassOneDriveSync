@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## [3.2.2.0] - August 11, 2026
+
+- Improved startup sync detection by also checking OneDrive's remote last modified timestamp and the local KeePass database hash before deciding a database is already in sync
+- Fixed first-time OneDrive uploads to store the stable CTag value used for future sync comparisons
+
 ## [3.2.1.0] - July 15, 2026
 
 - Fixed potential issue with uploading larger KeePass databases, likely only occurring with OneDrive Personal

@@ -225,16 +225,20 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     databaseConfig.RemoteItemId = newUploadResult.Id;
                     databaseConfig.LastCheckedAt = DateTime.Now;
                     databaseConfig.LastSyncedAt = DateTime.Now;
-                    databaseConfig.ETag = newUploadResult.ETag;
+                    databaseConfig.ETag = newUploadResult.CTag;
+                    databaseConfig.RemoteLastModifiedAt = newUploadResult.LastModifiedDateTime;
                 }
                 Configuration.Save();
                 return false;
             }
 
-            // Use the ETag from the OneDrive item to compare it against the local database config etag to see if the content has changed
-            // Microsoft Graph API reports back a different ETag when uploading than the file actually gets assigned for some unknown reason. This would cause each sync attempt to sync again as the ETags differ. As a workaround we'll use the CTag which does seem reliable to detect a change to the file.
-            if (!forceSync && 
-                oneDriveItem.CTag == databaseConfig.ETag)
+            // Use the CTag from the OneDrive item to compare it against the local database config etag to see if the content has changed.
+            // Microsoft Graph API reports back a different ETag when uploading than the file actually gets assigned for some unknown reason. This would cause each sync attempt to sync again as the ETags differ. As a workaround we'll use the CTag which does seem more reliable to detect a change to the file.
+            if (!forceSync &&
+                oneDriveItem.CTag == databaseConfig.ETag &&
+                databaseConfig.RemoteLastModifiedAt.HasValue &&
+                oneDriveItem.LastModifiedDateTime == databaseConfig.RemoteLastModifiedAt &&
+                Utilities.GetDatabaseFileHash(localKeePassDatabasePath) == databaseConfig.LocalFileHash)
             {
                 updateStatus(string.Format("Database {0} is in sync", databaseConfig.KeePassDatabase.Name));
 
@@ -344,6 +348,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
 
            // The ETag changes with every request of the item so we use the CTag instead which only changes when the file changes
             databaseConfig.ETag = uploadResult.CTag;
+            databaseConfig.RemoteLastModifiedAt = uploadResult.LastModifiedDateTime;
 
             return true;
         }
@@ -479,6 +484,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
 
             // The ETag changes with every request of the item so we use the CTag instead which only changes when the file changes
             databaseConfig.ETag = oneDriveItem.CTag;
+            databaseConfig.RemoteLastModifiedAt = oneDriveItem.LastModifiedDateTime;
 
             return saveFiledialog.FileName;
         }
