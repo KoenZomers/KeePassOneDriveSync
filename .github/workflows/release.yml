@@ -91,9 +91,6 @@ jobs:
         working-directory: repo
         run: .\create-plgx.cmd
 
-      - name: Rename PLGX release asset
-        run: Copy-Item -Path repo\KeeOneDriveSync.plgx -Destination "KeeOneDriveSync-${{ steps.release-version.outputs.version }}.plgx" -Force
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -101,4 +98,4 @@ jobs:
           name: Version ${{ steps.release-version.outputs.version }}
           prerelease: ${{ inputs.prerelease }}
           generate_release_notes: true
-          files: KeeOneDriveSync-${{ steps.release-version.outputs.version }}.plgx
+          files: repo/KeeOneDriveSync-${{ steps.release-version.outputs.assembly-version }}.plgx

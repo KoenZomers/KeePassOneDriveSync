@@ -132,6 +132,14 @@
       <DependentUpon>OneDriveConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\MicrosoftGraph\GraphCollectionResponse.cs" />
+    <Compile Include="Providers\MicrosoftGraph\GraphDrive.cs" />
+    <Compile Include="Providers\MicrosoftGraph\GraphDriveItem.cs" />
+    <Compile Include="Providers\MicrosoftGraph\GraphDriveItemFileFacet.cs" />
+    <Compile Include="Providers\MicrosoftGraph\GraphDriveItemFolderFacet.cs" />
+    <Compile Include="Providers\MicrosoftGraph\GraphItemReference.cs" />
+    <Compile Include="Providers\MicrosoftGraph\GraphSite.cs" />
+    <Compile Include="Providers\MicrosoftGraph\SharePointGraphClient.cs" />
     <Compile Include="Providers\OneDriveProvider.cs" />
     <Compile Include="Providers\SharePointProvider.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -172,16 +180,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Resources\SharePoint.pdn" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Providers\MicrosoftGraph\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Images\KeePassLive.png" />
     <Content Include="Images\KeePassO365.png" />
@@ -191,21 +197,21 @@
     <Content Include="Resources\DocLib.png" />
     <Content Include="Resources\File.png" />
     <Content Include="Resources\Folder.png" />
+    <Content Include="Resources\LogoSmall.png" />
     <Content Include="Resources\OneDriveBothClouds.png" />
     <None Include="Resources\mslogo.png" />
     <None Include="Resources\SharePoint.png" />
-    <None Include="Resources\MSGraph.pdn" />
-    <None Include="Resources\OneDriveForBusiness.png" />
-    <None Include="Resources\OneDrive.png" />
-    <None Include="Resources\MSGraph.png" />
     <None Include="Resources\OneDriveIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF EXIST "$(ProgramFiles)\KeePass Password Safe 2\KeePass.exe" (
-    IF NOT EXIST "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync" MKDIR "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync"
-    XCOPY /Y /D "$(TargetDir)*.dll" "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync\"
-    XCOPY /Y /D "$(TargetDir)*.pdb" "$(ProgramFiles)\KeePass Password Safe 2\Plugins\KeePassOneDriveSync\"
+    <PostBuildEvent>IF "$(SkipPlgxPostBuild)" NEQ "true" IF EXIST "$(ProgramW6432)\KeePass Password Safe 2\KeePass.exe" (
+    CALL "$(SolutionDir)create-plgx.cmd" -SkipBuild -Configuration "$(ConfigurationName)" -CopyToKeePassPluginFolder
+    IF ERRORLEVEL 1 EXIT /B 1
+)
+IF "$(SkipPlgxPostBuild)" NEQ "true" IF NOT EXIST "$(ProgramW6432)\KeePass Password Safe 2\KeePass.exe" IF EXIST "$(ProgramFiles)\KeePass Password Safe 2\KeePass.exe" (
+    CALL "$(SolutionDir)create-plgx.cmd" -SkipBuild -Configuration "$(ConfigurationName)" -CopyToKeePassPluginFolder
+    IF ERRORLEVEL 1 EXIT /B 1
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

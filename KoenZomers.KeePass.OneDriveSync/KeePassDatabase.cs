@@ -48,6 +48,7 @@ namespace KoenZomersKeePassOneDriveSync
                     break;
 
                 case CloudStorageType.SharePoint:
+                case CloudStorageType.SharePointOnPremises:
                     localKeePassDatabasePath = await Providers.SharePointProvider.OpenFromSharePoint(databaseConfig, updateStatus);
                     break;
             }
@@ -152,6 +153,7 @@ namespace KoenZomersKeePassOneDriveSync
                         break;
 
                     case CloudStorageType.SharePoint:
+                    case CloudStorageType.SharePointOnPremises:
                         syncSuccessful = await Providers.SharePointProvider.SyncUsingSharePointPlatform(databaseConfig, localKeePassDatabasePath, forceSync, updateStatus);
                         break;
                 }

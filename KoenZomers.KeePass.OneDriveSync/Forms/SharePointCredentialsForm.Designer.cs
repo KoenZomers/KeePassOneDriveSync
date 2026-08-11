@@ -1,4 +1,4 @@
-﻿namespace KoenZomersKeePassOneDriveSync.Forms
+namespace KoenZomersKeePassOneDriveSync.Forms
 {
     partial class SharePointCredentialsForm
     {
@@ -31,10 +31,10 @@
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.SharePointUrlTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.ClientIdLabel = new System.Windows.Forms.Label();
             this.ClientIdTextBox = new System.Windows.Forms.TextBox();
             this.ClientSecretTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.ClientSecretLabel = new System.Windows.Forms.Label();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.TestButton = new System.Windows.Forms.Button();
@@ -50,8 +50,7 @@
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Size = new System.Drawing.Size(423, 29);
             this.ExplanationLabel.TabIndex = 1;
-            this.ExplanationLabel.Text = "Enter the details of the SharePoint 2013, 2016, 2019 or Online environment you wi" +
-    "sh to store the KeePass database on.";
+            this.ExplanationLabel.Text = "Enter the URL of the SharePoint Online site collection you wish to store the KeePass database on.";
             // 
             // label1
             // 
@@ -75,15 +74,15 @@
             this.SharePointUrlTextBox.TextChanged += new System.EventHandler(this.SharePointUrlTextBox_TextChanged);
             this.SharePointUrlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SharePointUrlTextBox_KeyUp);
             // 
-            // label2
+            // ClientIdLabel
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.Location = new System.Drawing.Point(9, 80);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(113, 19);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Client Id:";
+            this.ClientIdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ClientIdLabel.Location = new System.Drawing.Point(9, 80);
+            this.ClientIdLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.ClientIdLabel.Name = "ClientIdLabel";
+            this.ClientIdLabel.Size = new System.Drawing.Size(113, 19);
+            this.ClientIdLabel.TabIndex = 4;
+            this.ClientIdLabel.Text = "Client Id:";
             // 
             // ClientIdTextBox
             // 
@@ -107,15 +106,15 @@
             this.ClientSecretTextBox.TabIndex = 2;
             this.ClientSecretTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ClientSecretTextBox_KeyUp);
             // 
-            // label3
+            // ClientSecretLabel
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.Location = new System.Drawing.Point(9, 103);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 19);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Client Secret:";
+            this.ClientSecretLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ClientSecretLabel.Location = new System.Drawing.Point(9, 103);
+            this.ClientSecretLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.ClientSecretLabel.Name = "ClientSecretLabel";
+            this.ClientSecretLabel.Size = new System.Drawing.Size(113, 19);
+            this.ClientSecretLabel.TabIndex = 6;
+            this.ClientSecretLabel.Text = "Client Secret:";
             // 
             // CancelButton
             // 
@@ -165,9 +164,9 @@
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.ClientSecretTextBox);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.ClientSecretLabel);
             this.Controls.Add(this.ClientIdTextBox);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.ClientIdLabel);
             this.Controls.Add(this.SharePointUrlTextBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ExplanationLabel);
@@ -189,10 +188,10 @@
         private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox SharePointUrlTextBox;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label ClientIdLabel;
         private System.Windows.Forms.TextBox ClientIdTextBox;
         private System.Windows.Forms.TextBox ClientSecretTextBox;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label ClientSecretLabel;
         private new System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.Button TestButton;

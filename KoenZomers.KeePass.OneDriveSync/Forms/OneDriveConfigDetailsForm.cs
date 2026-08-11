@@ -31,14 +31,15 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ShowConfiguration()
         {
-            LocationNameLabel.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? "SharePoint site:" : "OneDrive name:";
+            var isSharePoint = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint || _configuration.Value.CloudStorageType == CloudStorageType.SharePointOnPremises;
+            LocationNameLabel.Text = isSharePoint ? "SharePoint site:" : "OneDrive name:";
             LastSyncedLabel.Text = string.Format(LastSyncedLabel.Text, _configuration.Value.CloudStorageType);
             LastVerifiedLabel.Text = string.Format(LastVerifiedLabel.Text, _configuration.Value.CloudStorageType);
-            OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteDatabasePath + (string.IsNullOrEmpty(_configuration.Value.OneDriveName) ? "" : " (" + _configuration.Value.OneDriveName + ")") : _configuration.Value.OneDriveName;
+            OneDriveNameTextbox.Text = _configuration.Value.DoNotSync ? "Not enabled for sync" : isSharePoint ? _configuration.Value.RemoteDatabasePath + (string.IsNullOrEmpty(_configuration.Value.OneDriveName) ? "" : " (" + _configuration.Value.OneDriveName + ")") : _configuration.Value.OneDriveName;
             CloudStorageTypeTextBox.Text = _configuration.Value.CloudStorageType.GetValueOrDefault(CloudStorageType.OneDriveConsumer).ToString();
             LocalDatabasePathLinkLabel.Text = _configuration.Key;
             LocalDatabasePathLinkLabel.LinkColor = System.IO.File.Exists(_configuration.Key) ? System.Drawing.Color.Blue : System.Drawing.Color.Red;
-            RemoteKeePassPathTextbox.Text = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint ? _configuration.Value.RemoteFolderId + "/" + _configuration.Value.RemoteFileName : _configuration.Value.RemoteDatabasePath;
+            RemoteKeePassPathTextbox.Text = isSharePoint ? _configuration.Value.RemoteFolderId + "/" + _configuration.Value.RemoteFileName : _configuration.Value.RemoteDatabasePath;
             OneDriveRefreshTokenTextbox.Text = _configuration.Value.RefreshToken;
             RefreshTokenStorageTextBox.Text = "Encrypted on disk (KeePass.config.xml)";
             LastSyncedTextbox.Text = _configuration.Value.LastSyncedAt.HasValue ? _configuration.Value.LastSyncedAt.Value.ToString("dddd d MMMM yyyy HH:mm:ss") : "Never synced yet";

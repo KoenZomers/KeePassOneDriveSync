@@ -1,4 +1,6 @@
 ﻿using KoenZomers.KeePass.OneDriveSync;
+using KoenZomers.KeePass.OneDriveSync.Enums;
+using KoenZomersKeePassOneDriveSync.Providers.MicrosoftGraph;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -21,66 +23,96 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// <returns>True if successful, false if failed</returns>
         public static async Task<bool> SyncUsingSharePointPlatform(Configuration databaseConfig, string localKeePassDatabasePath, bool forceSync, Action<string> updateStatus)
         {
-            if(! await EnsureSharePointCredentials(databaseConfig))
+            if (databaseConfig.CloudStorageType == CloudStorageType.SharePointOnPremises)
+            {
+                return await SyncUsingSharePointOnPremisesPlatform(databaseConfig, localKeePassDatabasePath, forceSync, updateStatus);
+            }
+
+            if (!await EnsureSharePointCredentials(databaseConfig))
             {
                 return false;
             }
 
-            using (var httpClient = CreateSharePointHttpClient(databaseConfig))
+            using (var graphClient = await CreateSharePointGraphClient(databaseConfig))
             {
-                // Check if we have a Document Library on SharePoint to sync with
-                if (string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && string.IsNullOrEmpty(databaseConfig.RemoteFileName))
+                if (graphClient == null)
                 {
-                    // Ask the user where to store the database on SharePoint
-                    var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(httpClient);
+                    updateStatus(string.Format("Failed to connect to SharePoint for database {0}", databaseConfig.KeePassDatabase.Name));
+                    return false;
+                }
+
+                var site = await graphClient.GetSiteByUrl(new Uri(databaseConfig.RemoteDatabasePath));
+                databaseConfig.OneDriveName = site.DisplayName;
+
+                if (string.IsNullOrEmpty(databaseConfig.RemoteDriveId) && string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && string.IsNullOrEmpty(databaseConfig.RemoteFileName))
+                {
+                    var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(graphClient, site.Id)
+                    {
+                        FileName = !string.IsNullOrEmpty(databaseConfig.RemoteFileName) ? databaseConfig.RemoteFileName : new System.IO.FileInfo(localKeePassDatabasePath).Name
+                    };
                     await sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
-                    sharePointDocumentLibraryPickerDialog.FileName = !string.IsNullOrEmpty(databaseConfig.RemoteFileName) ? databaseConfig.RemoteFileName : new System.IO.FileInfo(localKeePassDatabasePath).Name;
                     var result = sharePointDocumentLibraryPickerDialog.ShowDialog();
-                    if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl))
+                    if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDriveId) || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedFolderId))
                     {
                         return false;
                     }
-                    databaseConfig.RemoteFolderId = sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl;
+
+                    databaseConfig.RemoteDriveId = sharePointDocumentLibraryPickerDialog.SelectedDriveId;
+                    databaseConfig.RemoteFolderId = sharePointDocumentLibraryPickerDialog.SelectedFolderId;
+                    databaseConfig.RemoteItemId = sharePointDocumentLibraryPickerDialog.SelectedFileId;
                     databaseConfig.RemoteFileName = sharePointDocumentLibraryPickerDialog.FileName;
                     Configuration.Save();
                 }
 
-                // Ensure we have the SharePoint site name
-                if(string.IsNullOrEmpty(databaseConfig.OneDriveName))
+                GraphDriveItem sharePointItem = null;
+                if (!string.IsNullOrEmpty(databaseConfig.RemoteItemId))
                 {
-                    // We don't have the SharePoint site name yet, retrieve it now by triggering TestConnection
-                    await TestConnection(httpClient, databaseConfig);
-                    Configuration.Save();
+                    try
+                    {
+                        sharePointItem = await graphClient.GetDriveItem(databaseConfig.RemoteDriveId, databaseConfig.RemoteItemId);
+                    }
+                    catch (HttpRequestException)
+                    {
+                        databaseConfig.RemoteItemId = null;
+                    }
                 }
 
-                // Retrieve the KeePass database from SharePoint
-                var serverRelativeSharePointUrl = string.Concat(databaseConfig.RemoteFolderId, "/", databaseConfig.RemoteFileName);
-                var eTag = await GetEtagOfFile(httpClient, serverRelativeSharePointUrl);
-
-                if (eTag == null)
+                if (sharePointItem == null && !string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && !string.IsNullOrEmpty(databaseConfig.RemoteFileName))
                 {
-                    // KeePass database not found on OneDrive
+                    sharePointItem = await graphClient.GetItemInFolder(databaseConfig.RemoteDriveId, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName);
+                    if (sharePointItem != null)
+                    {
+                        databaseConfig.RemoteItemId = sharePointItem.Id;
+                        Configuration.Save();
+                    }
+                }
+
+                if (sharePointItem == null)
+                {
                     updateStatus(string.Format("Database {0} does not exist yet on SharePoint, uploading it now", databaseConfig.KeePassDatabase.Name));
 
-                    // Upload the database to SharePoint
-                    eTag = await UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, true);
+                    var newUploadResult = await graphClient.UploadFileAs(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFileName, databaseConfig.RemoteDriveId, databaseConfig.RemoteFolderId);
 
-                    updateStatus(string.Format(eTag == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
+                    updateStatus(string.Format(newUploadResult == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
                     databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
-                    if (eTag != null)
+                    if (newUploadResult != null)
                     {
+                        databaseConfig.RemoteItemId = newUploadResult.Id;
                         databaseConfig.LastCheckedAt = DateTime.Now;
                         databaseConfig.LastSyncedAt = DateTime.Now;
-                        databaseConfig.ETag = eTag;
+                        databaseConfig.ETag = newUploadResult.CTag ?? newUploadResult.ETag;
+                        databaseConfig.RemoteLastModifiedAt = newUploadResult.LastModifiedDateTime;
                     }
                     Configuration.Save();
                     return false;
                 }
 
-                // Use the ETag from the SharePoint item to compare it against the local database config etag to see if the content has changed
+                var remoteChangeTag = sharePointItem.CTag ?? sharePointItem.ETag;
                 if (!forceSync &&
-                    eTag == databaseConfig.ETag &&
+                    remoteChangeTag == databaseConfig.ETag &&
+                    databaseConfig.RemoteLastModifiedAt.HasValue &&
+                    sharePointItem.LastModifiedDateTime == databaseConfig.RemoteLastModifiedAt &&
                     Utilities.GetDatabaseFileHash(localKeePassDatabasePath) == databaseConfig.LocalFileHash)
                 {
                     updateStatus(string.Format("KeePass database {0} is in sync", databaseConfig.KeePassDatabase.Name));
@@ -91,23 +123,20 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     return false;
                 }
 
-                // Download the database from SharePoint
                 updateStatus(string.Format("Downloading KeePass database {0} from SharePoint", databaseConfig.KeePassDatabase.Name));
 
                 var temporaryKeePassDatabasePath = System.IO.Path.GetTempFileName();
-                var downloadSuccessful = DownloadFile(temporaryKeePassDatabasePath, serverRelativeSharePointUrl, httpClient);
+                var downloadSuccessful = await graphClient.DownloadItemAndSaveAs(databaseConfig.RemoteDriveId, sharePointItem.Id, temporaryKeePassDatabasePath);
 
-                if (! await downloadSuccessful)
+                if (!downloadSuccessful)
                 {
                     updateStatus(string.Format("Failed to download the KeePass database {0} from SharePoint", databaseConfig.KeePassDatabase.Name));
 
                     return false;
                 }
 
-                // Sync database
                 updateStatus(string.Format("KeePass database {0} downloaded, going to sync", databaseConfig.KeePassDatabase.Name));
 
-                // Merge the downloaded database with the currently open KeePass database
                 var syncSuccessful = KeePassDatabase.MergeDatabases(databaseConfig, temporaryKeePassDatabasePath);
 
                 string localDatabaseToUpload;
@@ -118,25 +147,28 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     var confirm = MessageBox.Show(string.Format("Unable to merge the KeePass database {0}. Did you just change the master password for this KeePass database? If so and you would like to OVERWRITE the KeePass database stored on your SharePoint site with your local database, select Yes, otherwise select No.", databaseConfig.KeePassDatabase.Name), "Confirm overwriting your KeePass database", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                     if (confirm != DialogResult.Yes) return false;
 
-                    // Upload the local database
                     updateStatus(string.Format("Uploading the local KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
                     localDatabaseToUpload = databaseConfig.KeePassDatabase.IOConnectionInfo.Path;
                 }
                 else
                 {
-                    // Upload the synced database
                     updateStatus(string.Format("Uploading the merged KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
                     localDatabaseToUpload = temporaryKeePassDatabasePath;
                 }
 
-                var uploadResult = await UploadFile(localDatabaseToUpload, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, false);
+                var uploadResult = await graphClient.UpdateFile(localDatabaseToUpload, databaseConfig.RemoteDriveId, sharePointItem.Id);
 
-                // Delete the temporary database used for merging
                 System.IO.File.Delete(temporaryKeePassDatabasePath);
 
-                databaseConfig.ETag = uploadResult;
+                databaseConfig.RemoteItemId = uploadResult.Id;
+                databaseConfig.ETag = uploadResult.CTag ?? uploadResult.ETag;
+                databaseConfig.RemoteLastModifiedAt = uploadResult.LastModifiedDateTime;
+                databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+                databaseConfig.LastCheckedAt = DateTime.Now;
+                databaseConfig.LastSyncedAt = DateTime.Now;
+                Configuration.Save();
                 return true;
             }
         }
@@ -620,6 +652,17 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         }
 
         /// <summary>
+        /// Creates a Microsoft Graph SharePoint client based on a Configuration file specific for a SharePoint synchronization.
+        /// </summary>
+        /// <param name="databaseConfig">Configuration set to be specific for a SharePoint synchronization</param>
+        /// <returns>SharePoint Graph client or NULL if authentication failed</returns>
+        public static async Task<SharePointGraphClient> CreateSharePointGraphClient(Configuration databaseConfig)
+        {
+            var httpClient = await Utilities.GetSharePointGraphHttpClient(databaseConfig);
+            return httpClient == null ? null : new SharePointGraphClient(httpClient);
+        }
+
+        /// <summary>
         /// Creates a SharePoint ClientContext based on a Configuration file specific for a SharePoint synchronization
         /// </summary>
         /// <param name="databaseConfig">Configuration set to be specific for a SharePoint synchronization</param>
@@ -680,18 +723,31 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// </summary>
         /// <param name="databaseConfig">Configuration which needs to map to a SharePoint environment</param>
         /// <returns>True if successful, false if failed to receive a SharePoint configuration</returns>
-        private static bool RequestSharePointDetails(Configuration databaseConfig)
+        private static bool RequestSharePointDetails(Configuration databaseConfig, bool useMicrosoftGraph = true)
         {
-            var sharePointCredentialsDialog = new Forms.SharePointCredentialsForm();
+            var sharePointCredentialsDialog = new Forms.SharePointCredentialsForm(useMicrosoftGraph);
             var result = sharePointCredentialsDialog.ShowDialog();
             if (result != DialogResult.OK)
             {
                 return false;
             }
 
-            // Copy the entered data into the database configuration
-            databaseConfig.RefreshToken = string.Format("{0};{1}", sharePointCredentialsDialog.SharePointClientId, sharePointCredentialsDialog.SharePointClientSecret);
             databaseConfig.RemoteDatabasePath = sharePointCredentialsDialog.SharePointUrl;
+            if (useMicrosoftGraph)
+            {
+                if (!string.IsNullOrEmpty(databaseConfig.RefreshToken) && databaseConfig.RefreshToken.IndexOf(';') != -1)
+                {
+                    databaseConfig.RefreshToken = null;
+                }
+                databaseConfig.RemoteDriveId = null;
+                databaseConfig.RemoteFolderId = null;
+                databaseConfig.RemoteItemId = null;
+                databaseConfig.RemoteFileName = null;
+            }
+            else
+            {
+                databaseConfig.RefreshToken = string.Format("{0};{1}", sharePointCredentialsDialog.SharePointClientId, sharePointCredentialsDialog.SharePointClientSecret);
+            }
             Configuration.Save();
 
             return true;
@@ -747,15 +803,196 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         }
 
         /// <summary>
+        /// Test the connection with the provided SharePoint Graph client.
+        /// </summary>
+        /// <param name="graphClient">The SharePoint Graph client to use to test the connection</param>
+        /// <param name="databaseConfig">If config is provided, the drive name will be updated with the actual title (optional)</param>
+        /// <returns>True if connection successful, False if the test failed</returns>
+        public static async Task<bool> TestConnection(SharePointGraphClient graphClient, Configuration databaseConfig = null)
+        {
+            try
+            {
+                if (databaseConfig == null || string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath))
+                {
+                    return false;
+                }
+
+                var site = await graphClient.GetSiteByUrl(new Uri(databaseConfig.RemoteDatabasePath));
+                databaseConfig.OneDriveName = site.DisplayName;
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private static async Task<bool> SyncUsingSharePointOnPremisesPlatform(Configuration databaseConfig, string localKeePassDatabasePath, bool forceSync, Action<string> updateStatus)
+        {
+            if (!await EnsureSharePointOnPremisesCredentials(databaseConfig))
+            {
+                return false;
+            }
+
+            using (var httpClient = CreateSharePointHttpClient(databaseConfig))
+            {
+                if (string.IsNullOrEmpty(databaseConfig.RemoteFolderId) && string.IsNullOrEmpty(databaseConfig.RemoteFileName))
+                {
+                    var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(httpClient);
+                    await sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
+                    sharePointDocumentLibraryPickerDialog.FileName = !string.IsNullOrEmpty(databaseConfig.RemoteFileName) ? databaseConfig.RemoteFileName : new System.IO.FileInfo(localKeePassDatabasePath).Name;
+                    var result = sharePointDocumentLibraryPickerDialog.ShowDialog();
+                    if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl))
+                    {
+                        return false;
+                    }
+                    databaseConfig.RemoteFolderId = sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl;
+                    databaseConfig.RemoteFileName = sharePointDocumentLibraryPickerDialog.FileName;
+                    Configuration.Save();
+                }
+
+                if (string.IsNullOrEmpty(databaseConfig.OneDriveName))
+                {
+                    await TestConnection(httpClient, databaseConfig);
+                    Configuration.Save();
+                }
+
+                var serverRelativeSharePointUrl = string.Concat(databaseConfig.RemoteFolderId, "/", databaseConfig.RemoteFileName);
+                var eTag = await GetEtagOfFile(httpClient, serverRelativeSharePointUrl);
+
+                if (eTag == null)
+                {
+                    updateStatus(string.Format("Database {0} does not exist yet on SharePoint, uploading it now", databaseConfig.KeePassDatabase.Name));
+                    eTag = await UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, true);
+                    updateStatus(string.Format(eTag == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
+
+                    databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+                    if (eTag != null)
+                    {
+                        databaseConfig.LastCheckedAt = DateTime.Now;
+                        databaseConfig.LastSyncedAt = DateTime.Now;
+                        databaseConfig.ETag = eTag;
+                    }
+                    Configuration.Save();
+                    return false;
+                }
+
+                if (!forceSync &&
+                    eTag == databaseConfig.ETag &&
+                    Utilities.GetDatabaseFileHash(localKeePassDatabasePath) == databaseConfig.LocalFileHash)
+                {
+                    updateStatus(string.Format("KeePass database {0} is in sync", databaseConfig.KeePassDatabase.Name));
+                    databaseConfig.LastCheckedAt = DateTime.Now;
+                    Configuration.Save();
+                    return false;
+                }
+
+                updateStatus(string.Format("Downloading KeePass database {0} from SharePoint", databaseConfig.KeePassDatabase.Name));
+                var temporaryKeePassDatabasePath = System.IO.Path.GetTempFileName();
+                var downloadSuccessful = await DownloadFile(temporaryKeePassDatabasePath, serverRelativeSharePointUrl, httpClient);
+
+                if (!downloadSuccessful)
+                {
+                    updateStatus(string.Format("Failed to download the KeePass database {0} from SharePoint", databaseConfig.KeePassDatabase.Name));
+                    return false;
+                }
+
+                updateStatus(string.Format("KeePass database {0} downloaded, going to sync", databaseConfig.KeePassDatabase.Name));
+                var syncSuccessful = KeePassDatabase.MergeDatabases(databaseConfig, temporaryKeePassDatabasePath);
+
+                string localDatabaseToUpload;
+                if (!syncSuccessful)
+                {
+                    updateStatus(string.Format("Failed to synchronize the KeePass database {0}", databaseConfig.KeePassDatabase.Name));
+
+                    var confirm = MessageBox.Show(string.Format("Unable to merge the KeePass database {0}. Did you just change the master password for this KeePass database? If so and you would like to OVERWRITE the KeePass database stored on your SharePoint site with your local database, select Yes, otherwise select No.", databaseConfig.KeePassDatabase.Name), "Confirm overwriting your KeePass database", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                    if (confirm != DialogResult.Yes) return false;
+
+                    updateStatus(string.Format("Uploading the local KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
+                    localDatabaseToUpload = databaseConfig.KeePassDatabase.IOConnectionInfo.Path;
+                }
+                else
+                {
+                    updateStatus(string.Format("Uploading the merged KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
+                    localDatabaseToUpload = temporaryKeePassDatabasePath;
+                }
+
+                var uploadResult = await UploadFile(localDatabaseToUpload, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, false);
+                System.IO.File.Delete(temporaryKeePassDatabasePath);
+
+                databaseConfig.ETag = uploadResult;
+                return true;
+            }
+        }
+
+        private static async Task<bool> EnsureSharePointOnPremisesCredentials(Configuration databaseConfig)
+        {
+            if (string.IsNullOrEmpty(databaseConfig.RefreshToken) || databaseConfig.RefreshToken.IndexOf(';') == -1 || string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath))
+            {
+                bool retryGettingApiInstance;
+                do
+                {
+                    retryGettingApiInstance = false;
+                    try
+                    {
+                        var requestSharePointDetailsSuccessful = RequestSharePointDetails(databaseConfig, useMicrosoftGraph: false);
+
+                        if (!requestSharePointDetailsSuccessful)
+                        {
+                            return false;
+                        }
+
+                        using (var httpClient = CreateSharePointHttpClient(databaseConfig))
+                        {
+                            if (!await TestConnection(httpClient, databaseConfig))
+                            {
+                                MessageBox.Show("Connection failed. Please ensure you are able to connect to the SharePoint farm", "Connecting to SharePoint", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                retryGettingApiInstance = true;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        var errorMessage = new System.Text.StringBuilder();
+                        errorMessage.Append("Failed to connect to SharePoint:");
+                        errorMessage.AppendLine();
+                        errorMessage.AppendLine(e.Message);
+
+                        if (e.InnerException != null)
+                        {
+                            errorMessage.AppendLine(e.InnerException.Message);
+
+                            if (e.InnerException.Message.Contains("remote name could not be resolved"))
+                            {
+                                KeePassDatabase.UpdateStatus("Can't connect. Working offline.");
+                                return false;
+                            }
+                        }
+
+                        MessageBox.Show(errorMessage.ToString(), "Connection failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                        retryGettingApiInstance = true;
+                    }
+                } while (retryGettingApiInstance);
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Ensures that the provided database config contains information to connect to SharePoint. If not, it will prompt for the end user to provide the details.
         /// </summary>
         /// <param name="databaseConfig">Databaseconfig to check for the presence of SharePoint authentication information</param>
         /// <returns>True if succeeded to get SharePoint authentication information, false if failed</returns>
         public static async Task<bool> EnsureSharePointCredentials(Configuration databaseConfig)
         {
-            if (string.IsNullOrEmpty(databaseConfig.RefreshToken) || databaseConfig.RefreshToken.IndexOf(';') == -1 || string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath))
+            if (databaseConfig.CloudStorageType == CloudStorageType.SharePointOnPremises)
             {
-                // Configuration does not have a SharePoint config in it yet, ask for connection details
+                return await EnsureSharePointOnPremisesCredentials(databaseConfig);
+            }
+
+            if (string.IsNullOrEmpty(databaseConfig.RemoteDatabasePath) || (!string.IsNullOrEmpty(databaseConfig.RefreshToken) && databaseConfig.RefreshToken.IndexOf(';') != -1))
+            {
                 bool retryGettingApiInstance;
                 do
                 {
@@ -769,32 +1006,28 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                             return false;
                         }
 
-                        using (var httpClient = CreateSharePointHttpClient(databaseConfig))
+                        using (var graphClient = await CreateSharePointGraphClient(databaseConfig))
                         {
-                            if (! await TestConnection(httpClient, databaseConfig))
+                            if (graphClient == null || !await TestConnection(graphClient, databaseConfig))
                             {
-                                MessageBox.Show("Connection failed. Please ensure you are able to connect to the SharePoint farm", "Connecting to SharePoint", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show("Connection failed. Please ensure you are able to connect to the SharePoint Online site", "Connecting to SharePoint", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 retryGettingApiInstance = true;
                             }
                         }
                     }
                     catch (Exception e)
                     {
-                        // Build the error text to show to the end user
                         var errorMessage = new System.Text.StringBuilder();
                         errorMessage.Append("Failed to connect to SharePoint:");
                         errorMessage.AppendLine();
                         errorMessage.AppendLine(e.Message);
 
-                        // If there's an inner exception, show its message as well as it typically gives more detail why it went wrong
                         if (e.InnerException != null)
                         {
                             errorMessage.AppendLine(e.InnerException.Message);
 
-                            // Verify if we're offline
                             if (e.InnerException.Message.Contains("remote name could not be resolved"))
                             {
-                                // Offline, don't display a modal dialog but use the status bar instead
                                 KeePassDatabase.UpdateStatus("Can't connect. Working offline.");
                                 return false;
                             }
@@ -817,14 +1050,81 @@ namespace KoenZomersKeePassOneDriveSync.Providers
         /// <returns>Path to the local KeePass database or NULL if the process has been aborted</returns>
         public static async Task<string> OpenFromSharePoint(Configuration databaseConfig, Action<string> updateStatus)
         {
-            if(! await EnsureSharePointCredentials(databaseConfig))
+            if (databaseConfig.CloudStorageType == CloudStorageType.SharePointOnPremises)
+            {
+                return await OpenFromSharePointOnPremises(databaseConfig, updateStatus);
+            }
+
+            if (!await EnsureSharePointCredentials(databaseConfig))
+            {
+                return null;
+            }
+
+            using (var graphClient = await CreateSharePointGraphClient(databaseConfig))
+            {
+                if (graphClient == null)
+                {
+                    updateStatus("Failed to connect to SharePoint");
+                    return null;
+                }
+
+                var site = await graphClient.GetSiteByUrl(new Uri(databaseConfig.RemoteDatabasePath));
+                databaseConfig.OneDriveName = site.DisplayName;
+
+                var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(graphClient, site.Id)
+                {
+                    ExplanationText = "Select the KeePass database to open. Right click for additional options.",
+                    AllowEnteringNewFileName = false
+                };
+                await sharePointDocumentLibraryPickerDialog.LoadDocumentLibraryItems();
+
+                var result = sharePointDocumentLibraryPickerDialog.ShowDialog();
+                if (result != DialogResult.OK || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedDriveId) || string.IsNullOrEmpty(sharePointDocumentLibraryPickerDialog.SelectedFileId))
+                {
+                    updateStatus("Open KeePass database from SharePoint aborted");
+                    return null;
+                }
+                databaseConfig.RemoteDriveId = sharePointDocumentLibraryPickerDialog.SelectedDriveId;
+                databaseConfig.RemoteFolderId = sharePointDocumentLibraryPickerDialog.SelectedFolderId;
+                databaseConfig.RemoteItemId = sharePointDocumentLibraryPickerDialog.SelectedFileId;
+                databaseConfig.RemoteFileName = sharePointDocumentLibraryPickerDialog.FileName;
+
+                var saveFiledialog = new SaveFileDialog
+                {
+                    Filter = "KeePass databases (*.kdbx)|*.kdbx|All Files (*.*)|*.*",
+                    Title = "Select where to store the KeePass database locally",
+                    CheckFileExists = false,
+                    FileName = sharePointDocumentLibraryPickerDialog.FileName
+                };
+
+                var saveFileDialogResult = saveFiledialog.ShowDialog();
+                if (saveFileDialogResult != DialogResult.OK || string.IsNullOrEmpty(saveFiledialog.FileName))
+                {
+                    updateStatus("Open KeePass database from SharePoint aborted");
+                    return null;
+                }
+
+                updateStatus("Downloading KeePass database");
+
+                var downloadSuccessful = await graphClient.DownloadItemAndSaveAs(databaseConfig.RemoteDriveId, databaseConfig.RemoteItemId, saveFiledialog.FileName);
+                var sharePointItem = await graphClient.GetDriveItem(databaseConfig.RemoteDriveId, databaseConfig.RemoteItemId);
+                databaseConfig.ETag = sharePointItem.CTag ?? sharePointItem.ETag;
+                databaseConfig.RemoteLastModifiedAt = sharePointItem.LastModifiedDateTime;
+                Configuration.Save();
+
+                return downloadSuccessful ? saveFiledialog.FileName : null;
+            }
+        }
+
+        private static async Task<string> OpenFromSharePointOnPremises(Configuration databaseConfig, Action<string> updateStatus)
+        {
+            if (!await EnsureSharePointOnPremisesCredentials(databaseConfig))
             {
                 return null;
             }
 
             using (var httpClient = CreateSharePointHttpClient(databaseConfig))
             {
-                // Ask the user where to store the database on SharePoint
                 var sharePointDocumentLibraryPickerDialog = new Forms.SharePointDocumentLibraryPickerDialog(httpClient)
                 {
                     ExplanationText = "Select the KeePass database to open. Right click for additional options.",
@@ -841,7 +1141,6 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 databaseConfig.RemoteFolderId = sharePointDocumentLibraryPickerDialog.SelectedDocumentLibraryServerRelativeUrl;
                 databaseConfig.RemoteFileName = sharePointDocumentLibraryPickerDialog.FileName;
 
-                // Show the save as dialog to select a location locally where to store the KeePass database
                 var saveFiledialog = new SaveFileDialog
                 {
                     Filter = "KeePass databases (*.kdbx)|*.kdbx|All Files (*.*)|*.*",
@@ -857,14 +1156,11 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     return null;
                 }
 
-                // Download the KeePass database to the selected location
                 updateStatus("Downloading KeePass database");
 
-                // Retrieve the KeePass database from SharePoint
                 var serverRelativeSharePointUrl = string.Concat(databaseConfig.RemoteFolderId, "/", databaseConfig.RemoteFileName);
                 var downloadSuccessful = await DownloadFile(saveFiledialog.FileName, serverRelativeSharePointUrl, httpClient);
 
-                // Get the ETag of the database so we can determine if it's in sync
                 databaseConfig.ETag = await GetEtagOfFile(httpClient, serverRelativeSharePointUrl);
 
                 return downloadSuccessful ? saveFiledialog.FileName : null;

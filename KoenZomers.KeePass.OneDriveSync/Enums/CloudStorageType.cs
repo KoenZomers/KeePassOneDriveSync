@@ -21,6 +21,11 @@
         SharePoint = 3,
 
         /// <summary>
+        /// Microsoft SharePoint 2013, 2016, 2019 or Subscription Edition
+        /// </summary>
+        SharePointOnPremises = 5,
+
+        /// <summary>
         /// Microsoft Graph API, authenticating interactively via MSAL's system browser flow (opens the default OS
         /// browser and listens for the redirect on http://localhost)
         /// </summary>

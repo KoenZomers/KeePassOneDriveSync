@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -6,6 +6,8 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 {
     public partial class SharePointCredentialsForm : Form
     {
+        private readonly bool _useMicrosoftGraph;
+
         #region Properties
 
         /// <summary>
@@ -24,14 +26,31 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         public string SharePointClientSecret { get { return ClientSecretTextBox.Text; } }
 
         /// <summary>
-        /// Boolean indicating if the SharePointUrl, SharePointClientId and SharePointClientSecret fields all contain a value
+        /// Boolean indicating if the SharePointUrl field contains a value
         /// </summary>
-        public bool AllFieldsContainText { get { return !string.IsNullOrWhiteSpace(SharePointUrlTextBox.Text) && !string.IsNullOrWhiteSpace(ClientIdTextBox.Text) && !string.IsNullOrWhiteSpace(ClientSecretTextBox.Text); } }
+        public bool AllFieldsContainText
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(SharePointUrlTextBox.Text) &&
+                       (_useMicrosoftGraph || (!string.IsNullOrWhiteSpace(ClientIdTextBox.Text) && !string.IsNullOrWhiteSpace(ClientSecretTextBox.Text)));
+            }
+        }
         #endregion
 
-        public SharePointCredentialsForm()
+        public SharePointCredentialsForm(bool useMicrosoftGraph = true)
         {
+            _useMicrosoftGraph = useMicrosoftGraph;
+
             InitializeComponent();
+
+            ClientIdTextBox.Visible = !useMicrosoftGraph;
+            ClientSecretTextBox.Visible = !useMicrosoftGraph;
+            ClientIdLabel.Visible = !useMicrosoftGraph;
+            ClientSecretLabel.Visible = !useMicrosoftGraph;
+            ExplanationLabel.Text = useMicrosoftGraph
+                ? "Enter the URL of the SharePoint Online site collection you wish to store the KeePass database on."
+                : "Enter the details of the SharePoint 2013, 2016, 2019 or Subscription Edition environment you wish to store the KeePass database on.";
         }
 
         /// <summary>
@@ -42,6 +61,7 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             if(!EnsureAllFieldsEntered())
             {
                 DialogResult = DialogResult.None;
+                return;
             }
             DialogResult = DialogResult.OK;
         }
@@ -85,23 +105,45 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             // Test the connection
             try
             {
+                if (_useMicrosoftGraph)
+                {
+                    var testConfiguration = new KoenZomers.KeePass.OneDriveSync.Configuration
+                    {
+                        RemoteDatabasePath = SharePointUri.ToString()
+                    };
+
+                    using (var graphClient = await Providers.SharePointProvider.CreateSharePointGraphClient(testConfiguration))
+                    {
+                        if (graphClient != null && await Providers.SharePointProvider.TestConnection(graphClient, testConfiguration))
+                        {
+                            MessageBox.Show("Connection successful", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Connection failed", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                    }
+                    return;
+                }
+
                 using (var clientContext = Providers.SharePointProvider.CreateSharePointHttpClient(SharePointUri, SharePointClientId, SharePointClientSecret))
                 {
-                    if (await Providers.SharePointProvider.TestConnection(clientContext))
-                    {
-                        MessageBox.Show("Connection successful", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Connection failed", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    }
+                    MessageBox.Show(await Providers.SharePointProvider.TestConnection(clientContext) ? "Connection successful" : "Connection failed", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Connection failed: '" + ex.Message + "'. Check your entered Client ID and Client Secret.", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                ClientIdTextBox.SelectAll();
-                ClientIdTextBox.Focus();
+                MessageBox.Show("Connection failed: '" + ex.Message + "'. Check the entered SharePoint details and your permissions to access it.", "Testing SharePoint Connectivity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                if (_useMicrosoftGraph)
+                {
+                    SharePointUrlTextBox.SelectAll();
+                    SharePointUrlTextBox.Focus();
+                }
+                else
+                {
+                    ClientIdTextBox.SelectAll();
+                    ClientIdTextBox.Focus();
+                }
                 return;
             }
         }
@@ -112,13 +154,18 @@ namespace KoenZomersKeePassOneDriveSync.Forms
             {
                 var clipText = Clipboard.GetText();
                 var clipTextSplitted = clipText.Split(new[] { '\r', '\n' });
-                if (clipTextSplitted.Length == 5)
+                if (_useMicrosoftGraph && clipTextSplitted.Length > 0)
+                {
+                    SharePointUrlTextBox.Text = clipTextSplitted[0];
+                    e.SuppressKeyPress = false;
+                }
+                else if (!_useMicrosoftGraph && clipTextSplitted.Length == 5)
                 {
                     SharePointUrlTextBox.Text = clipTextSplitted[0];
                     ClientIdTextBox.Text = clipTextSplitted[2];
                     ClientSecretTextBox.Text = clipTextSplitted[4];
                     e.SuppressKeyPress = false;
-                }                
+                }
             }
             e.SuppressKeyPress = true;
         }

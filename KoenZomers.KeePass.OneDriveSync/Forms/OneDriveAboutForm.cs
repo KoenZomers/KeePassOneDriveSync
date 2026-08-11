@@ -13,6 +13,8 @@ namespace KoenZomersKeePassOneDriveSync
         {
             InitializeComponent();
 
+            pictureBox1.Image = Resources.LogoSmall;
+
             var assemblyVersion = Assembly.GetCallingAssembly().GetName().Version;
 
             HeaderLabel.Text = string.Format("KeePass OneDriveSync v{0}.{1}.{2}.{3}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build, assemblyVersion.Revision);

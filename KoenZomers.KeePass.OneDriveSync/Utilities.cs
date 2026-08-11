@@ -1,7 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -113,6 +116,88 @@ namespace KoenZomersKeePassOneDriveSync
         }
 
         /// <summary>
+        /// Returns an authenticated Microsoft Graph HttpClient for SharePoint Online delegated access.
+        /// </summary>
+        /// <param name="databaseConfig">Configuration of the KeePass database</param>
+        /// <returns>Authenticated Microsoft Graph HttpClient or NULL if authentication failed</returns>
+        public static async Task<HttpClient> GetSharePointGraphHttpClient(Configuration databaseConfig)
+        {
+            var publicClientApplication = PublicClientApplicationBuilder.Create(KoenZomersKeePassOneDriveSyncExt.GraphApiApplicationId)
+                .WithRedirectUri("http://localhost")
+                .Build();
+
+            AuthenticationResult authenticationResult = null;
+
+            if (!string.IsNullOrEmpty(databaseConfig.RefreshToken) && databaseConfig.RefreshToken.IndexOf(';') == -1)
+            {
+                try
+                {
+                    var cacheBytes = Convert.FromBase64String(databaseConfig.RefreshToken);
+                    ((ITokenCacheSerializer)publicClientApplication.UserTokenCache).DeserializeMsalV3(cacheBytes);
+
+                    var accounts = await publicClientApplication.GetAccountsAsync();
+                    var account = accounts.FirstOrDefault();
+
+                    if (account != null)
+                    {
+                        authenticationResult = await publicClientApplication.AcquireTokenSilent(SharePointGraphScopes, account).ExecuteAsync();
+                    }
+                }
+                catch (MsalUiRequiredException)
+                {
+                    // The cached token cannot satisfy the SharePoint scopes anymore, fall through to interactive login.
+                }
+                catch (Exception)
+                {
+                    // The cached token is invalid or from the legacy ACS SharePoint flow, fall through to interactive login.
+                }
+            }
+
+            if (authenticationResult == null)
+            {
+                try
+                {
+                    authenticationResult = await publicClientApplication.AcquireTokenInteractive(SharePointGraphScopes)
+                        .WithUseEmbeddedWebView(false)
+                        .WithSystemWebViewOptions(new SystemWebViewOptions
+                        {
+                            HtmlMessageSuccess = BuildAuthResultHtmlPage(success: true),
+                            HtmlMessageError = BuildAuthResultHtmlPage(success: false)
+                        })
+                        .ExecuteAsync();
+                }
+                catch (MsalException)
+                {
+                    return null;
+                }
+            }
+
+            databaseConfig.RefreshToken = Convert.ToBase64String(((ITokenCacheSerializer)publicClientApplication.UserTokenCache).SerializeMsalV3());
+            Configuration.Save();
+
+            var httpClientHandler = new HttpClientHandler
+            {
+                Proxy = GetProxySettings(),
+                PreAuthenticate = true,
+                UseDefaultCredentials = false,
+                Credentials = GetProxyCredentials()
+            };
+
+            var httpClient = new HttpClient(httpClientHandler)
+            {
+                BaseAddress = new Uri("https://graph.microsoft.com/v1.0/")
+            };
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
+            var assemblyVersion = Assembly.GetCallingAssembly().GetName().Version;
+            httpClient.DefaultRequestHeaders.Add("User-Agent", string.Format("KoenZomers KeePass OneDriveSync v{0}.{1}.{2}.{3}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build, assemblyVersion.Revision));
+
+            return httpClient;
+        }
+
+        private static readonly string[] SharePointGraphScopes = { "User.Read", "offline_access", "Files.ReadWrite", "Sites.Read.All" };
+
+        /// <summary>
         /// Builds the HTML page shown in the system browser tab after MSAL's interactive sign-in flow completes on the
         /// http://localhost loopback listener, replacing MSAL's plain default page with a simple styled message.
         /// </summary>
@@ -128,10 +213,13 @@ namespace KoenZomersKeePassOneDriveSync
 
             return string.Format(@"<html><head><title>{0}</title></head>
 <body style=""font-family: Segoe UI, Arial, sans-serif; text-align: center; margin-top: 15%;"">
+<img src=""{3}"" alt=""KeePass OneDriveSync"" style=""margin-bottom: 18px;"" />
 <h1 style=""color: {1};"">{0}</h1>
 <p>{2}</p>
-</body></html>", title, accentColor, message);
+</body></html>", title, accentColor, message, AuthResultLogoUrl);
         }
+
+        private const string AuthResultLogoUrl = "https://raw.githubusercontent.com/KoenZomers/KeePassOneDriveSync/refs/heads/master/KoenZomers.KeePass.OneDriveSync/Resources/LogoSmall.png";
 
         #endregion
 

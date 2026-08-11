@@ -63,6 +63,16 @@ namespace KoenZomersKeePassOneDriveSync {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap LogoSmall {
+            get {
+                object obj = ResourceManager.GetObject("LogoSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap MicrosoftLogo {
             get {
                 object obj = ResourceManager.GetObject("MicrosoftLogo", resourceCulture);
@@ -73,49 +83,9 @@ namespace KoenZomersKeePassOneDriveSync {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap MSGraph {
-            get {
-                object obj = ResourceManager.GetObject("MSGraph", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap OneDrive {
-            get {
-                object obj = ResourceManager.GetObject("OneDrive", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap OneDriveBothClouds {
             get {
                 object obj = ResourceManager.GetObject("OneDriveBothClouds", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap OneDriveConsumer {
-            get {
-                object obj = ResourceManager.GetObject("OneDriveConsumer", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap OneDriveForBusiness {
-            get {
-                object obj = ResourceManager.GetObject("OneDriveForBusiness", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

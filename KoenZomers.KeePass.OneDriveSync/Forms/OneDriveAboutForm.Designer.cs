@@ -33,6 +33,8 @@
             this.NameLabel = new System.Windows.Forms.Label();
             this.ExplanationLabel = new System.Windows.Forms.Label();
             this.WebsiteLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // HeaderLabel
@@ -40,10 +42,10 @@
             this.HeaderLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.HeaderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HeaderLabel.Location = new System.Drawing.Point(18, 14);
+            this.HeaderLabel.Location = new System.Drawing.Point(197, 14);
             this.HeaderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.HeaderLabel.Name = "HeaderLabel";
-            this.HeaderLabel.Size = new System.Drawing.Size(561, 35);
+            this.HeaderLabel.Size = new System.Drawing.Size(687, 35);
             this.HeaderLabel.TabIndex = 2;
             this.HeaderLabel.Text = "KeePass OneDriveSync";
             this.HeaderLabel.UseMnemonic = false;
@@ -52,7 +54,7 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.CloseButton.Location = new System.Drawing.Point(431, 194);
+            this.CloseButton.Location = new System.Drawing.Point(736, 194);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(148, 51);
@@ -65,10 +67,10 @@
             // 
             this.NameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.NameLabel.Location = new System.Drawing.Point(20, 194);
+            this.NameLabel.Location = new System.Drawing.Point(18, 181);
             this.NameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.NameLabel.Name = "NameLabel";
-            this.NameLabel.Size = new System.Drawing.Size(405, 28);
+            this.NameLabel.Size = new System.Drawing.Size(710, 28);
             this.NameLabel.TabIndex = 6;
             this.NameLabel.Text = "Koen Zomers (koen@zomers.eu)";
             this.NameLabel.UseMnemonic = false;
@@ -78,11 +80,11 @@
             this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(19, 71);
+            this.ExplanationLabel.Location = new System.Drawing.Point(193, 71);
             this.ExplanationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ExplanationLabel.MinimumSize = new System.Drawing.Size(558, 118);
             this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(558, 118);
+            this.ExplanationLabel.Size = new System.Drawing.Size(689, 118);
             this.ExplanationLabel.TabIndex = 7;
             this.ExplanationLabel.Text = "This KeePass plugin allows synchronizing your KeePass databases with one or multiple OneDrive accounts. It is inspired by KeeSkyDrive by Oleksandr Senyuk. It is free to use and open source. Please leave these credits in place if you decide to use my source code. Feel free to contact me in case of questions or suggestions.";
             // 
@@ -90,7 +92,7 @@
             // 
             this.WebsiteLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WebsiteLinkLabel.AutoSize = true;
-            this.WebsiteLinkLabel.Location = new System.Drawing.Point(19, 222);
+            this.WebsiteLinkLabel.Location = new System.Drawing.Point(18, 209);
             this.WebsiteLinkLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.WebsiteLinkLabel.Name = "WebsiteLinkLabel";
             this.WebsiteLinkLabel.Size = new System.Drawing.Size(398, 20);
@@ -99,15 +101,25 @@
             this.WebsiteLinkLabel.Text = "https://github.com/KoenZomers/KeePassOneDriveSync";
             this.WebsiteLinkLabel.Click += new System.EventHandler(this.WebsiteLinkLabel_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(12, 14);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(174, 138);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 10;
+            this.pictureBox1.TabStop = false;
+            // 
             // OneDriveAboutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(597, 262);
+            this.ClientSize = new System.Drawing.Size(902, 262);
+            this.Controls.Add(this.NameLabel);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.WebsiteLinkLabel);
             this.Controls.Add(this.ExplanationLabel);
-            this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.HeaderLabel);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
@@ -118,6 +130,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About KeePass OneDriveSync";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -130,5 +143,6 @@
         private System.Windows.Forms.Label NameLabel;
         private System.Windows.Forms.Label ExplanationLabel;
         private System.Windows.Forms.LinkLabel WebsiteLinkLabel;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

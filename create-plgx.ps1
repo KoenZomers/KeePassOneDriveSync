@@ -1,3 +1,9 @@
+param(
+	[string] $Configuration = 'Release',
+	[switch] $SkipBuild,
+	[switch] $CopyToKeePassPluginFolder
+)
+
 $ErrorActionPreference = 'Stop'
 
 $pluginName = 'KeeOneDriveSync'
@@ -7,14 +13,25 @@ $solutionPath = Join-Path $root 'KoenZomers.KeePass.OneDriveSync.sln'
 $sourceFolder = Join-Path $root $sourceFolderName
 $projectFileName = 'KoenZomers.KeePass.OneDriveSync.csproj'
 $projectPath = Join-Path $sourceFolder $projectFileName
-$configuration = 'Release'
+$configuration = $Configuration
 $outputFolder = Join-Path $sourceFolder "bin\$configuration"
 $stageRoot = Join-Path $root 'obj\plgx'
 $stageSourceFolder = Join-Path $stageRoot $sourceFolderName
 $stageProjectPath = Join-Path $stageSourceFolder $projectFileName
 $stageReferencesFolderName = 'PlgxReferences'
 $stageReferencesFolder = Join-Path $stageSourceFolder $stageReferencesFolderName
-$plgxOutputPath = Join-Path $root "$pluginName.plgx"
+
+function Get-PluginVersion {
+	$assemblyInfoPath = Join-Path $sourceFolder 'Properties\AssemblyInfo.cs'
+	$assemblyVersionLine = Get-Content -Path $assemblyInfoPath |
+		Where-Object { $_ -match '^\s*\[assembly:\s*AssemblyVersion\("([^"]+)"\)\]' } |
+		Select-Object -First 1
+	if (!$assemblyVersionLine -or $assemblyVersionLine -notmatch '^\s*\[assembly:\s*AssemblyVersion\("([^"]+)"\)\]') {
+		throw "Unable to determine plugin version from '$assemblyInfoPath'."
+	}
+
+	return $Matches[1]
+}
 
 function Get-MSBuildPath {
 	$vsWhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
@@ -52,9 +69,16 @@ function Get-KeePassPath {
 		return $env:KEEPASS_EXE
 	}
 
-	$defaultKeePassPath = Join-Path $env:ProgramFiles 'KeePass Password Safe 2\KeePass.exe'
-	if (Test-Path $defaultKeePassPath) {
-		return $defaultKeePassPath
+	$defaultKeePassPaths = @(
+		$(if ($env:ProgramW6432) { Join-Path $env:ProgramW6432 'KeePass Password Safe 2\KeePass.exe' }),
+		$(if ($env:ProgramFiles) { Join-Path $env:ProgramFiles 'KeePass Password Safe 2\KeePass.exe' }),
+		$(if (${env:ProgramFiles(x86)}) { Join-Path ${env:ProgramFiles(x86)} 'KeePass Password Safe 2\KeePass.exe' })
+	) | Where-Object { $_ }
+
+	foreach ($defaultKeePassPath in $defaultKeePassPaths) {
+		if (Test-Path $defaultKeePassPath) {
+			return $defaultKeePassPath
+		}
 	}
 
 	throw 'KeePass.exe could not be found. Set the KEEPASS_EXE environment variable to the KeePass.exe path.'
@@ -124,20 +148,30 @@ function Add-PlgxReferencesToProject {
 	$projectXml.Save($stageProjectPath)
 }
 
+$pluginVersion = Get-PluginVersion
+$plgxOutputPath = Join-Path $root "$pluginName-$pluginVersion.plgx"
+$legacyPlgxOutputPath = Join-Path $root "$pluginName.plgx"
+
 Write-Host 'Creating KeePass plugin package'
 
-$msBuildPath = Get-MSBuildPath
-$msBuildArgs = @(
-	$solutionPath,
-	'/restore',
-	'/t:Build',
-	'/p:Configuration=Release',
-	'/p:Platform=Any CPU'
-)
+if (!$SkipBuild) {
+	$msBuildPath = Get-MSBuildPath
+	$msBuildArgs = @(
+		$solutionPath,
+		'/restore',
+		'/t:Build',
+		"/p:Configuration=$configuration",
+		'/p:Platform=Any CPU',
+		'/p:SkipPlgxPostBuild=true'
+	)
 
-& $msBuildPath @msBuildArgs
-if ($LASTEXITCODE -ne 0) {
-	throw "MSBuild failed with exit code $LASTEXITCODE."
+	& $msBuildPath @msBuildArgs
+	if ($LASTEXITCODE -ne 0) {
+		throw "MSBuild failed with exit code $LASTEXITCODE."
+	}
+}
+elseif (!(Test-Path $outputFolder)) {
+	throw "Build output folder '$outputFolder' does not exist. Build the project before creating the PLGX package with -SkipBuild."
 }
 
 Copy-SourceTree
@@ -166,6 +200,9 @@ Add-PlgxReferencesToProject
 
 if (Test-Path $plgxOutputPath) {
 	Remove-Item $plgxOutputPath -Force
+}
+if (Test-Path $legacyPlgxOutputPath) {
+	Remove-Item $legacyPlgxOutputPath -Force
 }
 
 $keepassPath = Get-KeePassPath
@@ -201,4 +238,21 @@ if (!$isPackageUnlocked) {
 }
 
 Move-Item $createdPlgxPath $plgxOutputPath -Force
+
+if ($CopyToKeePassPluginFolder) {
+	$keepassPluginFolder = Join-Path (Split-Path -Parent $keepassPath) 'Plugins'
+	if (!(Test-Path $keepassPluginFolder)) {
+		New-Item -ItemType Directory -Path $keepassPluginFolder | Out-Null
+	}
+
+	$legacyKeePassPluginPath = Join-Path $keepassPluginFolder (Split-Path -Leaf $legacyPlgxOutputPath)
+	if (Test-Path $legacyKeePassPluginPath) {
+		Remove-Item $legacyKeePassPluginPath -Force
+	}
+
+	$keepassPluginPath = Join-Path $keepassPluginFolder (Split-Path -Leaf $plgxOutputPath)
+	Copy-Item $plgxOutputPath $keepassPluginPath -Force
+	Write-Host "KeePass Plugin package has been copied to: $keepassPluginPath"
+}
+
 Write-Host "KeePass Plugin package has been created: $plgxOutputPath"

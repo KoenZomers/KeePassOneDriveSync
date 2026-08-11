@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## [3.3.0.0] - August 12, 2026
+
+- Added Microsoft Graph based SharePoint Online synchronization using MSAL delegated authentication so you can store your KeePass database on a SharePoint Online site in a document library
+- Kept the legacy ACS SharePoint connector available for SharePoint on-premises environments
+
 ## [3.2.2.0] - August 11, 2026
 
 - Improved startup sync detection by also checking OneDrive's remote last modified timestamp and the local KeePass database hash before deciding a database is already in sync
