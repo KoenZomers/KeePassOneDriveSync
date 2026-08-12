@@ -3,6 +3,7 @@ using KoenZomers.KeePass.OneDriveSync.Enums;
 using KoenZomers.OneDrive.Api;
 using KoenZomers.OneDrive.Api.Entities;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -115,23 +116,17 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     return false;
                 }
 
-                databaseConfig.RemoteDatabasePath = (oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.Path : "") + "/" + oneDriveFilePickerDialog.CurrentOneDriveItem.Name + "/" + oneDriveFilePickerDialog.FileName;
-                databaseConfig.RemoteDriveId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.DriveId : oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId : null;
-                if (oneDriveFilePickerDialog.CurrentOneDriveItem.File != null || (oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null && oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.File != null))
-                {
-                    databaseConfig.RemoteItemId = oneDriveFilePickerDialog.CurrentOneDriveItem.File != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id;
-                }
-                else
-                {
-                    databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference != null ? string.IsNullOrEmpty(oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.Id) || oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Folder != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
-                }
-                databaseConfig.RemoteFileName = oneDriveFilePickerDialog.FileName;
+                ApplySelectedOneDriveItem(databaseConfig, oneDriveFilePickerDialog.CurrentOneDriveItem, oneDriveFilePickerDialog.FileName);
                 Configuration.Save();
             }
 
             // Retrieve the metadata of the KeePass database on OneDrive
             OneDriveItem oneDriveItem;
-            if (string.IsNullOrEmpty(databaseConfig.RemoteItemId))
+            if (!string.IsNullOrEmpty(databaseConfig.RemoteSharingUrl))
+            {
+                oneDriveItem = await oneDriveApi.GetItemBySharingUrl(databaseConfig.RemoteSharingUrl);
+            }
+            else if (string.IsNullOrEmpty(databaseConfig.RemoteItemId))
             {
                 // We don't have the ID of the KeePass file, check if the database is stored on the current user its drive or on a shared drive
                 OneDriveItem folder;
@@ -192,6 +187,12 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             
             if (oneDriveItem == null)
             {
+                if (!string.IsNullOrEmpty(databaseConfig.RemoteSharingUrl))
+                {
+                    updateStatus(string.Format("Unable to download database {0} from OneDrive. The sharing link could not be resolved or access has been removed.", databaseConfig.KeePassDatabase.Name));
+                    return false;
+                }
+
                 // KeePass database not found on OneDrive
                 updateStatus(string.Format("Database {0} does not exist yet on OneDrive, uploading it now", databaseConfig.KeePassDatabase.Name));
 
@@ -395,21 +396,15 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 return null;
             }
 
-            databaseConfig.RemoteDatabasePath = (oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.Path : "") + "/" + oneDriveFilePickerDialog.CurrentOneDriveItem.Name + "/" + oneDriveFilePickerDialog.FileName;
-            databaseConfig.RemoteDriveId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.ParentReference.DriveId : oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.ParentReference.DriveId : null;
-            if (oneDriveFilePickerDialog.CurrentOneDriveItem.File != null || (oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null && oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.File != null))
-            {
-                databaseConfig.RemoteItemId = oneDriveFilePickerDialog.CurrentOneDriveItem.File != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id;
-            }
-            else
-            {
-                databaseConfig.RemoteFolderId = oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem != null ? oneDriveFilePickerDialog.CurrentOneDriveItem.RemoteItem.Id : oneDriveFilePickerDialog.CurrentOneDriveItem.Id;
-            }
-            databaseConfig.RemoteFileName = oneDriveFilePickerDialog.FileName;
+            ApplySelectedOneDriveItem(databaseConfig, oneDriveFilePickerDialog.CurrentOneDriveItem, oneDriveFilePickerDialog.FileName);
 
             // Retrieve the metadata of the KeePass database on OneDrive
             OneDriveItem oneDriveItem;
-            if (string.IsNullOrEmpty(databaseConfig.RemoteItemId))
+            if (!string.IsNullOrEmpty(databaseConfig.RemoteSharingUrl))
+            {
+                oneDriveItem = await oneDriveApi.GetItemBySharingUrl(databaseConfig.RemoteSharingUrl);
+            }
+            else if (string.IsNullOrEmpty(databaseConfig.RemoteItemId))
             {
                 // We don't have the ID of the KeePass file, check if the database is stored on the current user its drive or on a shared drive
                 OneDriveItem folder;
@@ -487,6 +482,45 @@ namespace KoenZomersKeePassOneDriveSync.Providers
             databaseConfig.RemoteLastModifiedAt = oneDriveItem.LastModifiedDateTime;
 
             return saveFiledialog.FileName;
+        }
+
+        private static void ApplySelectedOneDriveItem(Configuration databaseConfig, OneDriveItem selectedItem, string fileName)
+        {
+            databaseConfig.RemoteDriveId = null;
+            databaseConfig.RemoteFolderId = null;
+            databaseConfig.RemoteItemId = null;
+            databaseConfig.RemoteSharingUrl = selectedItem.SharingUrl;
+            databaseConfig.RemoteFileName = fileName;
+
+            var isFile = selectedItem.File != null || (selectedItem.RemoteItem != null && selectedItem.RemoteItem.File != null);
+            var selectedItemName = selectedItem.RemoteItem != null && !string.IsNullOrEmpty(selectedItem.RemoteItem.Name) ? selectedItem.RemoteItem.Name : selectedItem.Name;
+
+            databaseConfig.RemoteDatabasePath = isFile
+                ? CombineOneDrivePath(selectedItem.ParentReference != null ? selectedItem.ParentReference.Path : null, selectedItemName)
+                : CombineOneDrivePath(selectedItem.ParentReference != null ? selectedItem.ParentReference.Path : null, selectedItemName, fileName);
+
+            databaseConfig.RemoteDriveId = selectedItem.RemoteItem != null
+                ? selectedItem.RemoteItem.ParentReference != null ? selectedItem.RemoteItem.ParentReference.DriveId : null
+                : selectedItem.ParentReference != null ? selectedItem.ParentReference.DriveId : null;
+
+            if (isFile)
+            {
+                databaseConfig.RemoteItemId = selectedItem.File != null ? selectedItem.Id : selectedItem.RemoteItem.Id;
+                return;
+            }
+
+            databaseConfig.RemoteFolderId = selectedItem.RemoteItem != null
+                ? selectedItem.RemoteItem.ParentReference != null
+                    ? string.IsNullOrEmpty(selectedItem.RemoteItem.ParentReference.Id) || selectedItem.RemoteItem.Folder != null
+                        ? selectedItem.RemoteItem.Id
+                        : selectedItem.RemoteItem.ParentReference.Id
+                    : selectedItem.RemoteItem.Id
+                : selectedItem.Id;
+        }
+
+        private static string CombineOneDrivePath(params string[] pathParts)
+        {
+            return string.Join("/", pathParts.Where(pathPart => !string.IsNullOrWhiteSpace(pathPart)).Select(pathPart => pathPart.Trim('/')));
         }
     }
 }

@@ -89,6 +89,12 @@ namespace KoenZomers.KeePass.OneDriveSync
         public string RemoteItemId { get; set; }
 
         /// <summary>
+        /// Gets or sets the sharing URL that can be used to access the file on OneDrive. Only used when direct drive/item access is not available.
+        /// </summary>
+        [DataMember]
+        public string RemoteSharingUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the filename under which the database is stored on OneDrive
         /// </summary>
         [DataMember]
@@ -307,4 +313,3 @@ namespace KoenZomers.KeePass.OneDriveSync
         #endregion
     }
 }
-

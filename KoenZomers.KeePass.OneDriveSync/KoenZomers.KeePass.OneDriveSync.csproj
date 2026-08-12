@@ -47,10 +47,10 @@
     <Reference Include="KeePass">
       <HintPath>..\..\..\..\Program Files\KeePass Password Safe 2\KeePass.exe</HintPath>
     </Reference>
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.86.0" />
-    <PackageReference Include="Microsoft.IdentityModel" Version="6.1.7600.16394" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.87.0" />
+    <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
     <PackageReference Include="Microsoft.Identity.Model.Extensions" Version="2.0.1459.0" />
-    <PackageReference Include="System.Text.Json" Version="10.0.9" />
+    <PackageReference Include="System.Text.Json" Version="10.0.11" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />

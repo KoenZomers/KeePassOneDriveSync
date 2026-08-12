@@ -58,11 +58,17 @@
             this.GoToSharedWithMeRootTtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GoUpSharedWithMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SharedWithMeNotAvailableLabel = new System.Windows.Forms.Label();
+            this.SharedThroughUrlTabPage = new System.Windows.Forms.TabPage();
+            this.SharedThroughUrlStatusLabel = new System.Windows.Forms.Label();
+            this.sharedThroughUrlTextBox = new System.Windows.Forms.TextBox();
+            this.sharedThroughUrlTestButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.MyFilesContextMenu.SuspendLayout();
             this.FilesTabControl.SuspendLayout();
             this.MyFilesTabPage.SuspendLayout();
             this.SharedWithMeTabPage.SuspendLayout();
             this.SharedWithMeContextMenu.SuspendLayout();
+            this.SharedThroughUrlTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // MyFilesContextMenu
@@ -216,6 +222,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.FilesTabControl.Controls.Add(this.MyFilesTabPage);
             this.FilesTabControl.Controls.Add(this.SharedWithMeTabPage);
+            this.FilesTabControl.Controls.Add(this.SharedThroughUrlTabPage);
             this.FilesTabControl.Location = new System.Drawing.Point(16, 38);
             this.FilesTabControl.Name = "FilesTabControl";
             this.FilesTabControl.SelectedIndex = 0;
@@ -378,6 +385,63 @@
     " it will be available.";
             this.SharedWithMeNotAvailableLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // SharedThroughUrlTabPage
+            // 
+            this.SharedThroughUrlTabPage.Controls.Add(this.SharedThroughUrlStatusLabel);
+            this.SharedThroughUrlTabPage.Controls.Add(this.label1);
+            this.SharedThroughUrlTabPage.Controls.Add(this.sharedThroughUrlTextBox);
+            this.SharedThroughUrlTabPage.Controls.Add(this.sharedThroughUrlTestButton);
+            this.SharedThroughUrlTabPage.Location = new System.Drawing.Point(4, 29);
+            this.SharedThroughUrlTabPage.Name = "SharedThroughUrlTabPage";
+            this.SharedThroughUrlTabPage.Size = new System.Drawing.Size(746, 536);
+            this.SharedThroughUrlTabPage.TabIndex = 2;
+            this.SharedThroughUrlTabPage.Text = "Shared through URL";
+            this.SharedThroughUrlTabPage.UseVisualStyleBackColor = true;
+            // 
+            // SharedThroughUrlStatusLabel
+            // 
+            this.SharedThroughUrlStatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SharedThroughUrlStatusLabel.Location = new System.Drawing.Point(21, 189);
+            this.SharedThroughUrlStatusLabel.Name = "SharedThroughUrlStatusLabel";
+            this.SharedThroughUrlStatusLabel.Size = new System.Drawing.Size(686, 69);
+            this.SharedThroughUrlStatusLabel.TabIndex = 11;
+            // 
+            // sharedThroughUrlTextBox
+            // 
+            this.sharedThroughUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.sharedThroughUrlTextBox.BackColor = System.Drawing.Color.White;
+            this.sharedThroughUrlTextBox.Location = new System.Drawing.Point(25, 98);
+            this.sharedThroughUrlTextBox.Name = "sharedThroughUrlTextBox";
+            this.sharedThroughUrlTextBox.Size = new System.Drawing.Size(668, 19);
+            this.sharedThroughUrlTextBox.TabIndex = 9;
+            this.sharedThroughUrlTextBox.TextChanged += new System.EventHandler(this.SharedThroughUrlTextBox_TextChanged);
+            this.sharedThroughUrlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SharedThroughUrlTextBox_KeyUp);
+            // 
+            // sharedThroughUrlTestButton
+            // 
+            this.sharedThroughUrlTestButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.sharedThroughUrlTestButton.Enabled = false;
+            this.sharedThroughUrlTestButton.Location = new System.Drawing.Point(25, 133);
+            this.sharedThroughUrlTestButton.Name = "sharedThroughUrlTestButton";
+            this.sharedThroughUrlTestButton.Size = new System.Drawing.Size(149, 43);
+            this.sharedThroughUrlTestButton.TabIndex = 8;
+            this.sharedThroughUrlTestButton.Text = "Validate";
+            this.sharedThroughUrlTestButton.UseVisualStyleBackColor = true;
+            this.sharedThroughUrlTestButton.Click += new System.EventHandler(this.SharedThroughUrlTestButton_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Location = new System.Drawing.Point(21, 33);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(686, 62);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Paste the \"Copy link\" or \"Share\" link to the KeePass database. It must have edit " +
+    "rights to function properly.";
+            // 
             // OneDriveFilePickerDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -405,6 +469,8 @@
             this.SharedWithMeTabPage.ResumeLayout(false);
             this.SharedWithMeTabPage.PerformLayout();
             this.SharedWithMeContextMenu.ResumeLayout(false);
+            this.SharedThroughUrlTabPage.ResumeLayout(false);
+            this.SharedThroughUrlTabPage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -439,5 +505,10 @@
         private System.Windows.Forms.ToolStripMenuItem GoToSharedWithMeRootTtoolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem GoUpSharedWithMeToolStripMenuItem;
         private System.Windows.Forms.Label SharedWithMeNotAvailableLabel;
+        private System.Windows.Forms.TabPage SharedThroughUrlTabPage;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label SharedThroughUrlStatusLabel;
+        private System.Windows.Forms.TextBox sharedThroughUrlTextBox;
+        private System.Windows.Forms.Button sharedThroughUrlTestButton;
     }
 }

@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [3.3.2.0] - August 12, 2026
+
+- Added support for selecting KeePass databases through OneDrive and SharePoint sharing links as a replacement path for the deprecated Microsoft Graph sharedWithMe API
+- Added sharing-link redemption support for Microsoft Graph shared items, including OneDrive for Business, SharePoint document libraries, and compatible OneDrive Personal links to make it easier to share a KeePass database with others
+- Updated MSAL and Identity dependencies to the latest versions
+
 ## [3.3.1.0] - August 12, 2026
 
 - Fixed synchronization for portable KeePass installs launched from a batch file by resolving relative database paths from the KeePass executable folder instead of the process working directory
@@ -58,4 +64,3 @@ All notable changes to this project are documented in this file.
 - Changed that in the OneDrive and SharePoint file pickers, if an item in the folder has the same name as shown in the filename textbox, that it will get selected by default to make it clearer that it already exists in that folder
 - Added tooltips for files and folders in the SharePoint file picker to show additional information on these items when hovering over them such as creation date/time, last modified date/time, file size and file version number
 - Updated links pointing to the GitHub documentation to the new GitHub Wiki location
-

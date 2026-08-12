@@ -25,11 +25,32 @@ namespace KoenZomersKeePassOneDriveSync.Forms
         private OneDriveItem CurrentSharedWithMeOneDriveItem;
 
         /// <summary>
+        /// Reference to the validated OneDrive file that was shared through a pasted URL
+        /// </summary>
+        private OneDriveItem CurrentSharedThroughUrlOneDriveItem;
+
+        /// <summary>
         /// Reference to the currently displayed folder on OneDrive for the active tab
         /// </summary>
         public OneDriveItem CurrentOneDriveItem
         {
-            get { return FilesTabControl.SelectedIndex == 0 ? CurrentMyOneDriveItem : CurrentSharedWithMeOneDriveItem; }
+            get
+            {
+                switch (FilesTabControl.SelectedIndex)
+                {
+                    case 0:
+                        return CurrentMyOneDriveItem;
+
+                    case 1:
+                        return CurrentSharedWithMeOneDriveItem;
+
+                    case 2:
+                        return CurrentSharedThroughUrlOneDriveItem;
+
+                    default:
+                        return null;
+                }
+            }
         }
 
         /// <summary>
@@ -385,6 +406,12 @@ namespace KoenZomersKeePassOneDriveSync.Forms
 
         private void FileNameTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (FilesTabControl.SelectedIndex == 2)
+            {
+                OKButton.Enabled = CurrentSharedThroughUrlOneDriveItem != null && FileNameTextBox.Text.Equals(CurrentSharedThroughUrlOneDriveItem.Name, StringComparison.InvariantCultureIgnoreCase);
+                return;
+            }
+
             OKButton.Enabled = CurrentOneDriveItem != null && !string.IsNullOrEmpty(FileNameTextBox.Text);
         }
 
@@ -462,6 +489,10 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                     SharedWithMePicker_ItemSelectionChanged(sender, null);
                     break;
 
+                case 2:
+                    FileNameTextBox_TextChanged(sender, e);
+                    break;
+
                 case 0:
                     CloudLocationPicker_ItemSelectionChanged(sender, null);
                     break;
@@ -535,6 +566,75 @@ namespace KoenZomersKeePassOneDriveSync.Forms
                 OKButton.Enabled = true;
                 CurrentSharedWithMeOneDriveItem = selectedItem.Tag as OneDriveItem;
             }
+        }
+
+        private void SharedThroughUrlTextBox_TextChanged(object sender, EventArgs e)
+        {
+            CurrentSharedThroughUrlOneDriveItem = null;
+            sharedThroughUrlTestButton.Enabled = IsValidAbsoluteUrl(sharedThroughUrlTextBox.Text);
+            SharedThroughUrlStatusLabel.Text = string.Empty;
+            FileNameTextBox_TextChanged(sender, e);
+        }
+
+        private async void SharedThroughUrlTestButton_Click(object sender, EventArgs e)
+        {
+            CurrentSharedThroughUrlOneDriveItem = null;
+            SharedThroughUrlStatusLabel.Text = "Validating sharing link...";
+            sharedThroughUrlTestButton.Enabled = false;
+            OKButton.Enabled = false;
+
+            try
+            {
+                var sharedItem = await _oneDriveApi.GetItemBySharingUrl(sharedThroughUrlTextBox.Text);
+                if (sharedItem == null)
+                {
+                    SharedThroughUrlStatusLabel.Text = "The sharing link could not be resolved. Check that the link is correct and that this account has access.";
+                    return;
+                }
+
+                if (sharedItem.File == null)
+                {
+                    SharedThroughUrlStatusLabel.Text = "The sharing link resolves to a folder. Paste a link to the KeePass database file instead.";
+                    return;
+                }
+
+                if (sharedItem.ParentReference == null || string.IsNullOrEmpty(sharedItem.ParentReference.DriveId))
+                {
+                    SharedThroughUrlStatusLabel.Text = "The sharing link resolved, but Microsoft Graph did not return the drive information required for syncing.";
+                    return;
+                }
+
+                CurrentSharedThroughUrlOneDriveItem = sharedItem;
+                FileNameTextBox.Text = sharedItem.Name;
+                SharedThroughUrlStatusLabel.Text = string.Format("Validated: {0}", sharedItem.Name);
+                FileNameTextBox_TextChanged(sender, e);
+            }
+            catch (ArgumentException exception)
+            {
+                SharedThroughUrlStatusLabel.Text = exception.Message;
+            }
+            catch (Exception exception)
+            {
+                SharedThroughUrlStatusLabel.Text = string.Format("The sharing link could not be validated: {0}", exception.Message);
+            }
+            finally
+            {
+                sharedThroughUrlTestButton.Enabled = IsValidAbsoluteUrl(sharedThroughUrlTextBox.Text);
+            }
+        }
+
+        private void SharedThroughUrlTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && sharedThroughUrlTestButton.Enabled)
+            {
+                SharedThroughUrlTestButton_Click(sender, e);
+            }
+        }
+
+        private static bool IsValidAbsoluteUrl(string url)
+        {
+            Uri parsedUrl;
+            return Uri.TryCreate(url.Trim(), UriKind.Absolute, out parsedUrl);
         }
     }
 }
