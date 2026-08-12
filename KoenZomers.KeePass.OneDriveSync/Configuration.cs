@@ -289,6 +289,21 @@ namespace KoenZomers.KeePass.OneDriveSync
             return localPasswordDatabasePath;
         }
 
+        /// <summary>
+        /// Resolves a normalized database path to a full path, using the KeePass folder for portable relative paths.
+        /// </summary>
+        /// <param name="localPasswordDatabasePath">Full path or relative path from the KeePass executable folder to a KeePass database</param>
+        /// <returns>Full path to the KeePass database</returns>
+        internal static string ResolveLocalDatabasePath(string localPasswordDatabasePath)
+        {
+            if (string.IsNullOrEmpty(localPasswordDatabasePath) || System.IO.Path.IsPathRooted(localPasswordDatabasePath))
+            {
+                return localPasswordDatabasePath;
+            }
+
+            return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, localPasswordDatabasePath));
+        }
+
         #endregion
     }
 }

@@ -95,6 +95,8 @@ namespace KoenZomersKeePassOneDriveSync
                     databaseConfig = Configuration.GetPasswordDatabaseConfiguration(localKeePassDatabasePath);
                 }
 
+                var resolvedLocalKeePassDatabasePath = Configuration.ResolveLocalDatabasePath(localKeePassDatabasePath);
+
                 // If this database is already syncing, abort this attempt. This happens when the Import saves the resulting KeePass database. That by itself triggers another sync which doesn't have to go through the sync process as it just regards the temp database.
                 if (databaseConfig.IsCurrentlySyncing)
                 {
@@ -149,12 +151,12 @@ namespace KoenZomersKeePassOneDriveSync
                     case CloudStorageType.MicrosoftGraph:
                     case CloudStorageType.MicrosoftGraphMsalLogin:
                     case CloudStorageType.OneDriveConsumer:
-                        syncSuccessful = await Providers.OneDriveProvider.SyncUsingOneDriveCloudProvider(databaseConfig, localKeePassDatabasePath, forceSync, updateStatus);
+                        syncSuccessful = await Providers.OneDriveProvider.SyncUsingOneDriveCloudProvider(databaseConfig, resolvedLocalKeePassDatabasePath, forceSync, updateStatus);
                         break;
 
                     case CloudStorageType.SharePoint:
                     case CloudStorageType.SharePointOnPremises:
-                        syncSuccessful = await Providers.SharePointProvider.SyncUsingSharePointPlatform(databaseConfig, localKeePassDatabasePath, forceSync, updateStatus);
+                        syncSuccessful = await Providers.SharePointProvider.SyncUsingSharePointPlatform(databaseConfig, resolvedLocalKeePassDatabasePath, forceSync, updateStatus);
                         break;
                 }
 
@@ -170,7 +172,7 @@ namespace KoenZomersKeePassOneDriveSync
 
                 updateStatus(string.Format("KeePass database {0} has successfully been synchronized and uploaded", databaseConfig.KeePassDatabase.Name));
 
-                databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
+                databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(resolvedLocalKeePassDatabasePath);
                 //databaseConfig.ETag = uploadResult.ETag;
                 databaseConfig.LastSyncedAt = DateTime.Now;
                 databaseConfig.LastCheckedAt = DateTime.Now;

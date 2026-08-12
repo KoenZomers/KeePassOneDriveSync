@@ -91,7 +91,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 {
                     updateStatus(string.Format("Database {0} does not exist yet on SharePoint, uploading it now", databaseConfig.KeePassDatabase.Name));
 
-                    var newUploadResult = await graphClient.UploadFileAs(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFileName, databaseConfig.RemoteDriveId, databaseConfig.RemoteFolderId);
+                    var newUploadResult = await graphClient.UploadFileAs(localKeePassDatabasePath, databaseConfig.RemoteFileName, databaseConfig.RemoteDriveId, databaseConfig.RemoteFolderId);
 
                     updateStatus(string.Format(newUploadResult == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
@@ -149,7 +149,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
 
                     updateStatus(string.Format("Uploading the local KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
-                    localDatabaseToUpload = databaseConfig.KeePassDatabase.IOConnectionInfo.Path;
+                    localDatabaseToUpload = localKeePassDatabasePath;
                 }
                 else
                 {
@@ -864,7 +864,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 if (eTag == null)
                 {
                     updateStatus(string.Format("Database {0} does not exist yet on SharePoint, uploading it now", databaseConfig.KeePassDatabase.Name));
-                    eTag = await UploadFile(databaseConfig.KeePassDatabase.IOConnectionInfo.Path, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, true);
+                    eTag = await UploadFile(localKeePassDatabasePath, databaseConfig.RemoteFolderId, databaseConfig.RemoteFileName, httpClient, true);
                     updateStatus(string.Format(eTag == null ? "Failed to upload the KeePass database {0}" : "Successfully uploaded the new KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
 
                     databaseConfig.LocalFileHash = Utilities.GetDatabaseFileHash(localKeePassDatabasePath);
@@ -910,7 +910,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                     if (confirm != DialogResult.Yes) return false;
 
                     updateStatus(string.Format("Uploading the local KeePass database {0} to SharePoint", databaseConfig.KeePassDatabase.Name));
-                    localDatabaseToUpload = databaseConfig.KeePassDatabase.IOConnectionInfo.Path;
+                    localDatabaseToUpload = localKeePassDatabasePath;
                 }
                 else
                 {

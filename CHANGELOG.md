@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## [3.3.1.0] - August 12, 2026
+
+- Fixed synchronization for portable KeePass installs launched from a batch file by resolving relative database paths from the KeePass executable folder instead of the process working directory
+
 ## [3.3.0.0] - August 12, 2026
 
 - Added Microsoft Graph based SharePoint Online synchronization using MSAL delegated authentication so you can store your KeePass database on a SharePoint Online site in a document library

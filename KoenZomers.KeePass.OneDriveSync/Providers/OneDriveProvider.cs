@@ -276,7 +276,7 @@ namespace KoenZomersKeePassOneDriveSync.Providers
                 if (confirm != DialogResult.Yes) return false;
 
                 // Upload the local database
-                localDatabaseToUpload = databaseConfig.KeePassDatabase.IOConnectionInfo.Path;
+                localDatabaseToUpload = localKeePassDatabasePath;
 
                 updateStatus(string.Format("Uploading the local KeePass database {0} to OneDrive", databaseConfig.KeePassDatabase.Name));
             }
