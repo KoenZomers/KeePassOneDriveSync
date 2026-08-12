@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: repo
 
@@ -53,16 +53,16 @@ jobs:
           "assembly-version=$assemblyVersion" >> $env:GITHUB_OUTPUT
 
       - name: Checkout OneDrive API dependency
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: KoenZomers/OneDriveAPI
           path: OneDriveAPI
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+        uses: NuGet/setup-nuget@v4
 
       - name: Install KeePass
         run: choco install keepass -y --no-progress
@@ -92,7 +92,7 @@ jobs:
         run: .\create-plgx.cmd
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.release-version.outputs.version }}
           name: Version ${{ steps.release-version.outputs.version }}
