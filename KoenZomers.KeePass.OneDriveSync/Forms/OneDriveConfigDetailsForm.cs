@@ -12,6 +12,7 @@ namespace KoenZomersKeePassOneDriveSync
     public partial class OneDriveConfigDetailsForm : Form
     {
         private KeyValuePair<string, Configuration> _configuration;
+        private bool _isLoadingConfiguration;
 
         /// <summary>
         /// Opens the configuration details screen for the provided configuration
@@ -31,6 +32,8 @@ namespace KoenZomersKeePassOneDriveSync
 
         private void ShowConfiguration()
         {
+            _isLoadingConfiguration = true;
+
             var isSharePoint = _configuration.Value.CloudStorageType == CloudStorageType.SharePoint || _configuration.Value.CloudStorageType == CloudStorageType.SharePointOnPremises;
             LocationNameLabel.Text = isSharePoint ? "SharePoint site:" : "OneDrive name:";
             LastSyncedLabel.Text = string.Format(LastSyncedLabel.Text, _configuration.Value.CloudStorageType);
@@ -47,9 +50,13 @@ namespace KoenZomersKeePassOneDriveSync
             LocalKeePassFileHashTextbox.Text = _configuration.Value.LocalFileHash;
             OneDriveEtagTextBox.Text = _configuration.Value.ETag;
             ForceSyncButton.Enabled = !_configuration.Value.DoNotSync;
+            SyncOnOpenCheckBox.Checked = _configuration.Value.SyncOnOpen;
+            SyncOnOpenCheckBox.Enabled = !_configuration.Value.DoNotSync;
             ItemIdTextBox.Text = _configuration.Value.RemoteItemId;
             FolderIdTextBox.Text = _configuration.Value.RemoteFolderId;
             DriveIdTextBox.Text = _configuration.Value.RemoteDriveId;
+
+            _isLoadingConfiguration = false;
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -83,6 +90,18 @@ namespace KoenZomersKeePassOneDriveSync
         private void UpdateStatus(string message)
         {
             StatusLabel.Text = message;
+        }
+
+        private void SyncOnOpenCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_isLoadingConfiguration)
+            {
+                return;
+            }
+
+            _configuration.Value.SyncOnOpen = SyncOnOpenCheckBox.Checked;
+            Configuration.Save();
+            UpdateStatus("Startup sync setting has been saved");
         }
 
         private void OneDriveConfigDetailsForm_KeyUp(object sender, KeyEventArgs e)

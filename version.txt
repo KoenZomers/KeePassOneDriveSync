@@ -1,3 +1,3 @@
 :
-KoenZomers.KeePass.OneDriveSync:3.3.3.1
+KoenZomers.KeePass.OneDriveSync:3.3.4.0
 :

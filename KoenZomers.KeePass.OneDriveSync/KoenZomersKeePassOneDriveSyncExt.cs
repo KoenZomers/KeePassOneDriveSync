@@ -94,6 +94,11 @@ namespace KoenZomersKeePassOneDriveSync
         private ToolStripMenuItem _toolsMenuConfigMenuItem;
 
         /// <summary>
+        /// Sync current database option in the Tools menu
+        /// </summary>
+        private ToolStripMenuItem _toolsMenuSyncNowMenuItem;
+
+        /// <summary>
         /// Open from OneDrive option in File > Open menu
         /// </summary>
         private ToolStripMenuItem _fileOpenMenuItem;
@@ -142,6 +147,13 @@ namespace KoenZomersKeePassOneDriveSync
             _toolsMenuConfigMenuItem.Click += MenuOptionsOnClick;
             toolsmenu.Add(_toolsMenuConfigMenuItem);
 
+            _toolsMenuSyncNowMenuItem = new ToolStripMenuItem("OneDriveSync Sync Current Database Now", Resources.OneDriveIcon)
+            {
+                ShortcutKeys = Keys.Control | Keys.Alt | Keys.S
+            };
+            _toolsMenuSyncNowMenuItem.Click += MenuForceSyncCurrentDatabaseOnClick;
+            toolsmenu.Add(_toolsMenuSyncNowMenuItem);
+
             // Add the menu option for configuration under File > Open
             var filemenu = Host.MainWindow.MainMenu.Items["m_menuFile"] as ToolStripMenuItem;
             if (filemenu != null)
@@ -183,6 +195,9 @@ namespace KoenZomersKeePassOneDriveSync
             _toolsMenuConfigMenuItem.Click -= MenuOptionsOnClick;
             optionsmenu.Remove(_toolsMenuSeparator);
             optionsmenu.Remove(_toolsMenuConfigMenuItem);
+
+            _toolsMenuSyncNowMenuItem.Click -= MenuForceSyncCurrentDatabaseOnClick;
+            optionsmenu.Remove(_toolsMenuSyncNowMenuItem);
 
             var openmenu = Host.MainWindow.MainMenu.Items["m_menuFile"] as ToolStripMenuItem;
             if (openmenu != null)
@@ -265,6 +280,40 @@ namespace KoenZomersKeePassOneDriveSync
         }
 
         /// <summary>
+        /// Triggered when clicking on the Sync Current Database Now menu item under Tools
+        /// </summary>
+        private async void MenuForceSyncCurrentDatabaseOnClick(object sender, EventArgs e)
+        {
+            var database = Host.Database;
+            if (database == null || !database.IsOpen)
+            {
+                Host.MainWindow.SetStatusEx("No KeePass database is currently open");
+                return;
+            }
+
+            var databasePath = database.IOConnectionInfo.Path;
+            var config = Configuration.GetPasswordDatabaseConfiguration(databasePath);
+            config.KeePassDatabase = database;
+
+            if (config.DoNotSync)
+            {
+                Host.MainWindow.SetStatusEx(string.Format("Database {0} is not configured to sync with OneDriveSync", database.Name));
+                return;
+            }
+
+            if (!database.IOConnectionInfo.IsLocalFile())
+            {
+                MessageBox.Show("KeePass OneDriveSync does not support synchronizing databases from remote locations and will therefore not be available for this database", "KeePass OneDriveSync", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                config.DoNotSync = true;
+                Configuration.Save();
+                return;
+            }
+
+            await KeePassDatabase.SyncDatabase(databasePath, KeePassDatabase.UpdateStatus, true, config);
+        }
+
+        /// <summary>
         /// Triggered when clicking on the OneDriveSync Offline Mode menu item under File
         /// </summary>
         private void MenuFileOneDriveSyncOfflineOnClick(object sender, EventArgs e)
@@ -286,6 +335,11 @@ namespace KoenZomersKeePassOneDriveSync
 
             // Check if we should sync this database
             if (config.DoNotSync || !fileOpenedEventArgs.Database.IOConnectionInfo.IsLocalFile()) return;
+            if (!config.SyncOnOpen)
+            {
+                Host.MainWindow.SetStatusEx(string.Format("OneDriveSync startup sync is disabled for database {0}", fileOpenedEventArgs.Database.Name));
+                return;
+            }
             if(!_fileOfflineMenuItem.Checked)
             {
                 Host.MainWindow.SetStatusEx(string.Format("OneDriveSync has been set to offline, skipping sync for database {0}", fileOpenedEventArgs.Database.Name));

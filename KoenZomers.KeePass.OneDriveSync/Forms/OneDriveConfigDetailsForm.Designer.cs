@@ -58,6 +58,7 @@
             this.FolderIdLabel = new System.Windows.Forms.Label();
             this.DriveIdTextBox = new System.Windows.Forms.TextBox();
             this.DriveIdLabel = new System.Windows.Forms.Label();
+            this.SyncOnOpenCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // LocationNameLabel
@@ -146,7 +147,7 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.CloseButton.Location = new System.Drawing.Point(572, 333);
+            this.CloseButton.Location = new System.Drawing.Point(572, 366);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(4);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(132, 41);
@@ -158,7 +159,7 @@
             // DeleteButton
             // 
             this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DeleteButton.Location = new System.Drawing.Point(20, 333);
+            this.DeleteButton.Location = new System.Drawing.Point(20, 366);
             this.DeleteButton.Margin = new System.Windows.Forms.Padding(4);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(132, 41);
@@ -218,7 +219,7 @@
             // ForceSyncButton
             // 
             this.ForceSyncButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ForceSyncButton.Location = new System.Drawing.Point(432, 333);
+            this.ForceSyncButton.Location = new System.Drawing.Point(432, 366);
             this.ForceSyncButton.Margin = new System.Windows.Forms.Padding(4);
             this.ForceSyncButton.Name = "ForceSyncButton";
             this.ForceSyncButton.Size = new System.Drawing.Size(132, 41);
@@ -255,7 +256,7 @@
             // 
             this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.StatusLabel.Location = new System.Drawing.Point(160, 333);
+            this.StatusLabel.Location = new System.Drawing.Point(160, 366);
             this.StatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(264, 44);
@@ -421,13 +422,25 @@
             this.DriveIdLabel.TabIndex = 33;
             this.DriveIdLabel.Text = "Drive Id:";
             this.DriveIdLabel.UseMnemonic = false;
-            // 
+            //
+            // SyncOnOpenCheckBox
+            //
+            this.SyncOnOpenCheckBox.AutoSize = true;
+            this.SyncOnOpenCheckBox.Location = new System.Drawing.Point(20, 333);
+            this.SyncOnOpenCheckBox.Name = "SyncOnOpenCheckBox";
+            this.SyncOnOpenCheckBox.Size = new System.Drawing.Size(339, 20);
+            this.SyncOnOpenCheckBox.TabIndex = 35;
+            this.SyncOnOpenCheckBox.Text = "Automatically sync this database when it is opened";
+            this.SyncOnOpenCheckBox.UseVisualStyleBackColor = true;
+            this.SyncOnOpenCheckBox.CheckedChanged += new System.EventHandler(this.SyncOnOpenCheckBox_CheckedChanged);
+            //
             // OneDriveConfigDetailsForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(720, 388);
+            this.ClientSize = new System.Drawing.Size(720, 421);
+            this.Controls.Add(this.SyncOnOpenCheckBox);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.ForceSyncButton);
             this.Controls.Add(this.DeleteButton);
@@ -506,5 +519,6 @@
         private System.Windows.Forms.Label FolderIdLabel;
         private System.Windows.Forms.TextBox DriveIdTextBox;
         private System.Windows.Forms.Label DriveIdLabel;
+        private System.Windows.Forms.CheckBox SyncOnOpenCheckBox;
     }
 }

@@ -106,6 +106,18 @@ namespace KoenZomers.KeePass.OneDriveSync
         [DataMember]
         public bool DoNotSync { get; set; }
 
+        private bool _syncOnOpen = true;
+
+        /// <summary>
+        /// Gets or sets a boolean to indicate if the database should be synced automatically when it is opened
+        /// </summary>
+        [DataMember]
+        public bool SyncOnOpen
+        {
+            get { return _syncOnOpen; }
+            set { _syncOnOpen = value; }
+        }
+
         /// <summary>
         /// The SHA1 hash of the local KeePass database
         /// </summary>

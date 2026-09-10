@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## [3.3.4.0] - September 11, 2026
+
+- Added a per-database option to disable automatic synchronization when opening a KeePass database, while keeping startup sync enabled by default
+- Added a Tools menu option to manually force synchronization of the currently open KeePass database
+
 ## [3.3.3.1] - September 3, 2026
 
 - Fixed SharePoint Online synchronization for existing configurations that still stored a server-relative document library path by resolving it to Microsoft Graph drive and folder item IDs before syncing
